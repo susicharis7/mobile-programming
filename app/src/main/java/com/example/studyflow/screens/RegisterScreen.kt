@@ -1,5 +1,6 @@
 package com.example.studyflow.screens
 
+// Foundation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,22 +15,33 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
+
+// Material3
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.HorizontalDivider
+
+// Material icons (only once!)
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+
+// Runtime
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+
+// UI
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,20 +49,25 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+// Resource
 import com.example.studyflow.R
 
+
 @Composable
-fun LoginScreen(onRegisterClick: () -> Unit) {
-    var email by remember {mutableStateOf("") }
-    var password by remember {mutableStateOf("") }
+fun RegisterScreen(onLoginClick: () -> Unit) {
+    var name by remember {mutableStateOf("")}
+    var email by remember {mutableStateOf("")}
+    var password by remember {mutableStateOf("")}
+    var passwordVisible by remember {mutableStateOf(false)}
 
     val greenColor = Color(0xFF00E676)
 
-    // First Box - Background Image, Upper Text
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -97,7 +114,7 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
             )
 
             Text(
-                text = "Log Into Your Account",
+                text = "Create Your Account",
                 color = Color.White,
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold
@@ -113,7 +130,41 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
                 .padding(horizontal = 32.dp, vertical = 70.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // First Box - Username/Email
+            // First box - Name
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp)
+                    .border(
+                        width = 2.dp,
+                        color = greenColor,
+                        shape = RoundedCornerShape(4.dp)
+                    )
+            ) {
+                TextField(
+                    value = name,
+                    onValueChange = {name = it},
+                    label = {Text("Enter Your Name", color = greenColor)},
+                    leadingIcon = {
+                        Icon(Icons.Default.Person, contentDescription = null, tint = Color.White)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    colors = TextFieldDefaults.colors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White,
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedLabelColor = greenColor,
+                        unfocusedLabelColor = greenColor,
+                        cursorColor = greenColor
+                    )
+                )
+            }
+
+            // Second Box - Email
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -127,7 +178,7 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
                 TextField(
                     value = email,
                     onValueChange = {email = it},
-                    label = {Text("Username / Email", color = greenColor)},
+                    label = {Text("Enter your email", color = greenColor)},
                     leadingIcon = {
                         Icon(Icons.Default.Email, contentDescription = null, tint = Color.White)
                     },
@@ -149,7 +200,7 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
             }
 
 
-            // Second Box - Password
+            // Third Box - Password
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -163,11 +214,28 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
                 TextField(
                     value = password,
                     onValueChange = { password = it},
-                    label = { Text("Password", color = greenColor)},
+                    label = { Text("Enter Your Password", color = greenColor)},
                     leadingIcon = {
                         Icon(Icons.Default.Lock, contentDescription = null, tint = Color.White)
                     },
-                    visualTransformation = PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image = if (passwordVisible)
+                            Icons.Default.Visibility
+                        else Icons.Default.VisibilityOff
+
+                        val iconTint = if (passwordVisible) greenColor else Color.Red
+
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(
+                                imageVector = image,
+                                contentDescription = null,
+                                tint = iconTint
+                            )
+
+                        }
+                    },
+                    visualTransformation = if (passwordVisible) VisualTransformation.None
+                                            else PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
                     colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
@@ -181,6 +249,8 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
                         cursorColor = greenColor
                     )
                 )
+
+
             }
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -195,9 +265,10 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
                 colors = ButtonDefaults.buttonColors(containerColor = greenColor)
             ) {
                 Text(
-                    text = "Login",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp,
+                    text = "Create Account",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    letterSpacing = 1.5.sp,
                     color = Color.Black
                 )
             }
@@ -207,14 +278,14 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
             // Row
             Row {
                 Text(
-                    text = "Do not have an account? ",
+                    text = "Already have an account? ",
                     color = Color.White
                 )
                 Text(
-                    text = "Register Now",
+                    text = "Login",
                     color = greenColor,
                     fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.clickable { onRegisterClick() }
+                    modifier = Modifier.clickable { onLoginClick() }
                 )
             }
         }
