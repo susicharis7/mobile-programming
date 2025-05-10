@@ -12,7 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.studyflow.screens.LoginScreen
+import com.example.studyflow.screens.RegisterScreen
 import com.example.studyflow.ui.theme.StudyFlowTheme
+import com.example.studyflow.AppNavigation
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             StudyFlowTheme {
-                LoginScreen()
+                AppNavigation()
             }
         }
     }
