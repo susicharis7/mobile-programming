@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.studyflow.screens.DashboardScreen
 import com.example.studyflow.screens.LoginScreen
 import com.example.studyflow.screens.RegisterScreen
 
@@ -27,8 +28,17 @@ fun AppNavigation() {
             LoginScreen(
                 onRegisterClick = {
                     navController.navigate("register")
+                },
+                onLoginSuccess = {
+                    navController.navigate("dashboard") {
+                        popUpTo("login") { inclusive = true }
+                    }
                 }
             )
+        }
+
+        composable("dashboard") {
+            DashboardScreen()
         }
     }
 }
