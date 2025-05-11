@@ -55,9 +55,6 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
     var email by remember {mutableStateOf("") }
     var password by remember {mutableStateOf("") }
 
-//    val greenColor = Color(0xFF00E676)
-//    val buttonGradientColor = listOf(Color(0xFF48CB94), Color(0xFF2F9168))
-
     // First Box - Background Image, Upper Text
     Box(
         modifier = Modifier.fillMaxSize()
@@ -97,7 +94,6 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
                 letterSpacing = 0.05.em,
                 modifier = Modifier
                     .fillMaxWidth()
-//                    .padding(horizontal = 62.dp),
                 ,textAlign = TextAlign.Center
             )
 
@@ -120,7 +116,7 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(horizontal = 30.dp, vertical = 70.dp), //TODO nez sta je ovo
+                .padding(horizontal = 30.dp, vertical = 70.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // First Box - Username/Email
@@ -223,8 +219,9 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
                 Text(
                     text = "Login",
                     fontFamily = interFontFamily,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.SemiBold,
                     fontSize = 20.sp,
+                    letterSpacing = 1.sp,
                     color = TextBlack
                 )
             }

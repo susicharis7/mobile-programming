@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.MaterialTheme
 
 // Runtime
 import androidx.compose.runtime.Composable
@@ -44,6 +45,7 @@ import androidx.compose.runtime.setValue
 // UI
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -53,10 +55,16 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 
 // Resource
 import com.example.studyflow.R
+import com.example.studyflow.ui.theme.ButtonGradientColor
+import com.example.studyflow.ui.theme.LoginGreen
+import com.example.studyflow.ui.theme.TextBlack
+import com.example.studyflow.ui.theme.TextWhite
+import com.example.studyflow.ui.theme.interFontFamily
 
 
 @Composable
@@ -84,39 +92,40 @@ fun RegisterScreen(onLoginClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 65.dp),
+                .padding(top = 74.67.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "StudyFlow",
-                color = Color.White,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleLarge,
+                color = TextWhite
             )
 
             Spacer(
-                modifier = Modifier.height(8.dp)
+                modifier = Modifier.height(14.dp)
             )
 
             Text(
                 text = "Organise Your Future",
-                color = Color.White.copy(alpha = 0.8f),
-                fontSize = 27.sp,
-                letterSpacing = 2.sp,
+                color = Color(0xffE6E6E6),
+                fontFamily = interFontFamily,
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Light,
+                letterSpacing = 0.05.em,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 62.dp),
-                textAlign = TextAlign.Center
+                ,textAlign = TextAlign.Center
             )
 
             Spacer(
-                modifier = Modifier.height(40.dp)
+                modifier = Modifier.height(46.dp)
             )
 
             Text(
-                text = "Create Your Account",
-                color = Color.White,
-                fontSize = 30.sp,
+                text = "Log Into Your Account",
+                color = TextWhite,
+                fontFamily = interFontFamily,
+                fontSize = 26.67.sp,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -127,7 +136,7 @@ fun RegisterScreen(onLoginClick: () -> Unit) {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(horizontal = 32.dp, vertical = 70.dp),
+                .padding(horizontal = 30.dp, vertical = 70.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // First box - Name
@@ -137,29 +146,35 @@ fun RegisterScreen(onLoginClick: () -> Unit) {
                     .padding(vertical = 10.dp)
                     .border(
                         width = 2.dp,
-                        color = greenColor,
+                        color = LoginGreen,
                         shape = RoundedCornerShape(4.dp)
                     )
             ) {
                 TextField(
                     value = name,
                     onValueChange = {name = it},
-                    label = {Text("Enter Your Name", color = greenColor)},
+                    label = {Text(
+                                "Enter Your Name",
+                                color = LoginGreen,
+                                fontFamily = interFontFamily,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 16.sp
+                    )},
                     leadingIcon = {
-                        Icon(Icons.Default.Person, contentDescription = null, tint = Color.White)
+                        Icon(Icons.Default.Person, contentDescription = null, tint = TextWhite)
                     },
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
+                        focusedTextColor = TextWhite,
+                        unfocusedTextColor = TextWhite,
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        focusedLabelColor = greenColor,
-                        unfocusedLabelColor = greenColor,
-                        cursorColor = greenColor
+                        focusedLabelColor = LoginGreen,
+                        unfocusedLabelColor = LoginGreen,
+                        cursorColor = LoginGreen
                     )
                 )
             }
@@ -171,29 +186,29 @@ fun RegisterScreen(onLoginClick: () -> Unit) {
                     .padding(vertical = 2.dp)
                     .border(
                         width = 2.dp,
-                        color = greenColor,
+                        color = LoginGreen,
                         shape = RoundedCornerShape(4.dp)
                     )
             ) {
                 TextField(
                     value = email,
                     onValueChange = {email = it},
-                    label = {Text("Enter your email", color = greenColor)},
+                    label = {Text("Enter your email", color = LoginGreen)},
                     leadingIcon = {
-                        Icon(Icons.Default.Email, contentDescription = null, tint = Color.White)
+                        Icon(Icons.Default.Email, contentDescription = null, tint = TextWhite)
                     },
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
+                        focusedTextColor = TextWhite,
+                        unfocusedTextColor = TextWhite,
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        focusedLabelColor = greenColor,
-                        unfocusedLabelColor = greenColor,
-                        cursorColor = greenColor
+                        focusedLabelColor = LoginGreen,
+                        unfocusedLabelColor = LoginGreen,
+                        cursorColor = LoginGreen
 
                     )
                 )
@@ -207,23 +222,29 @@ fun RegisterScreen(onLoginClick: () -> Unit) {
                     .padding(vertical = 10.dp)
                     .border(
                         width = 2.dp,
-                        color = greenColor,
+                        color = LoginGreen,
                         shape = RoundedCornerShape(4.dp)
                     )
             ) {
                 TextField(
                     value = password,
                     onValueChange = { password = it},
-                    label = { Text("Enter Your Password", color = greenColor)},
+                    label = { Text(
+                                "Enter Your Password",
+                                color = LoginGreen,
+                                fontFamily = interFontFamily,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 16.sp
+                        )},
                     leadingIcon = {
-                        Icon(Icons.Default.Lock, contentDescription = null, tint = Color.White)
+                        Icon(Icons.Default.Lock, contentDescription = null, tint = TextWhite)
                     },
                     trailingIcon = {
                         val image = if (passwordVisible)
                             Icons.Default.Visibility
                         else Icons.Default.VisibilityOff
 
-                        val iconTint = if (passwordVisible) greenColor else Color.Red
+                        val iconTint = if (passwordVisible) greenColor else LoginGreen
 
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
                             Icon(
@@ -240,13 +261,13 @@ fun RegisterScreen(onLoginClick: () -> Unit) {
                     colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
+                        focusedTextColor = TextWhite,
+                        unfocusedTextColor = TextWhite,
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        focusedLabelColor = greenColor,
-                        unfocusedLabelColor = greenColor,
-                        cursorColor = greenColor
+                        focusedLabelColor = LoginGreen,
+                        unfocusedLabelColor = LoginGreen,
+                        cursorColor = LoginGreen
                     )
                 )
 
@@ -260,31 +281,41 @@ fun RegisterScreen(onLoginClick: () -> Unit) {
                 onClick = {/* login */},
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(42.dp),
+                    .height(42.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(ButtonGradientColor),
+                        shape = RoundedCornerShape(2.dp)
+                    ),
                 shape = RoundedCornerShape(2.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = greenColor)
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
             ) {
                 Text(
                     text = "Create Account",
+                    fontFamily = interFontFamily,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 20.sp,
-                    letterSpacing = 1.5.sp,
-                    color = Color.Black
+                    letterSpacing = 1.sp,
+                    color = TextBlack
                 )
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(13.67.dp))
 
             // Row
             Row {
                 Text(
                     text = "Already have an account? ",
-                    color = Color.White
+                    fontFamily = interFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 12.sp,
+                    color = TextWhite
                 )
                 Text(
                     text = "Login",
-                    color = greenColor,
-                    fontWeight = FontWeight.SemiBold,
+                    color = LoginGreen,
+                    fontFamily = interFontFamily,
+                    fontWeight = FontWeight.Black,
+                    fontSize = 12.sp,
                     modifier = Modifier.clickable { onLoginClick() }
                 )
             }
