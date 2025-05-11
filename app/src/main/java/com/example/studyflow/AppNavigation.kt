@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.studyflow.screens.DashboardScreen
 import com.example.studyflow.screens.LoginScreen
+import com.example.studyflow.screens.PomodoroTimer
 import com.example.studyflow.screens.RegisterScreen
 
 
@@ -17,31 +18,32 @@ fun AppNavigation() {
         navController = navController,
         startDestination = "register"
     ) {
+        // Auth screens
         composable("register") {
             RegisterScreen(
-                onLoginClick = {
-                    navController.navigate("login")
-                },
+                onLoginClick = { navController.navigate("login") },
                 onRegisterSuccess = {
-                    navController.navigate("dashboard")
-                }
-            )
-        }
-        composable("login") {
-            LoginScreen(
-                onRegisterClick = {
-                    navController.navigate("register")
-                },
-                onLoginSuccess = {
-                    navController.navigate("dashboard") {
-                        popUpTo("login") { inclusive = true }
+                    navController.navigate("home") {
+                        popUpTo(navController.graph.id) { inclusive = true }
                     }
                 }
             )
         }
 
-        composable("dashboard") {
-            DashboardScreen()
+        composable("login") {
+            LoginScreen(
+                onRegisterClick = { navController.navigate("register") },
+                onLoginSuccess = {
+                    navController.navigate("home") {
+                        popUpTo(navController.graph.id) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // Main app entry point
+        composable("home") {
+            HomeNavigation(navController)
         }
     }
 }

@@ -88,6 +88,7 @@ Text(
 - [2025-5-9]: Added login screen
 - [2025-5-9]: Added register screen and navigation
 - [2025-5-10]: Added theme colors and typography
+- [2025-5-12]: Added more screens and navigation bar at the bottom
 ```
 
 ---
@@ -95,6 +96,7 @@ Text(
 ## Team Messages
 ```
 @team: Need to create other screeens, looks like login and register are completed
+@sanin: skontaj kako se mijenja boja na navigation bar i ostale customizatons, isto nesto na vrhu ne bude iste boje kao background pa i to probaj popraviti
 ```
 ## Add your own things 
  - Add to "Design Implementation Guide" for others to be aware of.
