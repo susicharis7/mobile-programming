@@ -68,7 +68,10 @@ import com.example.studyflow.ui.theme.interFontFamily
 
 
 @Composable
-fun RegisterScreen(onLoginClick: () -> Unit) {
+fun RegisterScreen(
+    onLoginClick: () -> Unit,
+    onRegisterSuccess: () -> Unit
+) {
     var name by remember {mutableStateOf("")}
     var email by remember {mutableStateOf("")}
     var password by remember {mutableStateOf("")}
@@ -278,7 +281,7 @@ fun RegisterScreen(onLoginClick: () -> Unit) {
 
             // Button
             Button(
-                onClick = {/* login */},
+                onClick = { onRegisterSuccess() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(42.dp)
