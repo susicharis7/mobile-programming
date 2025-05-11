@@ -51,7 +51,10 @@ import com.example.studyflow.ui.theme.*
 
 
 @Composable
-fun LoginScreen(onRegisterClick: () -> Unit) {
+fun LoginScreen(
+    onRegisterClick: () -> Unit,
+    onLoginSuccess: () -> Unit
+    ) {
     var email by remember {mutableStateOf("") }
     var password by remember {mutableStateOf("") }
 
@@ -205,7 +208,7 @@ fun LoginScreen(onRegisterClick: () -> Unit) {
 
             // Button
             Button(
-                onClick = {/* login */},
+                onClick = { onLoginSuccess()},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(42.dp)
