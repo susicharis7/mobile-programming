@@ -1,34 +1,59 @@
 package com.example.studyflow.screens
 
+// Scrollable
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.studyflow.R
-import com.example.studyflow.ui.theme.*
-
-// Scrollable
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.filled.Flag
-import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.sp
+import com.example.studyflow.R
+import com.example.studyflow.ui.theme.AVGStudyTimeGradientColor
+import com.example.studyflow.ui.theme.AVGStudyTimeHours
+import com.example.studyflow.ui.theme.BackgroundColor
+import com.example.studyflow.ui.theme.CardBackgroundColor
+import com.example.studyflow.ui.theme.CurrentSessionGradientColor
+import com.example.studyflow.ui.theme.CurrentSessionHours
+import com.example.studyflow.ui.theme.StreakColor
+import com.example.studyflow.ui.theme.TaskCompletedGradientColor
+import com.example.studyflow.ui.theme.TaskCompletedNumber
+import com.example.studyflow.ui.theme.TextWhite
+import com.example.studyflow.ui.theme.UpcomingExamCardColor
+import com.example.studyflow.ui.theme.UpcomingTasksBackground
 
 @Composable
 fun DashboardScreen() {
@@ -40,7 +65,7 @@ fun DashboardScreen() {
             .padding(14.dp)
     ) {
         item {  // Top Bar - Icons, Dashboard
-            Spacer(modifier = Modifier.height(19.dp))
+            Spacer(modifier = Modifier.height(36.67.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -80,7 +105,7 @@ fun DashboardScreen() {
                 TasksCompletedCard(modifier = Modifier.weight(1f))
                 CurrentSessionCard(modifier = Modifier.weight(1f))
             }
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
         }
 
         item {
@@ -151,6 +176,75 @@ fun DashboardScreen() {
 
             } // Column
         } // item
+
+
+        item { // Upcoming Exams Section
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(CardBackgroundColor, shape = RoundedCornerShape(12.dp))
+                    .padding(16.dp)
+            ) {
+                Text(
+                    "Upcoming Exams",
+                    color = TextWhite,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+
+                UpcomingExamItem(
+                    title = "Mobile Programming Exam",
+                    date = "Apr 23",
+                    time = "09:00 - 11:00",
+                    subject = "Mobile Programming",
+                    colorStripe = Color(0xFF60A5FA),
+                    daysLeft = "13"
+                )
+
+                UpcomingExamItem(
+                    title = "Statistics Exam",
+                    date = "Apr 26",
+                    time = "11:00 - 15:00",
+                    subject = "Probability & Statistics",
+                    colorStripe = Color(0xFFBB86FC),
+                    daysLeft = "16"
+                )
+
+                UpcomingExamItem(
+                    title = "Microprocessors Exam",
+                    date = "Apr 27",
+                    time = "10:00 - 12:00",
+                    subject = "Microprocessors",
+                    colorStripe = Color(0xFFFACC15),
+                    daysLeft = "17"
+                )
+
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+
+        item { // Study Activity
+            StudyActivitySection(
+                studyData = listOf(
+                    "30" to "4.5 hours", "31" to "2 hours", "1" to "1 hour", "2" to "2.5 hours", "3" to "4 hours", "4" to "30 minutes", "5" to "0 hours",
+                    "6" to "4.5 hours", "7" to "2 hours", "8" to "1.5 hours", "9" to "6 hours", "10" to "2.5 hours", "11" to "1 hour", "12" to "2 hours",
+                    "13" to "45 minutes", "14" to "0 hours", "15" to "6 hours", "16" to "1.5 hours", "17" to "2 hours", "18" to "5 hours"
+                ),
+                monthLabel = "April 2025",
+                totalHours = "48",
+                daysStudied = "20"
+            )
+        }
+
+
 
 
     }
@@ -388,7 +482,7 @@ fun UpcomingTaskItem(
             Text(
                 title,
                 color = TextWhite,
-                fontSize = 16.sp,
+                fontSize = 14.5.sp,
                 fontWeight = FontWeight.Normal
             )
 
@@ -408,7 +502,7 @@ fun UpcomingTaskItem(
                         Text(
                             text = category,
                             color = Color.White,
-                            fontSize = 13.sp
+                            fontSize = 11.sp
                         )
                     }
 
@@ -427,7 +521,7 @@ fun UpcomingTaskItem(
                         Text(
                             text = time,
                             color = Color(0xFFF9E79F),
-                            fontSize = 12.sp
+                            fontSize = 10.sp
                         )
                     }
                 }
@@ -436,7 +530,7 @@ fun UpcomingTaskItem(
                         Icons.Default.Flag,
                         contentDescription = null,
                         tint = priorityColor,
-                        modifier = Modifier.size(14.dp)
+                        modifier = Modifier.size(13.dp)
                     )
 
                     Spacer(modifier = Modifier.width(4.dp))
@@ -444,12 +538,286 @@ fun UpcomingTaskItem(
                     Text(
                         priorityLabel,
                         color = priorityColor,
-                        fontSize = 12.sp
+                        fontSize = 11.sp
                     )
                 }
             }
+        }
+
+
+    }
+}
+
+
+@Composable
+fun UpcomingExamItem(
+    title: String,
+    date: String,
+    time: String,
+    subject: String,
+    colorStripe: Color,
+    daysLeft: String
+) {
+    Box( // Outer Container - Space between Cards
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 14.dp)
+    ) {
+        Box( // Entire Card Container (With Background)
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(UpcomingExamCardColor, shape = RoundedCornerShape(12.dp))
+        ) {
+            Row( // Horizontal Layout inside Cards
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+                    .height(IntrinsicSize.Min)
+            ) {
+
+                Box( // Vertical Colored Bar (first thing on the left)
+                    modifier = Modifier
+                        .width(4.dp)
+                        .fillMaxHeight()
+                        .background(colorStripe, shape = RoundedCornerShape(2.dp))
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Column( // Column >> title,date,time,subject
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    Text(
+                        title,
+                        color = TextWhite,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    // Row w/ Calendar Icon + Date, Clock Icon + Time
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            Icons.Default.CalendarToday,
+                            contentDescription = null,
+                            tint = TextWhite,
+                            modifier = Modifier.size(14.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(6.dp))
+
+                        Text(
+                            date,
+                            color = TextWhite,
+                            fontSize = 12.sp
+                        )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Icon(
+                            Icons.Default.AccessTime,
+                            contentDescription = null,
+                            tint = TextWhite,
+                            modifier = Modifier.size(14.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(4.dp))
+
+                        Text(
+                            time,
+                            color = TextWhite,
+                            fontSize = 12.sp
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    // Row w/ Subject Icon + Subject Name
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.book),
+                            contentDescription = null,
+                            tint = TextWhite,
+                            modifier = Modifier.size(14.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(6.dp))
+
+                        Text(
+                            subject,
+                            color = TextWhite,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+
+                Column( // Day Counter (Right Aligned)
+                    modifier = Modifier
+                        .align(Alignment.Top)
+                        .padding(top = 9.dp, end = 4.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        daysLeft,
+                        color = Color(0xFFF59E0B),
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 26.sp
+                    )
+
+                    Text(
+                        "days left",
+                        color = TextWhite,
+                        fontSize = 12.sp
+                    )
+                }
+
+            }
+        }
+
+    }
+}
+
+
+@Composable
+fun StudyActivitySection(
+    studyData: List<Pair<String,String>>,
+    monthLabel: String = "April 2025",
+    totalHours: String = "48",
+    daysStudied: String = "20"
+) {
+    val fullData = buildList {
+        addAll(studyData)
+        val existingDays = studyData.map { it.first.toIntOrNull() ?: 0 }.toSet()
+        for (day in 19..30) {
+            if (!existingDays.contains(day)) add(day.toString() to "")
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(CardBackgroundColor, shape = RoundedCornerShape(12.dp))
+            .padding(14.dp)
+
+    ) {
+        // Header
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                "Study Activity",
+                color = TextWhite,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp
+            )
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    "Less",
+                    color = TextWhite,
+                    fontSize = 13.sp
+                )
+
+                Spacer(modifier = Modifier.width(5.dp))
+
+                repeat(5) {
+                    Box(
+                        modifier = Modifier
+                            .size(11.dp)
+                            .padding(horizontal = 1.dp)
+                            .background(Color(0xFF4CAF50).copy(alpha = 0.2f + it * 0.15f), shape = RoundedCornerShape(3.dp))
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("More", color = TextWhite, fontSize = 13.sp)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Month Label
+        Text(
+            monthLabel,
+            color = TextWhite,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Weekday Headers
+        val weekdays = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            weekdays.forEach {
+                Text(
+                    it,
+                    color = TextWhite.copy(alpha = 0.7f),
+                    fontSize = 12.sp,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        // Grid (7 columns)
+        val columns = 7
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(columns),
+            modifier = Modifier.height(280.dp),
+            userScrollEnabled = false
+        ) {
+            items(fullData.size) { index ->
+                val (day, hours) = fullData[index]
+                StudyDayCell(day = day, hours = hours)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Footer
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("$totalHours Total Hours", color = TextWhite)
+            Text("$daysStudied Days Studied", color = TextWhite)
         }
     }
 }
 
 
+@Composable // Composable for a single day cell
+fun StudyDayCell(
+    day: String,
+    hours: String
+) {
+    val hourValue = hours.split(" ").firstOrNull()?.toFloatOrNull() ?: 0f
+    val backgroundColor = when {
+        hours.isBlank() -> Color(0xFF0D1B2A) // Full empty for future days
+        hourValue == 0f -> Color(0xFF1B263B)
+        hourValue < 1 -> Color(0xFF4CAF50).copy(alpha = 0.3f)
+        hourValue < 3 -> Color(0xFF4CAF50).copy(alpha = 0.6f)
+        else -> Color(0xFF4CAF50)
+    }
+
+    Box(
+        modifier = Modifier
+            .padding(2.dp)
+            .aspectRatio(1f)
+            .background(backgroundColor, shape = RoundedCornerShape(6.dp)),
+        contentAlignment = Alignment.Center
+    ) {
+        if (hours.isNotBlank()) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(day, color = TextWhite, fontSize = 12.sp)
+                Text(hours, color = TextWhite, fontSize = 10.sp)
+            }
+        }
+    }
+}
