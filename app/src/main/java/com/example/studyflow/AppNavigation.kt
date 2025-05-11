@@ -21,6 +21,9 @@ fun AppNavigation() {
             RegisterScreen(
                 onLoginClick = {
                     navController.navigate("login")
+                },
+                onRegisterSuccess = {
+                    navController.navigate("dashboard")
                 }
             )
         }
