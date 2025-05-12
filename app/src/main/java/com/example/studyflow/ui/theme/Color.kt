@@ -23,6 +23,7 @@ val BackgroundColor = Color(0xFF0E1D25)
 val CardBackgroundColor = Color(0xED183040)
 val TextWhite = Color(0xFFFAFAFA)
 val UpcomingTasksBackground = Color(0xFF374151)
+val UpcomingExamCardColor = Color(0xff174459)
 val TextBlack = Color(0xFF171717)
 
 
