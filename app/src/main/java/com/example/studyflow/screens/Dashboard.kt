@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,6 +44,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.example.studyflow.R
 import com.example.studyflow.ui.theme.AVGStudyTimeGradientColor
 import com.example.studyflow.ui.theme.AVGStudyTimeHours
@@ -60,201 +62,216 @@ import com.example.studyflow.ui.theme.UpcomingTasksBackground
 
 @Composable
 fun DashboardScreen() {
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BackgroundColor)
-            .padding(horizontal = 14.dp)
-    ) {
-        item {  // Top Bar - Icons, Dashboard
-            Spacer(modifier = Modifier.height(36.67.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Icon(
-                    Icons.Default.Menu,
-                    contentDescription = null,
-                    tint = TextWhite,
-                    modifier = Modifier.size(34.dp)
-                )
-
-                Text(
-                    "Dashboard",
-                    color = TextWhite,
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Normal,
-                    letterSpacing = 0.05.em
-                )
-
-                Icon(
-                    painter = painterResource(id = R.drawable.headphones),
-                    contentDescription = null,
-                    tint = TextWhite,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(46.dp))
-        }
-
-        item { // Second Row, Tasks Completed;Current Session
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                TasksCompletedCard(modifier = Modifier.weight(1f))
-                CurrentSessionCard(modifier = Modifier.weight(1f))
-            }
-            Spacer(modifier = Modifier.height(10.dp))
-        }
-
-        item {
-            Row( // Third Row, Average Study Time;Streak
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                AverageStudyTimeCard(modifier = Modifier.weight(1f))
-                StreakCard(modifier = Modifier.weight(1f))
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        item { // Upcoming Tasks Section
+    Scaffold(
+        topBar = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(CardBackgroundColor, shape = RoundedCornerShape(12.dp))
-                    .padding(16.dp)
+                    .padding(horizontal = 14.dp)
+                    .background(BackgroundColor)
+                    .zIndex(1f)
             ) {
+                Spacer(modifier= Modifier.height(16.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Icon(
+                        Icons.Default.Menu,
+                        contentDescription = null,
+                        tint = TextWhite,
+                        modifier = Modifier.size(34.dp)
+                    )
+
+                    Text(
+                        "Dashboard",
+                        color = TextWhite,
+                        fontSize = 26.sp,
+                        fontWeight = FontWeight.Normal,
+                        letterSpacing = 0.05.em
+                    )
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.headphones),
+                        contentDescription = null,
+                        tint = TextWhite,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        },
+        modifier = Modifier.background(BackgroundColor)
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BackgroundColor)
+                .padding(horizontal = 14.dp)
+                .padding(paddingValues)
+        ) {
+//            item {  // Top Bar - Icons, Dashboard
+//                Spacer(modifier = Modifier.height(36.67.dp + 34.dp + 46.dp))
+//            }
+
+            item { // Second Row, Tasks Completed;Current Session
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    TasksCompletedCard(modifier = Modifier.weight(1f))
+                    CurrentSessionCard(modifier = Modifier.weight(1f))
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            item {
+                Row( // Third Row, Average Study Time;Streak
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    AverageStudyTimeCard(modifier = Modifier.weight(1f))
+                    StreakCard(modifier = Modifier.weight(1f))
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            item { // Upcoming Tasks Section
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(CardBackgroundColor, shape = RoundedCornerShape(12.dp))
+                        .padding(16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            "Upcoming Tasks",
+                            color = TextWhite,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+                        Text(
+                            "View All",
+                            color = Color(0xFF818CF8),
+                            fontSize = 13.sp
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    UpcomingTaskItem(
+                        title = "Complete Web Programming Milestone",
+                        category = "Web Programming",
+                        time = "May 5, 08:00 PM",
+                        priorityColor = Color(0xFFF87171),
+                        priorityLabel = "High",
+                        iconRes = R.drawable.tick
+                    )
+
+                    UpcomingTaskItem(
+                        title = "Prepare for Statistics Quiz",
+                        category = "Statistics",
+                        time = "Apr 19, 11:59 PM",
+                        priorityColor = Color(0xFFFFCB44),
+                        priorityLabel = "Medium",
+                        iconRes = R.drawable.tick
+                    )
+
+                    UpcomingTaskItem(
+                        title = "Prepare Presentation",
+                        category = "Operating Systems",
+                        time = "Apr 14, 08:00 PM",
+                        priorityColor = Color(0xFF4ADE80),
+                        priorityLabel = "Low",
+                        iconRes = R.drawable.tick
+                    )
+
+                } // Column
+            } // item
+
+
+            item { // Upcoming Exams Section
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(CardBackgroundColor, shape = RoundedCornerShape(12.dp))
+                        .padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 16.dp,
+                            bottom = 0.dp
+                        )
                 ) {
                     Text(
-                        "Upcoming Tasks",
+                        "Upcoming Exams",
                         color = TextWhite,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )
 
-                    Text(
-                        "View All",
-                        color = Color(0xFF818CF8),
-                        fontSize = 13.sp
+                    Spacer(modifier = Modifier.height(12.dp))
+
+
+                    UpcomingExamItem(
+                        title = "Mobile Programming Exam",
+                        date = "Apr 23",
+                        time = "09:00 - 11:00",
+                        subject = "Mobile Programming",
+                        colorStripe = Color(0xFF60A5FA),
+                        daysLeft = "13"
                     )
+
+                    UpcomingExamItem(
+                        title = "Statistics Exam",
+                        date = "Apr 26",
+                        time = "11:00 - 15:00",
+                        subject = "Probability & Statistics",
+                        colorStripe = Color(0xFFBB86FC),
+                        daysLeft = "16"
+                    )
+
+                    UpcomingExamItem(
+                        title = "Microprocessors Exam",
+                        date = "Apr 27",
+                        time = "10:00 - 12:00",
+                        subject = "Microprocessors",
+                        colorStripe = Color(0xFFFACC15),
+                        daysLeft = "17"
+                    )
+
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                UpcomingTaskItem(
-                    title = "Complete Web Programming Milestone",
-                    category = "Web Programming",
-                    time = "May 5, 08:00 PM",
-                    priorityColor = Color(0xFFF87171),
-                    priorityLabel = "High",
-                    iconRes = R.drawable.tick
-                )
-
-                UpcomingTaskItem(
-                    title = "Prepare for Statistics Quiz",
-                    category = "Statistics",
-                    time = "Apr 19, 11:59 PM",
-                    priorityColor = Color(0xFFFFCB44),
-                    priorityLabel = "Medium",
-                    iconRes = R.drawable.tick
-                )
-
-                UpcomingTaskItem(
-                    title = "Prepare Presentation",
-                    category = "Operating Systems",
-                    time = "Apr 14, 08:00 PM",
-                    priorityColor = Color(0xFF4ADE80),
-                    priorityLabel = "Low",
-                    iconRes = R.drawable.tick
-                )
-
-            } // Column
-        } // item
-
-
-        item { // Upcoming Exams Section
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(CardBackgroundColor, shape = RoundedCornerShape(12.dp))
-                    .padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 16.dp,
-                        bottom = 0.dp
-                    )
-            ) {
-                Text(
-                    "Upcoming Exams",
-                    color = TextWhite,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-
-                UpcomingExamItem(
-                    title = "Mobile Programming Exam",
-                    date = "Apr 23",
-                    time = "09:00 - 11:00",
-                    subject = "Mobile Programming",
-                    colorStripe = Color(0xFF60A5FA),
-                    daysLeft = "13"
-                )
-
-                UpcomingExamItem(
-                    title = "Statistics Exam",
-                    date = "Apr 26",
-                    time = "11:00 - 15:00",
-                    subject = "Probability & Statistics",
-                    colorStripe = Color(0xFFBB86FC),
-                    daysLeft = "16"
-                )
-
-                UpcomingExamItem(
-                    title = "Microprocessors Exam",
-                    date = "Apr 27",
-                    time = "10:00 - 12:00",
-                    subject = "Microprocessors",
-                    colorStripe = Color(0xFFFACC15),
-                    daysLeft = "17"
-                )
-
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            item { // Study Activity
+                StudyActivitySection(
+                    studyData = listOf(
+                        "30" to "4.5 hours", "31" to "2 hours", "1" to "1 hour", "2" to "2.5 hours", "3" to "4 hours", "4" to "30 min", "5" to "0 hours",
+                        "6" to "4.5 hours", "7" to "2 hours", "8" to "1.5 hours", "9" to "6 hours", "10" to "2.5 hours", "11" to "1 hour", "12" to "2 hours",
+                        "13" to "45 min", "14" to "0 hours", "15" to "6 hours", "16" to "1.5 hours", "17" to "2 hours", "18" to "5 hours"
+                    ),
+                    monthLabel = "April 2025",
+                    totalHours = "48",
+                    daysStudied = "20"
+                )
+            }
+
+
+
+
         }
-
-        item { // Study Activity
-            StudyActivitySection(
-                studyData = listOf(
-                    "30" to "4.5 hours", "31" to "2 hours", "1" to "1 hour", "2" to "2.5 hours", "3" to "4 hours", "4" to "30 min", "5" to "0 hours",
-                    "6" to "4.5 hours", "7" to "2 hours", "8" to "1.5 hours", "9" to "6 hours", "10" to "2.5 hours", "11" to "1 hour", "12" to "2 hours",
-                    "13" to "45 min", "14" to "0 hours", "15" to "6 hours", "16" to "1.5 hours", "17" to "2 hours", "18" to "5 hours"
-                ),
-                monthLabel = "April 2025",
-                totalHours = "48",
-                daysStudied = "20"
-            )
-        }
-
-
-
-
     }
 }
 
