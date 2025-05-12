@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,6 +53,7 @@ import com.example.studyflow.ui.theme.CurrentSessionHours
 import com.example.studyflow.ui.theme.StreakColor
 import com.example.studyflow.ui.theme.TaskCompletedGradientColor
 import com.example.studyflow.ui.theme.TaskCompletedNumber
+import com.example.studyflow.ui.theme.TextGray
 import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.UpcomingExamCardColor
 import com.example.studyflow.ui.theme.UpcomingTasksBackground
@@ -62,7 +65,7 @@ fun DashboardScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(BackgroundColor)
-            .padding(14.dp)
+            .padding(horizontal = 14.dp)
     ) {
         item {  // Top Bar - Icons, Dashboard
             Spacer(modifier = Modifier.height(36.67.dp))
@@ -187,7 +190,12 @@ fun DashboardScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(CardBackgroundColor, shape = RoundedCornerShape(12.dp))
-                    .padding(16.dp)
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 16.dp,
+                        bottom = 0.dp
+                    )
             ) {
                 Text(
                     "Upcoming Exams",
@@ -234,9 +242,9 @@ fun DashboardScreen() {
         item { // Study Activity
             StudyActivitySection(
                 studyData = listOf(
-                    "30" to "4.5 hours", "31" to "2 hours", "1" to "1 hour", "2" to "2.5 hours", "3" to "4 hours", "4" to "30 minutes", "5" to "0 hours",
+                    "30" to "4.5 hours", "31" to "2 hours", "1" to "1 hour", "2" to "2.5 hours", "3" to "4 hours", "4" to "30 min", "5" to "0 hours",
                     "6" to "4.5 hours", "7" to "2 hours", "8" to "1.5 hours", "9" to "6 hours", "10" to "2.5 hours", "11" to "1 hour", "12" to "2 hours",
-                    "13" to "45 minutes", "14" to "0 hours", "15" to "6 hours", "16" to "1.5 hours", "17" to "2 hours", "18" to "5 hours"
+                    "13" to "45 min", "14" to "0 hours", "15" to "6 hours", "16" to "1.5 hours", "17" to "2 hours", "18" to "5 hours"
                 ),
                 monthLabel = "April 2025",
                 totalHours = "48",
@@ -501,8 +509,8 @@ fun UpcomingTaskItem(
                     ) {
                         Text(
                             text = category,
-                            color = Color.White,
-                            fontSize = 11.sp
+                            color = TextGray,
+                            fontSize = 11.5.sp
                         )
                     }
 
@@ -572,7 +580,8 @@ fun UpcomingExamItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp)
-                    .height(IntrinsicSize.Min)
+                    .height(IntrinsicSize.Min),
+                verticalAlignment = Alignment.CenterVertically
             ) {
 
                 Box( // Vertical Colored Bar (first thing on the left)
@@ -591,7 +600,7 @@ fun UpcomingExamItem(
                     Text(
                         title,
                         color = TextWhite,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp
                     )
 
@@ -600,9 +609,9 @@ fun UpcomingExamItem(
                     // Row w/ Calendar Icon + Date, Clock Icon + Time
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            Icons.Default.CalendarToday,
+                            painter = painterResource(id = R.drawable.schedule),
                             contentDescription = null,
-                            tint = TextWhite,
+                            tint = TextGray,
                             modifier = Modifier.size(14.dp)
                         )
 
@@ -610,7 +619,7 @@ fun UpcomingExamItem(
 
                         Text(
                             date,
-                            color = TextWhite,
+                            color = TextGray,
                             fontSize = 12.sp
                         )
 
@@ -619,7 +628,7 @@ fun UpcomingExamItem(
                         Icon(
                             Icons.Default.AccessTime,
                             contentDescription = null,
-                            tint = TextWhite,
+                            tint = TextGray,
                             modifier = Modifier.size(14.dp)
                         )
 
@@ -627,19 +636,19 @@ fun UpcomingExamItem(
 
                         Text(
                             time,
-                            color = TextWhite,
+                            color = TextGray,
                             fontSize = 12.sp
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(2.dp))
+                    Spacer(modifier = Modifier.height(0.dp))
 
                     // Row w/ Subject Icon + Subject Name
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            painter = painterResource(id = R.drawable.book),
+                            painter = painterResource(id = R.drawable.subjects),
                             contentDescription = null,
-                            tint = TextWhite,
+                            tint = TextGray,
                             modifier = Modifier.size(14.dp)
                         )
 
@@ -647,7 +656,7 @@ fun UpcomingExamItem(
 
                         Text(
                             subject,
-                            color = TextWhite,
+                            color = TextGray,
                             fontSize = 12.sp
                         )
                     }
@@ -655,21 +664,21 @@ fun UpcomingExamItem(
 
                 Column( // Day Counter (Right Aligned)
                     modifier = Modifier
-                        .align(Alignment.Top)
-                        .padding(top = 9.dp, end = 4.dp),
+                        .padding(end = 4.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         daysLeft,
                         color = Color(0xFFF59E0B),
                         fontWeight = FontWeight.ExtraBold,
-                        fontSize = 26.sp
+                        fontSize = 20.sp
                     )
 
                     Text(
                         "days left",
                         color = TextWhite,
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Light
                     )
                 }
 
@@ -685,7 +694,7 @@ fun StudyActivitySection(
     studyData: List<Pair<String,String>>,
     monthLabel: String = "April 2025",
     totalHours: String = "48",
-    daysStudied: String = "20"
+    daysStudied: String = "18"
 ) {
     val fullData = buildList {
         addAll(studyData)
@@ -717,7 +726,7 @@ fun StudyActivitySection(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     "Less",
-                    color = TextWhite,
+                    color = TextGray,
                     fontSize = 13.sp
                 )
 
@@ -733,7 +742,7 @@ fun StudyActivitySection(
                 }
 
                 Spacer(modifier = Modifier.width(4.dp))
-                Text("More", color = TextWhite, fontSize = 13.sp)
+                Text("More", color = TextGray, fontSize = 13.sp)
             }
         }
 
@@ -769,7 +778,7 @@ fun StudyActivitySection(
         val columns = 7
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns),
-            modifier = Modifier.height(280.dp),
+            modifier = Modifier.height(240.dp),
             userScrollEnabled = false
         ) {
             items(fullData.size) { index ->
@@ -778,7 +787,11 @@ fun StudyActivitySection(
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Divider(
+            color = TextWhite.copy(alpha = 0.2f), // Adjust color and transparency
+            thickness = 1.dp, // Line thickness
+            modifier = Modifier.padding(vertical = 8.dp) // Space above and below line
+        )
 
         // Footer
         Row(
@@ -814,9 +827,20 @@ fun StudyDayCell(
         contentAlignment = Alignment.Center
     ) {
         if (hours.isNotBlank()) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(day, color = TextWhite, fontSize = 12.sp)
-                Text(hours, color = TextWhite, fontSize = 10.sp)
+            Box(contentAlignment = Alignment.Center) {
+                Column {
+                    Text(
+                        day,
+                        fontSize = 12.sp,
+                        modifier = Modifier.offset(y = 2.dp).align(alignment = Alignment.CenterHorizontally) // Manual positioning
+
+                    )
+                    Text(
+                        hours,
+                        fontSize = 7.sp,
+                        modifier = Modifier.offset(y = (-4).dp) // Manual positioning
+                    )
+                }
             }
         }
     }
