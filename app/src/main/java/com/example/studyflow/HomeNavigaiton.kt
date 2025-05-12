@@ -1,6 +1,10 @@
 package com.example.studyflow
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Icon
@@ -9,6 +13,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +25,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.compose.ui.graphics.Color
 
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -28,14 +34,28 @@ import com.example.studyflow.screens.PomodoroTimer
 import com.example.studyflow.screens.Schedule
 import com.example.studyflow.screens.Subjects
 import com.example.studyflow.screens.Tasks
+import com.example.studyflow.ui.theme.BackgroundColor
+import com.example.studyflow.ui.theme.CardBackgroundColor
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun HomeNavigation(mainNavController: NavHostController) {
     val homeNavController = rememberNavController()
 
+//    // Set system status bar color (top notification area)
+//    val systemUiController = rememberSystemUiController()
+//    SideEffect {
+//        systemUiController.setSystemBarsColor(
+//            color = BackgroundColor,
+//            darkIcons = false
+//        )
+//    }
+
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = Color(0xed0C2637)
+            ) {
                 val navBackStackEntry by homeNavController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
 
@@ -123,42 +143,3 @@ data class NavItem(
     val selectedIcon: Int,
     val unselectedIcon: Int
 )
-
-
-
-
-
-//    Scaffold(
-//        bottomBar = {
-//            NavigationBar {
-//                val navBackStackEntry by homeNavController.currentBackStackEntryAsState()
-//                val currentRoute = navBackStackEntry?.destination?.route
-//
-//                items.forEach { item ->
-//                    BottomNavigationItem(
-//                        icon = { Icon(item.icon, contentDescription = item.title) },
-//                        label = { Text(item.title) },
-//                        selected = currentRoute == item.route,
-//                        onClick = {
-//                            homeNavController.navigate(item.route) {
-//                                popUpTo(homeNavController.graph.findStartDestination().id) {
-//                                    saveState = true
-//                                }
-//                                launchSingleTop = true
-//                                restoreState = true
-//                            }
-//                        }
-//                    )
-//                }
-//            }
-//        }
-//    ) { padding ->
-//        NavHost(
-//            navController = homeNavController,
-//            startDestination = NavItem.Dashboard.route,
-//            modifier = Modifier.padding(padding)
-//            {
-//                composable(NavItem.Dashboard.route) { DashboardScreen() }
-//                composable(NavItem.Pomodoro.route) { PomodoroTimer() }
-//            }
-//    }
