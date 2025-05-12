@@ -100,6 +100,8 @@ Text(
 @futureFixes: Napraviti bolju logiku za "StudyDayCell" boju in dashboard (currently it thinks that 45 min is 45 hours)
     - also da se popravi da one crne prazne celije popune cijeli grid 7x5
     - boje sto se nalaze na vrhu izmedju Less ..... More nisu iste kao sto su na cards u grid
+@sanin/haris: I tried adding stuff to change the notification tray color to be the same as the background color in HomeNavigation.kt but it didn't work, i just left it commented
+    - also added a dependency in app/build.gradle.kts for the thing, maybe it wasnt up to date
 ```
 ## Add your own things 
  - Add to "Design Implementation Guide" for others to be aware of.
