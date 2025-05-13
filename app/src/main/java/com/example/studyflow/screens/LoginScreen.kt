@@ -185,7 +185,7 @@ fun LoginScreen(
                         },
                         label = {
                             Text(
-                                text = if (passwordError) "Please 8+ characters & 1+ digit" else "Password",
+                                text = if (passwordError) "Password must be at least 8 characters long and include a number" else "Password",
                                 color = if (passwordError) RedValidationColor else LoginGreen,
                                 fontFamily = interFontFamily,
                                 fontWeight = FontWeight.Normal,

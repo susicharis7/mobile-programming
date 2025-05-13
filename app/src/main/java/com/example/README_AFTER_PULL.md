@@ -96,13 +96,15 @@ Text(
 ## Team Messages
 ```
 @team: Need to create other screeens, looks like login and register are completed
-@sanin: skontaj kako se mijenja boja na navigation bar i ostale customizatons, isto nesto na vrhu ne bude iste boje kao background pa i to probaj popraviti
+@sanin: 
+    - skontaj kako se mijenja boja na navigation bar i ostale customizatons, isto nesto na vrhu ne bude iste boje kao background pa i to probaj popraviti
     - change the button on login/register so it has some effect when pressed
-@futureFixes: Napraviti bolju logiku za "StudyDayCell" boju in dashboard (currently it thinks that 45 min is 45 hours)
+@futureFixes: 
+    - Napraviti bolju logiku za "StudyDayCell" boju in dashboard (currently it thinks that 45 min is 45 hours)
     - also da se popravi da one crne prazne celije popune cijeli grid 7x5
     - boje sto se nalaze na vrhu izmedju Less ..... More nisu iste kao sto su na cards u grid
-@sanin/haris: I tried adding stuff to change the notification tray color to be the same as the background color in HomeNavigation.kt but it didn't work, i just left it commented
-    - also added a dependency in app/build.gradle.kts for the thing, maybe it wasnt up to date
+@sanin/haris: 
+    - fix routes in AppNavigation and Home navigation to follow the lab
 ```
 ## Add your own things 
  - Add to "Design Implementation Guide" for others to be aware of.

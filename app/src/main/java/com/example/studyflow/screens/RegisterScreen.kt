@@ -139,7 +139,7 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.height(46.dp))
 
             Text(
-                text = "Log Into Your Account",
+                text = "Create Your Account",
                 color = TextWhite,
                 fontFamily = interFontFamily,
                 fontSize = 26.67.sp,
@@ -267,7 +267,7 @@ fun RegisterScreen(
                         label = {
                             Text(
                                 if (passwordError)
-                                    "Please 8 characters & a number"
+                                    "Password must be at least 8 characters long and include a number"
                                 else
                                     "Enter Your Password",
                                 color = if (passwordError) RedValidationColor else LoginGreen,
