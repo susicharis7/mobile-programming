@@ -1,6 +1,9 @@
 package com.example.studyflow.screens
 
 // Foundation
+import android.util.Patterns
+import android.view.Gravity
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -66,18 +70,32 @@ import com.example.studyflow.ui.theme.TextBlack
 import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.interFontFamily
 
+// Validation
+fun isValidEmail(email: String): Boolean {
+    return email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+}
+fun isValidPassword(password: String): Boolean {
+    return password.length >= 8 && password.any { it.isDigit() }
+}
+
+
 
 @Composable
 fun RegisterScreen(
     onLoginClick: () -> Unit,
     onRegisterSuccess: () -> Unit
 ) {
-    var name by remember {mutableStateOf("")}
-    var email by remember {mutableStateOf("")}
-    var password by remember {mutableStateOf("")}
-    var passwordVisible by remember {mutableStateOf(false)}
+    var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+    var emailError by remember { mutableStateOf(false) }
+    var passwordError by remember { mutableStateOf(false) }
 
     val greenColor = Color(0xFF00E676)
+
+    // Toastr Message (When Register is Successfull)
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -104,9 +122,7 @@ fun RegisterScreen(
                 color = TextWhite
             )
 
-            Spacer(
-                modifier = Modifier.height(14.dp)
-            )
+            Spacer(modifier = Modifier.height(14.dp))
 
             Text(
                 text = "Organise Your Future",
@@ -115,14 +131,11 @@ fun RegisterScreen(
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Light,
                 letterSpacing = 0.05.em,
-                modifier = Modifier
-                    .fillMaxWidth()
-                ,textAlign = TextAlign.Center
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
             )
 
-            Spacer(
-                modifier = Modifier.height(46.dp)
-            )
+            Spacer(modifier = Modifier.height(46.dp))
 
             Text(
                 text = "Log Into Your Account",
@@ -133,7 +146,6 @@ fun RegisterScreen(
             )
         }
 
-
         // Second Column
         Column(
             modifier = Modifier
@@ -142,7 +154,7 @@ fun RegisterScreen(
                 .padding(horizontal = 30.dp, vertical = 70.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // First box - Name
+            // Name
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -155,111 +167,17 @@ fun RegisterScreen(
             ) {
                 TextField(
                     value = name,
-                    onValueChange = {name = it},
-                    label = {Text(
-                                "Enter Your Name",
-                                color = LoginGreen,
-                                fontFamily = interFontFamily,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 16.sp
-                    )},
+                    onValueChange = { name = it },
+                    label = {
+                        Text(
+                            text = "Enter Your Name",
+                            color = LoginGreen,
+                            fontFamily = interFontFamily
+                        )
+                    },
                     leadingIcon = {
                         Icon(Icons.Default.Person, contentDescription = null, tint = TextWhite)
                     },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedTextColor = TextWhite,
-                        unfocusedTextColor = TextWhite,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedLabelColor = LoginGreen,
-                        unfocusedLabelColor = LoginGreen,
-                        cursorColor = LoginGreen
-                    )
-                )
-            }
-
-            // Second Box - Email
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 2.dp)
-                    .border(
-                        width = 2.dp,
-                        color = LoginGreen,
-                        shape = RoundedCornerShape(4.dp)
-                    )
-            ) {
-                TextField(
-                    value = email,
-                    onValueChange = {email = it},
-                    label = {Text("Enter your email", color = LoginGreen)},
-                    leadingIcon = {
-                        Icon(Icons.Default.Email, contentDescription = null, tint = TextWhite)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedTextColor = TextWhite,
-                        unfocusedTextColor = TextWhite,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedLabelColor = LoginGreen,
-                        unfocusedLabelColor = LoginGreen,
-                        cursorColor = LoginGreen
-
-                    )
-                )
-            }
-
-
-            // Third Box - Password
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp)
-                    .border(
-                        width = 2.dp,
-                        color = LoginGreen,
-                        shape = RoundedCornerShape(4.dp)
-                    )
-            ) {
-                TextField(
-                    value = password,
-                    onValueChange = { password = it},
-                    label = { Text(
-                                "Enter Your Password",
-                                color = LoginGreen,
-                                fontFamily = interFontFamily,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 16.sp
-                        )},
-                    leadingIcon = {
-                        Icon(Icons.Default.Lock, contentDescription = null, tint = TextWhite)
-                    },
-                    trailingIcon = {
-                        val image = if (passwordVisible)
-                            Icons.Default.Visibility
-                        else Icons.Default.VisibilityOff
-
-                        val iconTint = if (passwordVisible) greenColor else LoginGreen
-
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(
-                                imageVector = image,
-                                contentDescription = null,
-                                tint = iconTint
-                            )
-
-                        }
-                    },
-                    visualTransformation = if (passwordVisible) VisualTransformation.None
-                                            else PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
                     colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
@@ -273,15 +191,138 @@ fun RegisterScreen(
                         cursorColor = LoginGreen
                     )
                 )
-
-
             }
+
+            // Email
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 2.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(
+                            width = 2.dp,
+                            color = if (emailError) Color.Red else LoginGreen,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                ) {
+                    TextField(
+                        value = email,
+                        onValueChange = {
+                            email = it
+                            if (emailError) emailError = false
+                        },
+                        label = {
+                            Text(
+                                text = if (emailError) "Please enter a valid email" else "Enter your email",
+                                color = if (emailError) Color.Red else LoginGreen
+                            )
+                        },
+                        isError = emailError,
+                        leadingIcon = {
+                            Icon(Icons.Default.Email, contentDescription = null, tint = TextWhite)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = TextFieldDefaults.colors(
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            focusedTextColor = TextWhite,
+                            unfocusedTextColor = TextWhite,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            errorContainerColor = Color.Transparent,
+                            errorIndicatorColor = Color.Transparent,
+                            errorTextColor = TextWhite,
+                            errorLabelColor = Color.Red,              // just in case Material 3 uses this
+                            errorLeadingIconColor = TextWhite,
+                            errorTrailingIconColor = LoginGreen,
+                            focusedLabelColor = LoginGreen,
+                            unfocusedLabelColor = LoginGreen,
+                            cursorColor = LoginGreen
+                        )
+                    )
+                }
+            }
+
+
+            // Password
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp)
+                    .border(
+                        width = 2.dp,
+                        color = if (passwordError) Color.Red else LoginGreen,
+                        shape = RoundedCornerShape(4.dp)
+                    )
+            ) {
+                Column {
+                    TextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        isError = passwordError,
+                        label = {
+                            Text(
+                                if (passwordError)
+                                    "Please 8 characters & a number"
+                                else
+                                    "Enter Your Password",
+                                color = if (passwordError) Color.Red else LoginGreen,
+                                fontFamily = interFontFamily
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(Icons.Default.Lock, contentDescription = null, tint = TextWhite)
+                        },
+                        trailingIcon = {
+                            val image = if (passwordVisible)
+                                Icons.Default.Visibility
+                            else Icons.Default.VisibilityOff
+
+                            val iconTint = if (passwordVisible) greenColor else LoginGreen
+
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    imageVector = image,
+                                    contentDescription = null,
+                                    tint = iconTint
+                                )
+                            }
+                        },
+                        visualTransformation = if (passwordVisible) VisualTransformation.None
+                        else PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = TextFieldDefaults.colors(
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            focusedTextColor = TextWhite,
+                            unfocusedTextColor = TextWhite,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedLabelColor = if (passwordError) Color.Red else LoginGreen,
+                            unfocusedLabelColor = if (passwordError) Color.Red else LoginGreen,
+                            cursorColor = LoginGreen
+                        )
+                    )
+                }
+            }
+
 
             Spacer(modifier = Modifier.height(14.dp))
 
             // Button
             Button(
-                onClick = { onRegisterSuccess() },
+                onClick = {
+                    emailError = !isValidEmail(email)
+                    passwordError = !isValidPassword(password)
+
+                    if (!emailError && !passwordError) {
+                        Toast.makeText(context, "Successfully Registered!", Toast.LENGTH_SHORT).show()
+                        onRegisterSuccess()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(42.dp)
@@ -304,7 +345,7 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(13.67.dp))
 
-            // Row
+            // Login Row
             Row {
                 Text(
                     text = "Already have an account? ",
@@ -323,12 +364,5 @@ fun RegisterScreen(
                 )
             }
         }
-
-
-
-
-
-
-
     }
 }
