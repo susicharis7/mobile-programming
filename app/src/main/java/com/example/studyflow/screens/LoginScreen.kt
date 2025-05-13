@@ -1,5 +1,7 @@
 package com.example.studyflow.screens
 
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -36,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -54,11 +57,13 @@ import com.example.studyflow.ui.theme.*
 fun LoginScreen(
     onRegisterClick: () -> Unit,
     onLoginSuccess: () -> Unit
-    ) {
-    var email by remember {mutableStateOf("") }
-    var password by remember {mutableStateOf("") }
+) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var emailError by remember { mutableStateOf(false) }
+    var passwordError by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
-    // First Box - Background Image, Upper Text
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -84,9 +89,7 @@ fun LoginScreen(
                 color = TextWhite
             )
 
-            Spacer(
-                modifier = Modifier.height(14.dp)
-            )
+            Spacer(modifier = Modifier.height(14.dp))
 
             Text(
                 text = "Organise Your Future",
@@ -95,14 +98,11 @@ fun LoginScreen(
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Light,
                 letterSpacing = 0.05.em,
-                modifier = Modifier
-                    .fillMaxWidth()
-                ,textAlign = TextAlign.Center
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
             )
 
-            Spacer(
-                modifier = Modifier.height(46.dp)
-            )
+            Spacer(modifier = Modifier.height(46.dp))
 
             Text(
                 text = "Log Into Your Account",
@@ -113,7 +113,6 @@ fun LoginScreen(
             )
         }
 
-
         // Second Column
         Column(
             modifier = Modifier
@@ -123,92 +122,116 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // First Box - Username/Email
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 2.dp)
-                    .border(
-                        width = 2.dp,
-                        color = LoginGreen,
-                        shape = RoundedCornerShape(4.dp)
-                    )
-            ) {
-                TextField(
-                    value = email,
-                    onValueChange = {email = it},
-                    label = {Text(
-                            "Username / Email",
-                            color = LoginGreen,
-                            fontFamily = interFontFamily,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 16.sp
-                    )},
-                    leadingIcon = {
-                        Icon(Icons.Default.Email, contentDescription = null, tint = TextWhite)
-                    },
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedTextColor = TextWhite,
-                        unfocusedTextColor = TextWhite,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedLabelColor = LoginGreen,
-                        unfocusedLabelColor = LoginGreen,
-                        cursorColor = LoginGreen
-
-                    )
-                )
-            }
-
-
-            // Second Box - Password
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp)
-                    .border(
-                        width = 2.dp,
-                        color = LoginGreen,
-                        shape = RoundedCornerShape(4.dp)
-                    )
-            ) {
-                TextField(
-                    value = password,
-                    onValueChange = { password = it},
-                    label = { Text(
-                                "Password",
-                                color = LoginGreen,
+                        .fillMaxWidth()
+                        .border(2.dp, if (emailError) RedValidationColor else LoginGreen, RoundedCornerShape(4.dp))
+                ) {
+                    TextField(
+                        value = email,
+                        onValueChange = {
+                            email = it
+                            emailError = false
+                        },
+                        label = {
+                            Text(
+                                text = if (emailError) "Please enter a valid email" else "Email",
+                                color = if (emailError) RedValidationColor else LoginGreen,
                                 fontFamily = interFontFamily,
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 16.sp
-                    )},
-                    leadingIcon = {
-                        Icon(Icons.Default.Lock, contentDescription = null, tint = TextWhite)
-                    },
-                    visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedTextColor = TextWhite,
-                        unfocusedTextColor = TextWhite,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedLabelColor = LoginGreen,
-                        unfocusedLabelColor = LoginGreen,
-                        cursorColor = LoginGreen
+                            )
+                        },
+                        isError = emailError,
+                        leadingIcon = {
+                            Icon(Icons.Default.Email, contentDescription = null, tint = TextWhite)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = TextFieldDefaults.colors(
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            focusedTextColor = TextWhite,
+                            unfocusedTextColor = TextWhite,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            errorContainerColor = Color.Transparent,
+                            errorIndicatorColor = Color.Transparent,
+                            errorTextColor = TextWhite,
+                            errorLabelColor = RedValidationColor,
+                            errorLeadingIconColor = TextWhite,
+                            errorTrailingIconColor = LoginGreen,
+                            focusedLabelColor = LoginGreen,
+                            unfocusedLabelColor = LoginGreen,
+                            cursorColor = LoginGreen
+                        )
                     )
-                )
+                }
+            }
+
+            // Second Box - Password
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp)
+                        .border(2.dp, if (passwordError) RedValidationColor else LoginGreen, RoundedCornerShape(4.dp))
+                ) {
+                    TextField(
+                        value = password,
+                        onValueChange = {
+                            password = it
+                            passwordError = false
+                        },
+                        label = {
+                            Text(
+                                text = if (passwordError) "Please 8+ characters & 1+ digit" else "Password",
+                                color = if (passwordError) RedValidationColor else LoginGreen,
+                                fontFamily = interFontFamily,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 16.sp
+                            )
+                        },
+                        isError = passwordError,
+                        leadingIcon = {
+                            Icon(Icons.Default.Lock, contentDescription = null, tint = TextWhite)
+                        },
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = TextFieldDefaults.colors(
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            focusedTextColor = TextWhite,
+                            unfocusedTextColor = TextWhite,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            errorContainerColor = Color.Transparent,
+                            errorIndicatorColor = Color.Transparent,
+                            errorTextColor = TextWhite,
+                            errorLabelColor = RedValidationColor,
+                            errorLeadingIconColor = TextWhite,
+                            errorTrailingIconColor = LoginGreen,
+                            focusedLabelColor = LoginGreen,
+                            unfocusedLabelColor = LoginGreen,
+                            cursorColor = LoginGreen
+                        )
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(14.dp))
 
             // Button
             Button(
-                onClick = { onLoginSuccess()},
+                onClick = {
+                    emailError = !Patterns.EMAIL_ADDRESS.matcher(email).matches()
+                    passwordError = !(password.length >= 8 && password.any { it.isDigit() })
+
+                    if (!emailError && !passwordError) {
+                        Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
+                        onLoginSuccess()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(42.dp)
@@ -250,12 +273,5 @@ fun LoginScreen(
                 )
             }
         }
-
-
-
-
-
-
-
     }
 }

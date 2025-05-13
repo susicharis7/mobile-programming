@@ -66,6 +66,7 @@ import androidx.compose.ui.unit.sp
 import com.example.studyflow.R
 import com.example.studyflow.ui.theme.ButtonGradientColor
 import com.example.studyflow.ui.theme.LoginGreen
+import com.example.studyflow.ui.theme.RedValidationColor
 import com.example.studyflow.ui.theme.TextBlack
 import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.interFontFamily
@@ -204,7 +205,7 @@ fun RegisterScreen(
                         .fillMaxWidth()
                         .border(
                             width = 2.dp,
-                            color = if (emailError) Color.Red else LoginGreen,
+                            color = if (emailError) RedValidationColor else LoginGreen,
                             shape = RoundedCornerShape(4.dp)
                         )
                 ) {
@@ -217,7 +218,7 @@ fun RegisterScreen(
                         label = {
                             Text(
                                 text = if (emailError) "Please enter a valid email" else "Enter your email",
-                                color = if (emailError) Color.Red else LoginGreen
+                                color = if (emailError) RedValidationColor else LoginGreen
                             )
                         },
                         isError = emailError,
@@ -235,7 +236,7 @@ fun RegisterScreen(
                             errorContainerColor = Color.Transparent,
                             errorIndicatorColor = Color.Transparent,
                             errorTextColor = TextWhite,
-                            errorLabelColor = Color.Red,              // just in case Material 3 uses this
+                            errorLabelColor = RedValidationColor,
                             errorLeadingIconColor = TextWhite,
                             errorTrailingIconColor = LoginGreen,
                             focusedLabelColor = LoginGreen,
@@ -254,7 +255,7 @@ fun RegisterScreen(
                     .padding(vertical = 10.dp)
                     .border(
                         width = 2.dp,
-                        color = if (passwordError) Color.Red else LoginGreen,
+                        color = if (passwordError) RedValidationColor else LoginGreen,
                         shape = RoundedCornerShape(4.dp)
                     )
             ) {
@@ -269,7 +270,7 @@ fun RegisterScreen(
                                     "Please 8 characters & a number"
                                 else
                                     "Enter Your Password",
-                                color = if (passwordError) Color.Red else LoginGreen,
+                                color = if (passwordError) RedValidationColor else LoginGreen,
                                 fontFamily = interFontFamily
                             )
                         },
@@ -301,8 +302,14 @@ fun RegisterScreen(
                             unfocusedTextColor = TextWhite,
                             focusedContainerColor = Color.Transparent,
                             unfocusedContainerColor = Color.Transparent,
-                            focusedLabelColor = if (passwordError) Color.Red else LoginGreen,
-                            unfocusedLabelColor = if (passwordError) Color.Red else LoginGreen,
+                            errorContainerColor = Color.Transparent,
+                            errorIndicatorColor = Color.Transparent,
+                            errorTextColor = TextWhite,
+                            errorLabelColor = RedValidationColor,
+                            errorLeadingIconColor = TextWhite,
+                            errorTrailingIconColor = LoginGreen,
+                            focusedLabelColor = LoginGreen,
+                            unfocusedLabelColor = LoginGreen,
                             cursorColor = LoginGreen
                         )
                     )

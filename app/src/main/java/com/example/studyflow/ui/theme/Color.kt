@@ -15,6 +15,8 @@ val AVGStudyTimeGradientColor = Brush.linearGradient(colors = listOf(Color(0xFF1
 // Streak
 val StreakColor = Color(0xFFF59E0B)
 
+
+
 // Additional Colors
 val GreenColor = Color(0xFF00E676)
 val LoginGreen = Color(0xFF48CB94)
@@ -26,6 +28,7 @@ val TextGray = Color(0xFFD1D5DB)
 val UpcomingTasksBackground = Color(0xFF374151)
 val UpcomingExamCardColor = Color(0xff174459)
 val TextBlack = Color(0xFF171717)
+val RedValidationColor = Color(0xFFF87171)
 
 
 
