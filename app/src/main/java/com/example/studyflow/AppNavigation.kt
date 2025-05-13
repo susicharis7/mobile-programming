@@ -16,7 +16,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "register"
+        startDestination = "login"
     ) {
         // Auth screens
         composable("register") {

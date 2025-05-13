@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,10 +20,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -35,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -43,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -60,6 +66,7 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
     var emailError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -130,9 +137,9 @@ fun LoginScreen(
                 ) {
                     TextField(
                         value = email,
-                        onValueChange = {
-                            email = it
-                            emailError = false
+                        onValueChange = { newEmail ->
+                            email = newEmail
+                            emailError = !Patterns.EMAIL_ADDRESS.matcher(email).matches()
                         },
                         label = {
                             Text(
@@ -179,9 +186,9 @@ fun LoginScreen(
                 ) {
                     TextField(
                         value = password,
-                        onValueChange = {
-                            password = it
-                            passwordError = false
+                        onValueChange = { newPassword ->
+                            password = newPassword
+                            passwordError = !(password.length >= 8 && password.any { it.isDigit() })
                         },
                         label = {
                             Text(
@@ -196,7 +203,21 @@ fun LoginScreen(
                         leadingIcon = {
                             Icon(Icons.Default.Lock, contentDescription = null, tint = TextWhite)
                         },
-                        visualTransformation = PasswordVisualTransformation(),
+                        trailingIcon = {
+                            val image = if (passwordVisible)
+                                Icons.Default.Visibility
+                            else Icons.Default.VisibilityOff
+
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    imageVector = image,
+                                    contentDescription = null,
+                                    tint = LoginGreen
+                                )
+                            }
+                        },
+                        visualTransformation = if (passwordVisible) VisualTransformation.None
+                        else PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth(),
                         colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = Color.Transparent,
@@ -235,11 +256,16 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(42.dp)
+                    .alpha(if ((password.isBlank() || email.isBlank()) || (emailError || passwordError)) 0.3f else 1f)
                     .background(
                         brush = Brush.horizontalGradient(ButtonGradientColor),
                         shape = RoundedCornerShape(2.dp)
                     ),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LoginGreen,
+                    contentColor = TextBlack
+                ),
+                interactionSource = remember { MutableInteractionSource() }, // ripple effect when button is pressed
                 shape = RoundedCornerShape(2.dp)
             ) {
                 Text(

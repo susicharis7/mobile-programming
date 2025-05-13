@@ -48,6 +48,7 @@ import androidx.compose.runtime.setValue
 // UI
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -211,9 +212,9 @@ fun RegisterScreen(
                 ) {
                     TextField(
                         value = email,
-                        onValueChange = {
-                            email = it
-                            if (emailError) emailError = false
+                        onValueChange = { newEmail ->
+                            email = newEmail
+                            emailError = !Patterns.EMAIL_ADDRESS.matcher(email).matches()
                         },
                         label = {
                             Text(
@@ -262,12 +263,15 @@ fun RegisterScreen(
                 Column {
                     TextField(
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = { newPassword ->
+                            password = newPassword
+                            passwordError = !(password.length >= 8 && password.any { it.isDigit() })
+                        },
                         isError = passwordError,
                         label = {
                             Text(
                                 if (passwordError)
-                                    "Password must be at least 8 characters long and include a number"
+                                    "Password requires at least 8 characters and a digit"
                                 else
                                     "Enter Your Password",
                                 color = if (passwordError) RedValidationColor else LoginGreen,
@@ -282,13 +286,11 @@ fun RegisterScreen(
                                 Icons.Default.Visibility
                             else Icons.Default.VisibilityOff
 
-                            val iconTint = if (passwordVisible) greenColor else LoginGreen
-
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Icon(
                                     imageVector = image,
                                     contentDescription = null,
-                                    tint = iconTint
+                                    tint = LoginGreen
                                 )
                             }
                         },
@@ -333,6 +335,7 @@ fun RegisterScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(42.dp)
+                    .alpha(if ((password.isBlank() || email.isBlank()) || (emailError || passwordError)) 0.3f else 1f)
                     .background(
                         brush = Brush.horizontalGradient(ButtonGradientColor),
                         shape = RoundedCornerShape(2.dp)
