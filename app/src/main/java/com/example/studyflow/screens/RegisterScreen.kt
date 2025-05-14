@@ -330,6 +330,7 @@ fun RegisterScreen(
                     if (!emailError && !passwordError) {
                         Toast.makeText(context, "Successfully Registered!", Toast.LENGTH_SHORT).show()
                         onRegisterSuccess()
+
                     }
                 },
                 modifier = Modifier

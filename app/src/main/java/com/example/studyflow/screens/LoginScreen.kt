@@ -128,7 +128,7 @@ fun LoginScreen(
                 .padding(horizontal = 30.dp, vertical = 70.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // First Box - Username/Email
+            // First Box - Email
             Column(modifier = Modifier.fillMaxWidth()) {
                 Box(
                     modifier = Modifier
@@ -146,8 +146,7 @@ fun LoginScreen(
                                 text = if (emailError) "Please enter a valid email" else "Email",
                                 color = if (emailError) RedValidationColor else LoginGreen,
                                 fontFamily = interFontFamily,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 16.sp
+                                fontWeight = FontWeight.Normal
                             )
                         },
                         isError = emailError,
@@ -195,8 +194,7 @@ fun LoginScreen(
                                 text = if (passwordError) "Password must be at least 8 characters long and include a number" else "Password",
                                 color = if (passwordError) RedValidationColor else LoginGreen,
                                 fontFamily = interFontFamily,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 16.sp
+                                fontWeight = FontWeight.Normal
                             )
                         },
                         isError = passwordError,
