@@ -20,7 +20,7 @@ enum class TimerType{
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["userID"])]
+    indices = [Index(value = ["userId"])]
 )
 data class Timersession(
     @PrimaryKey(autoGenerate = true)

@@ -89,6 +89,7 @@ Text(
 - [2025-5-9]: Added register screen and navigation
 - [2025-5-10]: Added theme colors and typography
 - [2025-5-12]: Added more screens and navigation bar at the bottom
+- [2025-5-14]: Implemented most of backend
 ```
 
 ---

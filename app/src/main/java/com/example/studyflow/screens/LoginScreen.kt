@@ -260,7 +260,7 @@ fun LoginScreen(
                         shape = RoundedCornerShape(2.dp)
                     ),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = LoginGreen,
+                    containerColor = Color.Transparent,
                     contentColor = TextBlack
                 ),
                 interactionSource = remember { MutableInteractionSource() }, // ripple effect when button is pressed
