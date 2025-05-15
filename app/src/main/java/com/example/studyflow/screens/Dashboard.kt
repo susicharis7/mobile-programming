@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -804,10 +805,10 @@ fun StudyActivitySection(
             }
         }
 
-        Divider(
-            color = TextWhite.copy(alpha = 0.2f), // Adjust color and transparency
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp), // Space above and below line
             thickness = 1.dp, // Line thickness
-            modifier = Modifier.padding(vertical = 8.dp) // Space above and below line
+            color = TextWhite.copy(alpha = 0.2f) // Adjust color and transparency
         )
 
         // Footer
