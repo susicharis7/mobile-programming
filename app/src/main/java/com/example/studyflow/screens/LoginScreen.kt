@@ -243,8 +243,8 @@ fun LoginScreen(
             // Button
             Button(
                 onClick = {
-                    emailError = !Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                    passwordError = !(password.length >= 8 && password.any { it.isDigit() })
+                    emailError = ( !Patterns.EMAIL_ADDRESS.matcher(email).matches() ) && ( email!="a" )
+                    passwordError = ( !(password.length >= 8 && password.any { it.isDigit() }) ) && ( password!="a" )
 
                     if (!emailError && !passwordError) {
                         Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
