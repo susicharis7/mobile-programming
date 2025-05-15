@@ -214,7 +214,7 @@ fun Tasks() {
                 contentColor = TextWhite,
                 shape = RoundedCornerShape(15),
                 modifier = Modifier
-                    .padding(20.dp,0.dp)
+                    .padding(horizontal = 0.dp, vertical = 0.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,

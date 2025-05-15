@@ -24,10 +24,9 @@ object DatabaseModule {
         return Room.databaseBuilder(
             context.applicationContext,
             AppDatabase::class.java,
-            "study_flow.db",
-        ).build()
+            "study_flow_v3.db",
+        ).fallbackToDestructiveMigration(true).build()
     }
-
     @Provides
     fun provideUserDao(appDatabase: AppDatabase): UserDao = appDatabase.userDao()
 

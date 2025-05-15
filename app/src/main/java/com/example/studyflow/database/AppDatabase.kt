@@ -16,7 +16,7 @@ import com.example.studyflow.model.User
 
 @Database(
     entities = [User::class, Subject::class, Task::class, Exam::class, Timersession::class],
-    version = 3
+    version = 1
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

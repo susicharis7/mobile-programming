@@ -23,8 +23,9 @@ import com.example.studyflow.screens.LoginScreen
 import com.example.studyflow.screens.RegisterScreen
 import com.example.studyflow.ui.theme.StudyFlowTheme
 import com.example.studyflow.AppNavigation
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
