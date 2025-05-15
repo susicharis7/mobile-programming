@@ -15,6 +15,13 @@ val AVGStudyTimeGradientColor = Brush.linearGradient(colors = listOf(Color(0xFF1
 // Streak
 val StreakColor = Color(0xFFF59E0B)
 
+// Subjects Progress Colors
+val FirstSubjectProgressColor = Brush.linearGradient(colors = listOf(Color(0xFF3B82F6), Color(0xFF234C90)))
+val SecondSubjectProgressColor = Brush.linearGradient(colors = listOf(Color(0xFFA855F7), Color(0xFF633291)))
+val ThirdSubjectProgressColor = Brush.linearGradient(colors = listOf(Color(0xFFEAB308), Color(0xFF846505)))
+val ProgressBackgroundColor = Color(0xFF374151)
+val ViewAllColor = Color(0xFF818CF8)
+
 
 
 // Additional Colors
