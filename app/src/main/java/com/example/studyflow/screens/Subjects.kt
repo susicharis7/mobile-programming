@@ -1,6 +1,5 @@
 package com.example.studyflow.screens
 
-import android.graphics.Color
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,10 +19,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,6 +46,7 @@ import com.example.studyflow.ui.theme.CardBackgroundColor
 import com.example.studyflow.ui.theme.FirstSubjectProgressColor
 import com.example.studyflow.ui.theme.ProgressBackgroundColor
 import com.example.studyflow.ui.theme.SecondSubjectProgressColor
+import com.example.studyflow.ui.theme.TextGray
 import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.ThirdSubjectProgressColor
 import com.example.studyflow.ui.theme.ViewAllColor
@@ -69,8 +72,8 @@ fun SubjectCard(
                 Text(
                     text = subjectName,
                     color = TextWhite,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 18.sp,
                     letterSpacing = 1.sp,
                     modifier = Modifier.align(Alignment.CenterStart)
                 )
@@ -126,7 +129,7 @@ fun SubjectCard(
             // Completed / Remaining
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 CompletedRemainingCards(number = completed, label = "Completed")
                 CompletedRemainingCards(number = remaining, label = "Remaining")
@@ -134,19 +137,18 @@ fun SubjectCard(
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp),
+                thickness = 1.dp,
+                color = TextGray.copy(alpha = 0.6f)
+            )
+
             Text(
                 text = "View All",
                 color = ViewAllColor,
                 fontSize = 13.sp,
                 modifier = Modifier.clickable{/* TODO : Navigate */}
             )
-
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = 8.dp),
-                thickness = 1.dp,
-                color = TextWhite
-            )
-
 
 
 
@@ -224,6 +226,22 @@ fun Subjects() {
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {/* Later Implement What Will It do */},
+                containerColor = Color(0xFF5F93AD),
+                contentColor = TextWhite,
+                shape = RoundedCornerShape(15),
+                modifier = Modifier
+                    .padding(horizontal = 0.dp, vertical = 0.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Task",
+                    modifier = Modifier.size(28.dp)
+                )
             }
         },
         modifier = Modifier.background(BackgroundColor)
