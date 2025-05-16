@@ -1,6 +1,7 @@
 package com.example.studyflow.screens
 
 import android.graphics.Paint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,6 +41,7 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.FloatingWindow
+import androidx.navigation.NavController
 import com.example.studyflow.R
 import com.example.studyflow.ui.theme.BackgroundColor
 import com.example.studyflow.ui.theme.CardBackgroundColor

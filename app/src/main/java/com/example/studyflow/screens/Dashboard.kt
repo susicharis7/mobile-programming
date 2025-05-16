@@ -2,6 +2,7 @@ package com.example.studyflow.screens
 
 // Scrollable
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavHostController
 import com.example.studyflow.R
 import com.example.studyflow.ui.theme.AVGStudyTimeGradientColor
 import com.example.studyflow.ui.theme.AVGStudyTimeHours
@@ -62,7 +64,7 @@ import com.example.studyflow.ui.theme.UpcomingExamCardColor
 import com.example.studyflow.ui.theme.UpcomingTasksBackground
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             Column(
@@ -158,10 +160,17 @@ fun DashboardScreen() {
                             fontWeight = FontWeight.SemiBold
                         )
 
+                        // Pops up Tasks in Dashboard ("View All")
                         Text(
                             "View All",
                             color = Color(0xFF818CF8),
-                            fontSize = 13.sp
+                            fontSize = 13.sp,
+                            modifier = Modifier.clickable {
+                                navController.navigate("tasks") {
+                                    popUpTo("dashboard") { inclusive = false }
+                                }
+
+                            }
                         )
                     }
 
