@@ -62,9 +62,9 @@ fun SubjectCard(
     Card(
        modifier = Modifier
            .fillMaxWidth()
-           .padding(vertical = 6.dp, horizontal = 4.dp),
+           .padding(bottom = 12.dp),
             colors = CardDefaults.cardColors(containerColor = CardBackgroundColor),
-        shape = RoundedCornerShape(6.dp)
+        shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
 
