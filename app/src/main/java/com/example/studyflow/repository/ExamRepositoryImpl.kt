@@ -9,8 +9,8 @@ class ExamRepositoryImpl @Inject constructor(private val examDao: ExamDao): Exam
         return examDao.insert(entity)
     }
 
-    override suspend fun getExamsByUser(userId: Int): List<Exam> {
-        return examDao.getExamsByUser(userId)
+    override suspend fun getExamsByUserId(userId: Int): List<Exam> {
+        return examDao.getExamsByUserId(userId)
     }
 
     override suspend fun delete(entity: Exam) {

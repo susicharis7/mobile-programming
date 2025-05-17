@@ -7,7 +7,7 @@ import com.example.studyflow.model.Task
 @Dao
 interface TaskDao : BaseDao<Task> {
     @Query("SELECT * FROM tasks WHERE userId = :userId AND isCompleted = 0")
-    suspend fun getTasksByUser(userId: Int): List<Task>
+    suspend fun getTasksByUserId(userId: Int): List<Task>
 
     // get tasks by subject
 

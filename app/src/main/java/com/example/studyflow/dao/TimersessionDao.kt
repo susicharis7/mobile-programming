@@ -7,7 +7,7 @@ import com.example.studyflow.model.Timersession
 @Dao
 interface TimersessionDao : BaseDao<Timersession> {
     @Query("SELECT * FROM timersessions WHERE userId = :userId")
-    suspend fun getTimersessionsByUser(userId: Int): List<Timersession>
+    suspend fun getTimersessionsByUserId(userId: Int): List<Timersession>
 
     // get by timer type
     // get by date or something that orders/groups by date

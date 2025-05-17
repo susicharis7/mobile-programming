@@ -9,8 +9,8 @@ class SubjectRepositoryImpl @Inject constructor(private val subjectDao: SubjectD
         return subjectDao.insert(entity)
     }
 
-    override suspend fun getSubjectByUser(userId: Int): List<Subject> {
-        return subjectDao.getSubjectByUser(userId)
+    override suspend fun getSubjectByUserId(userId: Int): List<Subject> {
+        return subjectDao.getSubjectByUserId(userId)
     }
 
     override suspend fun delete(entity: Subject) {

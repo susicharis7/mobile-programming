@@ -9,8 +9,8 @@ class TimersessionRepositoryImpl @Inject constructor(private val timersessionDao
         return timersessionDao.insert(entity)
     }
 
-    override suspend fun getTimersessionsByUser(userId: Int): List<Timersession> {
-        return timersessionDao.getTimersessionsByUser(userId)
+    override suspend fun getTimersessionsByUserId(userId: Int): List<Timersession> {
+        return timersessionDao.getTimersessionsByUserId(userId)
     }
 
     override suspend fun delete(entity: Timersession) {

@@ -9,8 +9,8 @@ class TaskRepositoryImpl @Inject constructor(private val taskDao: TaskDao): Task
         return taskDao.insert(entity)
     }
 
-    override suspend fun getTasksByUser(userId: Int): List<Task> {
-        return taskDao.getTasksByUser(userId)
+    override suspend fun getTasksByUserId(userId: Int): List<Task> {
+        return taskDao.getTasksByUserId(userId)
     }
 
     override suspend fun delete(entity: Task) {
