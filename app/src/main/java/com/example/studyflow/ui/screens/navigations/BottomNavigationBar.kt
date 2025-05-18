@@ -33,7 +33,7 @@ fun BottomNavigationBar(
             currentRoute?.contains("Subjects") == true -> "Subjects"
             currentRoute?.contains("Tasks") == true -> "Tasks"
             currentRoute?.contains("Dashboard") == true -> "Dashboard"
-            currentRoute?.contains("Study Timer") == true -> "Study Timer"
+            currentRoute?.contains("StudyTimer") == true -> "Study-Timer"
             else -> selectedItem // Keep current if no match
         }
     }
@@ -80,13 +80,13 @@ fun BottomNavigationBar(
         )
         NavigationBarItem(
             icon = {
-                Icon(painter = painterResource(R.drawable.study_timer), contentDescription = "Study Timer", tint = TextWhite)
+                Icon(painter = painterResource(R.drawable.study_timer), contentDescription = "Study-Timer", tint = TextWhite)
             },
             label = { Text("Timer") },
-            selected = selectedItem == "Study Timer",
+            selected = selectedItem == "Study-Timer",
             onClick = {
-                if (selectedItem != "Study Timer") {
-                    selectedItem = "Study Timer"
+                if (selectedItem != "Study-Timer") {
+                    selectedItem = "Study-Timer"
                     onTimerNav(loggedUser)
                 }
             }

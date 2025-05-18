@@ -1,4 +1,4 @@
-package com.example.studyflow.ui.screens.study_timers
+package com.example.studyflow.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +17,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,11 +28,14 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.studyflow.R
+import com.example.studyflow.model.User
 import com.example.studyflow.ui.theme.BackgroundColor
 import com.example.studyflow.ui.theme.TextWhite
+import com.example.studyflow.ui.viewmodel.TimerViewModel
 
 @Composable
-fun PomodoroTimer() {
+fun TimersScreen(loggedUser: User, timerViewModel: TimerViewModel) {
+    val timerStats by timerViewModel.timerStats.collectAsState()
     Scaffold(
         topBar = {
             Column(

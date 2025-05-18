@@ -24,6 +24,8 @@ import com.example.studyflow.ui.viewmodel.SubjectViewModel
 import com.example.studyflow.ui.viewmodel.TaskViewModel
 import com.example.studyflow.ui.viewmodel.UserViewModel
 import com.example.studyflow.ui.nav.types.CustomNavType
+import com.example.studyflow.ui.screens.TimersScreen
+import com.example.studyflow.ui.viewmodel.TimerViewModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
 
@@ -37,7 +39,7 @@ import kotlin.reflect.typeOf
 @Serializable data class DashboardNav(val user: User)
 @Serializable data class TasksNav(val user: User)
 @Serializable data class SubjectsNav(val user: User)
-//@Serializable data class StudyTimerScreen(val user: User)
+@Serializable data class StudyTimerNav(val user: User)
 //@Serializable data class ScheduleScreen(val user: User)
 
 @Composable
@@ -70,9 +72,9 @@ fun AppNavHost() {
                             launchSingleTop = true
                         } },
                         onTasksNav = { navController.navigate(TasksNav(user)) },
-//                    onTimerNav = { navController.navigate(StudyTimerScreen(user)) },
-//                    onScheduleNav = { navController.navigate(ScheduleScreen(user)) },
-                    onSubjectsNav = { navController.navigate(SubjectsNav(user)) }
+                        onTimerNav = { navController.navigate(StudyTimerNav(user)) },
+//                         onScheduleNav = { navController.navigate(ScheduleScreen(user)) },
+                        onSubjectsNav = { navController.navigate(SubjectsNav(user)) }
                     )
                 }
 
@@ -136,9 +138,18 @@ fun AppNavHost() {
                     val loggedUser = backStackEntry.toRoute<SubjectsNav>().user
                     SubjectsScreen(loggedUser, subjectViewModel)
                 }
+                composable<StudyTimerNav>(
+                    typeMap = mapOf(
+                        typeOf<User>() to CustomNavType.UserType
+                    )
+                ) { backStackEntry ->
+                    val timerViewModel: TimerViewModel = hiltViewModel(backStackEntry)
+                    val loggedUser = backStackEntry.toRoute<StudyTimerNav>().user
+                    TimersScreen(loggedUser, timerViewModel)
+                }
 //                data class Dashboard(val user: User) DONE
 //                data class TasksScreen(val user: User) DONE
-//                data class Subjects(val user: User) DD
+//                data class Subjects(val user: User) DONE
 //                data class StudyTimer(val user: User)
 //                data class Schedule(val user: User)
             }

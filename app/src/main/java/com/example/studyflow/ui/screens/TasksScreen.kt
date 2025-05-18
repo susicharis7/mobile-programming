@@ -191,7 +191,7 @@ fun TasksScreen(loggedUser: User, taskViewModel: TaskViewModel) {
                     )
 
                     Text(
-                        "TasksScreen",
+                        "Tasks",
                         color = TextWhite,
                         fontSize = 26.sp,
                         fontWeight = FontWeight.Normal,
