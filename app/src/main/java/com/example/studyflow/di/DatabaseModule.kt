@@ -8,6 +8,10 @@ import com.example.studyflow.dao.TaskDao
 import com.example.studyflow.dao.TimersessionDao
 import com.example.studyflow.dao.UserDao
 import com.example.studyflow.database.AppDatabase
+import com.example.studyflow.repository.UserRepository
+import com.example.studyflow.repository.UserRepositoryImpl
+import com.example.studyflow.repository.TaskRepository
+import com.example.studyflow.repository.TaskRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +28,7 @@ object DatabaseModule {
         return Room.databaseBuilder(
             context.applicationContext,
             AppDatabase::class.java,
-            "study_flow_v3.db",
+            "study_flow_v4.db",
         ).fallbackToDestructiveMigration(true).build()
     }
     @Provides
@@ -41,4 +45,23 @@ object DatabaseModule {
 
     @Provides
     fun provideTimersessionDao(appDatabase: AppDatabase): TimersessionDao = appDatabase.timersessionDao()
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(
+        userDao: UserDao
+    ): UserRepository = UserRepositoryImpl(userDao)
+
+    @Provides
+    @Singleton
+    fun provideWorkoutRepository(
+        taskDao: TaskDao
+    ): TaskRepository = TaskRepositoryImpl(taskDao)
+
+//    @Provides
+//    @Singleton
+//    fun provideCategoryRepository(
+//        categoryDao: CategoryDao
+//    ): CategoryRepository = CategoryRepositoryImpl(categoryDao)
+
 }

@@ -85,11 +85,16 @@ Text(
 
 ## Recent Changes
 ```markdown
+main:
 - [2025-5-9]: Added login screen
 - [2025-5-9]: Added register screen and navigation
 - [2025-5-10]: Added theme colors and typography
 - [2025-5-12]: Added more screens and navigation bar at the bottom
 - [2025-5-14]: Implemented most of backend
+
+refactor/navigation:
+- [2025-5-18]: Reorganzed file structure, changed how navigation works, added some ViewModels,
+    functional login and register screen connected to the database
 ```
 
 ---
@@ -104,7 +109,7 @@ Text(
     - also da se popravi da one crne prazne celije popune cijeli grid 7x5
     - boje sto se nalaze na vrhu izmedju Less ..... More nisu iste kao sto su na cards u grid
 @sanin/haris: 
-    - fix routes in AppNavigation and Home navigation to follow the lab
+    - dashboard and tasks screens need to pull data from database to display, in order for that to be done all viewModels mumst be finished and for good measure all screens fully updated to the new navigation schema
 ```
 ## Add your own things 
  - Add to "Design Implementation Guide" for others to be aware of.

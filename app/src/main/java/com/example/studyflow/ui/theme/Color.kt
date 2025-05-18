@@ -3,7 +3,7 @@ package com.example.studyflow.ui.theme
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
-// Tasks Completed
+// TasksScreen Completed
 val TaskCompletedGradientColor = Brush.linearGradient(colors = listOf(Color(0xFF6366F1), Color(0xFF393B8B )))
 val TaskCompletedNumber = Color(0xFF818CF8)
 // Current Session

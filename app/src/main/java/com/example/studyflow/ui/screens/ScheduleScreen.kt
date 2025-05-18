@@ -1,4 +1,4 @@
-package com.example.studyflow.screens
+package com.example.studyflow.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
