@@ -24,7 +24,7 @@ fun BottomNavigationBar(
     onTimerNav: (User) -> Unit,
     onTasksNav: (User) -> Unit,
     onSubjectsNav: (User) -> Unit,
-//    onScheduleNav: (User) -> Unit
+    onScheduleNav: (User) -> Unit
 ) {
     var selectedItem by remember { mutableStateOf("Dashboard") }
 
@@ -34,6 +34,7 @@ fun BottomNavigationBar(
             currentRoute?.contains("Tasks") == true -> "Tasks"
             currentRoute?.contains("Dashboard") == true -> "Dashboard"
             currentRoute?.contains("StudyTimer") == true -> "Study-Timer"
+            currentRoute?.contains("Schedule") == true -> "Schedule"
             else -> selectedItem // Keep current if no match
         }
     }
@@ -91,19 +92,19 @@ fun BottomNavigationBar(
                 }
             }
         )
-//        NavigationBarItem(
-//            icon = {
-//                Icon(painter = painterResource(R.drawable.schedule), contentDescription = "Schedule", tint = Color.Magenta)
-//            },
-//            label = { Text("Schedule") },
-//            selected = selectedItem == "Schedule",
-//            onClick = {
-//                if (selectedItem != "Schedule") {
-//                    selectedItem = "Schedule"
-//                    onScheduleNav(loggedUser)
-//                }
-//            }
-//        )
+        NavigationBarItem(
+            icon = {
+                Icon(painter = painterResource(R.drawable.schedule), contentDescription = "Schedule", tint = TextWhite)
+            },
+            label = { Text("Schedule") },
+            selected = selectedItem == "Schedule",
+            onClick = {
+                if (selectedItem != "Schedule") {
+                    selectedItem = "Schedule"
+                    onScheduleNav(loggedUser)
+                }
+            }
+        )
 
     }
 }

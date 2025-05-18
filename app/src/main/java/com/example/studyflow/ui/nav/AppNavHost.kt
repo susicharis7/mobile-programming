@@ -24,7 +24,9 @@ import com.example.studyflow.ui.viewmodel.SubjectViewModel
 import com.example.studyflow.ui.viewmodel.TaskViewModel
 import com.example.studyflow.ui.viewmodel.UserViewModel
 import com.example.studyflow.ui.nav.types.CustomNavType
+import com.example.studyflow.ui.screens.ScheduleScreen
 import com.example.studyflow.ui.screens.TimersScreen
+import com.example.studyflow.ui.viewmodel.ExamViewModel
 import com.example.studyflow.ui.viewmodel.TimerViewModel
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf
@@ -40,7 +42,7 @@ import kotlin.reflect.typeOf
 @Serializable data class TasksNav(val user: User)
 @Serializable data class SubjectsNav(val user: User)
 @Serializable data class StudyTimerNav(val user: User)
-//@Serializable data class ScheduleScreen(val user: User)
+@Serializable data class ScheduleNav(val user: User)
 
 @Composable
 fun AppNavHost() {
@@ -73,7 +75,7 @@ fun AppNavHost() {
                         } },
                         onTasksNav = { navController.navigate(TasksNav(user)) },
                         onTimerNav = { navController.navigate(StudyTimerNav(user)) },
-//                         onScheduleNav = { navController.navigate(ScheduleScreen(user)) },
+                        onScheduleNav = { navController.navigate(ScheduleNav(user)) },
                         onSubjectsNav = { navController.navigate(SubjectsNav(user)) }
                     )
                 }
@@ -146,6 +148,16 @@ fun AppNavHost() {
                     val timerViewModel: TimerViewModel = hiltViewModel(backStackEntry)
                     val loggedUser = backStackEntry.toRoute<StudyTimerNav>().user
                     TimersScreen(loggedUser, timerViewModel)
+                }
+                composable<ScheduleNav>(
+                    typeMap = mapOf(
+                        typeOf<User>() to CustomNavType.UserType
+                    )
+                ) { backStackEntry ->
+                    val taskViewModel: TaskViewModel = hiltViewModel(backStackEntry)
+                    val examViewModel: ExamViewModel = hiltViewModel(backStackEntry)
+                    val loggedUser = backStackEntry.toRoute<ScheduleNav>().user
+                    ScheduleScreen(loggedUser, taskViewModel, examViewModel)
                 }
 //                data class Dashboard(val user: User) DONE
 //                data class TasksScreen(val user: User) DONE

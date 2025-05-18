@@ -104,12 +104,14 @@ refactor/navigation:
 @team: Need to create other screeens, looks like login and register are completed
 @sanin: 
     - (i tried) skontaj kako se mijenja boja na navigation bar i ostale customizatons, isto nesto na vrhu ne bude iste boje kao background pa i to probaj popraviti
+    - fix padding f
 @futureFixes: 
     - Napraviti bolju logiku za "StudyDayCell" boju in dashboard (currently it thinks that 45 min is 45 hours)
     - also da se popravi da one crne prazne celije popune cijeli grid 7x5
     - boje sto se nalaze na vrhu izmedju Less ..... More nisu iste kao sto su na cards u grid
 @sanin/haris: 
     - dashboard and tasks screens need to pull data from database to display, in order for that to be done all viewModels mumst be finished and for good measure all screens fully updated to the new navigation schema
+    - add save scroll state to the screens with lazy column
 ```
 ## Add your own things 
  - Add to "Design Implementation Guide" for others to be aware of.
