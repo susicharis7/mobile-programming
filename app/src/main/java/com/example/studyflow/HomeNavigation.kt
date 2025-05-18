@@ -16,12 +16,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.compose.ui.graphics.Color
 
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.studyflow.ui.screens.study_timers.PomodoroTimer
-import com.example.studyflow.ui.screens.Schedule
-import com.example.studyflow.ui.screens.Subjects
-import com.example.studyflow.ui.screens.TasksScreen
+//import androidx.navigation.compose.currentBackStackEntryAsState
+//import androidx.navigation.compose.rememberNavController
+//import com.example.studyflow.ui.screens.study_timers.PomodoroTimer
+//import com.example.studyflow.ui.screens.Schedule
+//import com.example.studyflow.ui.screens.Subjects
+//import com.example.studyflow.ui.screens.TasksScreen
 
 //@Composable
 //fun HomeNavigation(mainNavController: NavHostController) {

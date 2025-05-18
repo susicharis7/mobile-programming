@@ -64,7 +64,7 @@ import com.example.studyflow.ui.theme.UpcomingTasksBackground
 import com.example.studyflow.ui.viewmodel.TaskViewModel
 
 @Composable
-fun DashboardScreen(loggedUser: User, taskViewModel: TaskViewModel, navController: NavHostController) { // trebace i viewmodel dodati
+fun DashboardScreen(loggedUser: User, taskViewModel: TaskViewModel, navController: NavHostController) { // trebace i viewmodele dodati
     Scaffold(
         topBar = {
             Column(

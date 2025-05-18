@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 //import androidx.navigation.NavHost
@@ -14,13 +13,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.studyflow.model.Task
 import com.example.studyflow.model.User
+import com.example.studyflow.ui.screens.SubjectsScreen
 import com.example.studyflow.ui.screens.TasksScreen
 import com.example.studyflow.ui.screens.DashboardScreen
 import com.example.studyflow.ui.screens.auth.LoginScreen
 import com.example.studyflow.ui.screens.auth.RegisterScreen
 import com.example.studyflow.ui.screens.navigations.BottomNavigationBar
+import com.example.studyflow.ui.viewmodel.SubjectViewModel
 import com.example.studyflow.ui.viewmodel.TaskViewModel
 import com.example.studyflow.ui.viewmodel.UserViewModel
 import com.example.studyflow.ui.nav.types.CustomNavType
@@ -34,9 +34,9 @@ import kotlin.reflect.typeOf
 
 @Serializable object Main
 
-@Serializable data class DashboardScreen(val user: User)
-@Serializable data class TasksScreen(val user: User)
-//@Serializable data class SubjectsScreen(val user: User)
+@Serializable data class DashboardNav(val user: User)
+@Serializable data class TasksNav(val user: User)
+@Serializable data class SubjectsNav(val user: User)
 //@Serializable data class StudyTimerScreen(val user: User)
 //@Serializable data class ScheduleScreen(val user: User)
 
@@ -46,27 +46,33 @@ fun AppNavHost() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val showBottomBar = navBackStackEntry?.destination?.route?.let { route ->
-        route.split('/')[0] !in listOf(
-            Login::class.qualifiedName,
-            Register::class.qualifiedName
-        )
-    } ?: false
+//    val showBottomBar = navBackStackEntry?.destination?.route?.let { route ->
+//        route.split('/')[0] !in listOf(
+//            Login::class.qualifiedName,
+//            Register::class.qualifiedName
+//        )
+//    } ?: false
+    val showBottomBar = (currentRoute?.split('/')?.get(0)) !in listOf(
+        Login::class.qualifiedName,     // or whatever string your Home route serializes to
+        Register::class.qualifiedName   // same for Workout
+        //same for profile
+    )
 
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                navBackStackEntry?.toRoute<DashboardScreen>()?.user?.let { user ->
+                navBackStackEntry?.toRoute<DashboardNav>()?.user?.let { user ->
                     BottomNavigationBar(
                         user,
-                        onDashboardNav = { navController.navigate(DashboardScreen(user)) {
+                        currentRoute,
+                        onDashboardNav = { navController.navigate(DashboardNav(user)) {
                             popUpTo(Main) { saveState = true }
                             launchSingleTop = true
                         } },
-                        onTasksNav = { navController.navigate(TasksScreen(user)) },
+                        onTasksNav = { navController.navigate(TasksNav(user)) },
 //                    onTimerNav = { navController.navigate(StudyTimerScreen(user)) },
 //                    onScheduleNav = { navController.navigate(ScheduleScreen(user)) },
-//                    onSubjectsNav = { navController.navigate(SubjectsScreen(user)) }
+                    onSubjectsNav = { navController.navigate(SubjectsNav(user)) }
                     )
                 }
 
@@ -83,7 +89,7 @@ fun AppNavHost() {
                     LoginScreen(authViewModel, onRegisterNav = {
                         navController.navigate(route = Register)
                     }, onLoginSuccess = {user: User ->
-                        navController.navigate(route = DashboardScreen(user = user)) {
+                        navController.navigate(route = DashboardNav(user = user)) {
                             popUpTo(route = Auth) { inclusive = true }
                         }
                     })
@@ -93,14 +99,14 @@ fun AppNavHost() {
                     RegisterScreen(authViewModel, onLoginNav = {
                         navController.navigate(route = Login)
                     }, onRegisterSuccess = {user: User ->
-                        navController.navigate(route = DashboardScreen(user = user)) {
+                        navController.navigate(route = DashboardNav(user = user)) {
                             popUpTo(route = Auth) { inclusive = true }
                         }
                     })
                 }
             }
-            navigation<Main>(startDestination = DashboardScreen(user = User(0, "", "", ""))) {
-                composable<DashboardScreen>(
+            navigation<Main>(startDestination = DashboardNav(user = User(0, "", "", ""))) {
+                composable<DashboardNav>(
                     typeMap = mapOf(
                         typeOf<User>() to CustomNavType.UserType
                     )
@@ -109,21 +115,30 @@ fun AppNavHost() {
 //                    val timersViewModel: TimersViewModel = hiltViewModel(backStackEntry) // not sure if we'll need separate for each timer for the timer screens
 //                    examsViewModel
 //                    might need something for study activity thing
-                    val loggedUser = backStackEntry.toRoute<DashboardScreen>().user
+                    val loggedUser = backStackEntry.toRoute<DashboardNav>().user
                     DashboardScreen(loggedUser = loggedUser, taskViewModel, navController) // will have other viewmodels too
                 }
-                composable<TasksScreen>(
+                composable<TasksNav>(
                     typeMap = mapOf(
                         typeOf<User>() to CustomNavType.UserType
                     )
                 ) { backStackEntry ->
                     val taskViewModel: TaskViewModel = hiltViewModel(backStackEntry)
-                    val loggedUser = backStackEntry.toRoute<TasksScreen>().user
+                    val loggedUser = backStackEntry.toRoute<TasksNav>().user
                     TasksScreen(loggedUser, taskViewModel)
+                }
+                composable<SubjectsNav>(
+                    typeMap = mapOf(
+                        typeOf<User>() to CustomNavType.UserType
+                    )
+                ) { backStackEntry ->
+                    val subjectViewModel: SubjectViewModel = hiltViewModel(backStackEntry)
+                    val loggedUser = backStackEntry.toRoute<SubjectsNav>().user
+                    SubjectsScreen(loggedUser, subjectViewModel)
                 }
 //                data class Dashboard(val user: User) DONE
 //                data class TasksScreen(val user: User) DONE
-//                data class Subjects(val user: User)
+//                data class Subjects(val user: User) DD
 //                data class StudyTimer(val user: User)
 //                data class Schedule(val user: User)
             }

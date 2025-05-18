@@ -30,7 +30,7 @@ import com.example.studyflow.ui.theme.BackgroundColor
 import com.example.studyflow.ui.theme.TextWhite
 
 @Composable
-fun Schedule() {
+fun ScheduleScreen() {
     Scaffold(
         topBar = {
             Column(
