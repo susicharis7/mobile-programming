@@ -1,4 +1,4 @@
-package com.example.studyflow.screens
+package com.example.studyflow.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,10 +25,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.studyflow.R
+import com.example.studyflow.model.User
 import com.example.studyflow.ui.theme.BackgroundColor
 import com.example.studyflow.ui.theme.CardBackgroundColor
 import com.example.studyflow.ui.theme.FirstSubjectProgressColor
@@ -50,6 +52,7 @@ import com.example.studyflow.ui.theme.TextGray
 import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.ThirdSubjectProgressColor
 import com.example.studyflow.ui.theme.ViewAllColor
+import com.example.studyflow.ui.viewmodel.SubjectViewModel
 
 @Composable
 fun SubjectCard(
@@ -186,7 +189,9 @@ fun CompletedRemainingCards(
 
 
 @Composable
-fun Subjects() {
+fun SubjectsScreen(loggedUser: User, subjectViewModel: SubjectViewModel) {
+    val subjects by subjectViewModel.subjects.collectAsState()
+
     Scaffold(
         topBar = {
             Column(

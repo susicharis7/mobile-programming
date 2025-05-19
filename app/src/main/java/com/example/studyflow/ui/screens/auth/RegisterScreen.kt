@@ -1,13 +1,12 @@
-package com.example.studyflow.screens
+package com.example.studyflow.ui.screens.auth
 
+// Foundation
 import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,26 +16,35 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+
+// Material3
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+
+// Material icons (only once!)
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.MaterialTheme
+
+// Runtime
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+
+// UI
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -45,31 +53,68 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.studyflow.R
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.em
-import com.example.studyflow.ui.theme.*
+import androidx.compose.ui.unit.sp
+
+// Resource
+import com.example.studyflow.R
+import com.example.studyflow.model.User
+import com.example.studyflow.ui.theme.ButtonGradientColor
+import com.example.studyflow.ui.theme.LoginGreen
+import com.example.studyflow.ui.theme.RedValidationColor
+import com.example.studyflow.ui.theme.TextBlack
+import com.example.studyflow.ui.theme.TextWhite
+import com.example.studyflow.ui.theme.interFontFamily
+import com.example.studyflow.ui.viewmodel.UserViewModel
+
+// Validation
+fun isValidEmail(email: String): Boolean {
+    return email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+}
+fun isValidPassword(password: String): Boolean {
+    return password.length >= 8 && password.any { it.isDigit() }
+}
+
 
 
 @Composable
-fun LoginScreen(
-    onRegisterClick: () -> Unit,
-    onLoginSuccess: () -> Unit
+fun RegisterScreen(
+    userViewModel: UserViewModel,
+    onLoginNav: () -> Unit,
+    onRegisterSuccess: (User) -> Unit
 ) {
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var emailError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
+    // Toastr Message (When Register is Successfull)
     val context = LocalContext.current
+    val registrationSuccess by userViewModel.registrationSuccess.collectAsState()
+    val loggedUser by userViewModel.loggedUser.collectAsState()
+
+    LaunchedEffect(registrationSuccess) {
+        if (registrationSuccess) {
+            loggedUser?.let { user ->
+                Toast.makeText(context, "Welcome!", Toast.LENGTH_SHORT).show()
+                onRegisterSuccess(user)
+            }
+        }
+//        registrationSuccess?.let { success ->
+//            if (success) {
+//                Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
+//                onRegisterSuccess(user)
+//            } else {
+//                // do something
+//            }
+//        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -112,7 +157,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(46.dp))
 
             Text(
-                text = "Log Into Your Account",
+                text = "Create Your Account",
                 color = TextWhite,
                 fontFamily = interFontFamily,
                 fontSize = 26.67.sp,
@@ -128,12 +173,59 @@ fun LoginScreen(
                 .padding(horizontal = 30.dp, vertical = 70.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // First Box - Email
-            Column(modifier = Modifier.fillMaxWidth()) {
+            // Name
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp)
+                    .border(
+                        width = 2.dp,
+                        color = LoginGreen,
+                        shape = RoundedCornerShape(4.dp)
+                    )
+            ) {
+                TextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = {
+                        Text(
+                            text = "Enter Your Name",
+                            color = LoginGreen,
+                            fontFamily = interFontFamily
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(Icons.Default.Person, contentDescription = null, tint = TextWhite)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.colors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedTextColor = TextWhite,
+                        unfocusedTextColor = TextWhite,
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedLabelColor = LoginGreen,
+                        unfocusedLabelColor = LoginGreen,
+                        cursorColor = LoginGreen
+                    )
+                )
+            }
+
+            // Email
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 2.dp)
+            ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(2.dp, if (emailError) RedValidationColor else LoginGreen, RoundedCornerShape(4.dp))
+                        .border(
+                            width = 2.dp,
+                            color = if (emailError) RedValidationColor else LoginGreen,
+                            shape = RoundedCornerShape(4.dp)
+                        )
                 ) {
                     TextField(
                         value = email,
@@ -143,10 +235,8 @@ fun LoginScreen(
                         },
                         label = {
                             Text(
-                                text = if (emailError) "Please enter a valid email" else "Email",
-                                color = if (emailError) RedValidationColor else LoginGreen,
-                                fontFamily = interFontFamily,
-                                fontWeight = FontWeight.Normal
+                                text = if (emailError) "Please enter a valid email" else "Enter your email",
+                                color = if (emailError) RedValidationColor else LoginGreen
                             )
                         },
                         isError = emailError,
@@ -175,29 +265,36 @@ fun LoginScreen(
                 }
             }
 
-            // Second Box - Password
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp)
-                        .border(2.dp, if (passwordError) RedValidationColor else LoginGreen, RoundedCornerShape(4.dp))
-                ) {
+
+            // Password
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp)
+                    .border(
+                        width = 2.dp,
+                        color = if (passwordError) RedValidationColor else LoginGreen,
+                        shape = RoundedCornerShape(4.dp)
+                    )
+            ) {
+                Column {
                     TextField(
                         value = password,
                         onValueChange = { newPassword ->
                             password = newPassword
                             passwordError = !(password.length >= 8 && password.any { it.isDigit() })
                         },
+                        isError = passwordError,
                         label = {
                             Text(
-                                text = if (passwordError) "Password must be at least 8 characters long and include a number" else "Password",
+                                if (passwordError)
+                                    "Password requires at least 8 characters and a digit"
+                                else
+                                    "Enter Your Password",
                                 color = if (passwordError) RedValidationColor else LoginGreen,
-                                fontFamily = interFontFamily,
-                                fontWeight = FontWeight.Normal
+                                fontFamily = interFontFamily
                             )
                         },
-                        isError = passwordError,
                         leadingIcon = {
                             Icon(Icons.Default.Lock, contentDescription = null, tint = TextWhite)
                         },
@@ -238,17 +335,18 @@ fun LoginScreen(
                 }
             }
 
+
             Spacer(modifier = Modifier.height(14.dp))
 
             // Button
             Button(
                 onClick = {
-                    emailError = ( !Patterns.EMAIL_ADDRESS.matcher(email).matches() ) && ( email!="a" )
-                    passwordError = ( !(password.length >= 8 && password.any { it.isDigit() }) ) && ( password!="a" )
+                    emailError = !(email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches())
+                    passwordError = !(password.length >= 8 && password.any { it.isDigit() })
 
                     if (!emailError && !passwordError) {
-                        Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
-                        onLoginSuccess()
+                        Toast.makeText(context, "Successfully Registered!", Toast.LENGTH_SHORT).show()
+                        userViewModel.register(email, password)
                     }
                 },
                 modifier = Modifier
@@ -259,15 +357,11 @@ fun LoginScreen(
                         brush = Brush.horizontalGradient(ButtonGradientColor),
                         shape = RoundedCornerShape(2.dp)
                     ),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = TextBlack
-                ),
-                interactionSource = remember { MutableInteractionSource() }, // ripple effect when button is pressed
-                shape = RoundedCornerShape(2.dp)
+                shape = RoundedCornerShape(2.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
             ) {
                 Text(
-                    text = "Login",
+                    text = "Create Account",
                     fontFamily = interFontFamily,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 20.sp,
@@ -278,22 +372,22 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(13.67.dp))
 
-            // Row
+            // Login Row
             Row {
                 Text(
-                    text = "Do not have an account? ",
+                    text = "Already have an account? ",
                     fontFamily = interFontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 12.sp,
                     color = TextWhite
                 )
                 Text(
-                    text = "Register Now",
+                    text = "Login",
                     color = LoginGreen,
                     fontFamily = interFontFamily,
                     fontWeight = FontWeight.Black,
                     fontSize = 12.sp,
-                    modifier = Modifier.clickable { onRegisterClick() }
+                    modifier = Modifier.clickable { onLoginNav() }
                 )
             }
         }

@@ -3,7 +3,7 @@ package com.example.studyflow.ui.theme
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
-// Tasks Completed
+// TasksScreen Completed
 val TaskCompletedGradientColor = Brush.linearGradient(colors = listOf(Color(0xFF6366F1), Color(0xFF393B8B )))
 val TaskCompletedNumber = Color(0xFF818CF8)
 // Current Session
@@ -21,6 +21,14 @@ val SecondSubjectProgressColor = Brush.linearGradient(colors = listOf(Color(0xFF
 val ThirdSubjectProgressColor = Brush.linearGradient(colors = listOf(Color(0xFFEAB308), Color(0xFF846505)))
 val ProgressBackgroundColor = Color(0xFF374151)
 val ViewAllColor = Color(0xFF818CF8)
+
+// Timer Colors
+val ButtonFocusSelectedColor = Color(0xFF4F46E5)
+val ButtonshortBreakColor = Color(0xFF16a34a)
+val ButtonlongBreakColor = Color(0xFF2563EB)
+val ButtonUnselectedColor = Color(0xFF2B3646)
+val thirdTimerBgColor = Color(0xFF6366F1)
+val thirdTimerBgColorv2 = Color(0xFF334155)
 
 
 

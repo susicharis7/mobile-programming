@@ -32,3 +32,9 @@ data class Timersession(
     val pauseCount: Int = 0,
     val completions: Int = 0 // this is only for pomodoro and timer, not for stopwatch
 )
+
+data class TimerStats(
+    val totalCycles: Int,
+    val totalHours: Int,
+    val distractionCount: Int
+)

@@ -1,4 +1,4 @@
-package com.example.studyflow.screens
+package com.example.studyflow.ui.screens
 
 // Scrollable
 import androidx.compose.foundation.background
@@ -24,11 +24,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -49,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.studyflow.R
+import com.example.studyflow.model.User
 import com.example.studyflow.ui.theme.AVGStudyTimeGradientColor
 import com.example.studyflow.ui.theme.AVGStudyTimeHours
 import com.example.studyflow.ui.theme.BackgroundColor
@@ -62,9 +61,10 @@ import com.example.studyflow.ui.theme.TextGray
 import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.UpcomingExamCardColor
 import com.example.studyflow.ui.theme.UpcomingTasksBackground
+import com.example.studyflow.ui.viewmodel.TaskViewModel
 
 @Composable
-fun DashboardScreen(navController: NavHostController) {
+fun DashboardScreen(loggedUser: User, taskViewModel: TaskViewModel, navController: NavHostController) { // trebace i viewmodele dodati
     Scaffold(
         topBar = {
             Column(
@@ -119,7 +119,7 @@ fun DashboardScreen(navController: NavHostController) {
 //                Spacer(modifier = Modifier.height(36.67.dp + 34.dp + 46.dp))
 //            }
 
-            item { // Second Row, Tasks Completed;Current Session
+            item { // Second Row, TasksScreen Completed;Current Session
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -141,7 +141,7 @@ fun DashboardScreen(navController: NavHostController) {
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            item { // Upcoming Tasks Section
+            item { // Upcoming TasksScreen Section
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -154,13 +154,13 @@ fun DashboardScreen(navController: NavHostController) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Upcoming Tasks",
+                            "Upcoming TasksScreen",
                             color = TextWhite,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold
                         )
 
-                        // Pops up Tasks in Dashboard ("View All")
+                        // Pops up TasksScreen in Dashboard ("View All")
                         Text(
                             "View All",
                             color = Color(0xFF818CF8),
