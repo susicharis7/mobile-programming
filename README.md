@@ -10,16 +10,23 @@ StudyFlow is an educational Android application developed as part of the **Mobil
 
 ## 🎯 Features
 
-### ✅ Screens:
+### :white_check_mark: Screens:
 - **Register/Login screen** – users can create an account and log in.
 - **Dashboard screen** – displays key statistics:
   - Tasks Completed
   - Current Session
   - Average Study Time
   - Streak (consecutive study days)
-- **Upcoming Tasks** – list of upcoming tasks with priority indicators.
-- **Upcoming Exams** – exams with remaining days shown on the card.
-- **Study Activity** – monthly grid showing study intensity with varying shades of green.
+  - Upcoming Tasks – list of upcoming tasks with priority indicators.
+  - Upcoming Exams – exams with remaining days shown on the card.
+  - Study Activity – monthly grid showing study intensity with varying shades of green.
+- **Tasks** – list of upcoming tasks with priority indicators.
+- **Subjects** – list of subjects and how many tasks were completed for each one.
+- **Timers** – three different ways to keep track of your studying:
+    - Pomodoro Timer – timer with 25 minutes of studying and 5 minutes break in between each cycle.
+    - Timer – standard timer to set how long you want to study.
+    - Stopwatch – stopwatch to see how long you studied.
+- **Schedule** – list of all upcoming exams/tasks to give you a better timeline.
 
 ### 📊 Visual Elements:
 - Modern flat UI design
