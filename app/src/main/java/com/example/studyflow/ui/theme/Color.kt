@@ -23,8 +23,10 @@ val ProgressBackgroundColor = Color(0xFF374151)
 val ViewAllColor = Color(0xFF818CF8)
 
 // Timer Colors
-val modeSelectedColor = Color(0xFF4F46E5)
-val modeUnselectedColor = Color(0xFF2B3646)
+val ButtonFocusSelectedColor = Color(0xFF4F46E5)
+val ButtonshortBreakColor = Color(0xFF16a34a)
+val ButtonlongBreakColor = Color(0xFF2563EB)
+val ButtonUnselectedColor = Color(0xFF2B3646)
 val thirdTimerBgColor = Color(0xFF6366F1)
 val thirdTimerBgColorv2 = Color(0xFF334155)
 

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,15 +43,18 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.studyflow.R
 import com.example.studyflow.model.TimerStats
 import com.example.studyflow.model.TimerType
 import com.example.studyflow.model.User
 import com.example.studyflow.ui.theme.BackgroundColor
+import com.example.studyflow.ui.theme.ButtonFocusSelectedColor
+import com.example.studyflow.ui.theme.ButtonUnselectedColor
+import com.example.studyflow.ui.theme.ButtonlongBreakColor
+import com.example.studyflow.ui.theme.ButtonshortBreakColor
 import com.example.studyflow.ui.theme.CardBackgroundColor
 import com.example.studyflow.ui.theme.TextWhite
-import com.example.studyflow.ui.theme.modeSelectedColor
-import com.example.studyflow.ui.theme.modeUnselectedColor
 import com.example.studyflow.ui.theme.thirdTimerBgColor
 import com.example.studyflow.ui.theme.thirdTimerBgColorv2
 import com.example.studyflow.ui.viewmodel.TimerViewModel
@@ -123,20 +127,20 @@ fun TimersScreen(loggedUser: User, timerViewModel: TimerViewModel) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 12.dp),
+                        .padding(vertical = 0.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     listOf("Pomodoro", "Timer", "Stopwatch").forEach { label ->
                         Text(
                             text = label,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 18.sp,
+                            fontWeight = if (selectedTab.value == label) FontWeight.Bold else FontWeight.Light,
                             color = if (selectedTab.value == label) TextWhite else TextWhite.copy(alpha = 0.4f),
                             modifier = Modifier
                                 .clickable { selectedTab.value = label }
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
                                 .background(
-                                    if (selectedTab.value == label) TextWhite.copy(alpha = 0.1f) else BackgroundColor,
+                                    //if (selectedTab.value == label) TextWhite.copy(alpha = 0.1f) else BackgroundColor, // mozda ovo da skolim
+                                    BackgroundColor,
                                     shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
                                 )
                                 .padding(horizontal = 12.dp, vertical = 6.dp)
@@ -146,7 +150,7 @@ fun TimersScreen(loggedUser: User, timerViewModel: TimerViewModel) {
 
                 // Show selected timer screen
                 when (selectedTab.value) {
-                    "Pomodoro" -> PomodoroTimer(loggedUser, timerStats, timerViewModel)
+                    "Pomodoro" -> PomodoroTimer(loggedUser, timerViewModel)
                     "Timer" -> BasicTimer()
                     "Stopwatch" -> StopwatchTimer()
                 }
@@ -156,7 +160,7 @@ fun TimersScreen(loggedUser: User, timerViewModel: TimerViewModel) {
 }
 
 @Composable
-fun PomodoroTimer(user: User, stats: TimerStats, viewModel: TimerViewModel) {
+fun PomodoroTimer(user: User, viewModel: TimerViewModel) {
     var selectedMode by remember { mutableStateOf("Focus") }
 
     val focusDuration = 25 * 60
@@ -216,7 +220,14 @@ fun PomodoroTimer(user: User, stats: TimerStats, viewModel: TimerViewModel) {
                     modifier = Modifier
                         .clip(RoundedCornerShape(6.dp))
                         .background(
-                            if (selectedMode == mode) modeSelectedColor else modeUnselectedColor
+                            if (selectedMode == mode){
+                                when (mode) {
+                                    "Focus" -> ButtonFocusSelectedColor
+                                    "Short Break" -> ButtonshortBreakColor
+                                    "Long Break" -> ButtonlongBreakColor
+                                    else -> ButtonUnselectedColor
+                                }
+                            } else ButtonUnselectedColor
                         )
                         .clickable {
                             selectedMode = mode
@@ -233,26 +244,25 @@ fun PomodoroTimer(user: User, stats: TimerStats, viewModel: TimerViewModel) {
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(260.dp)
-                .background(CardBackgroundColor, RoundedCornerShape(16.dp)),
+                .background(CardBackgroundColor, RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(24.dp)) {
                 Box(
                     modifier = Modifier
-                        .size(160.dp)
+                        .size(200.dp)
                         .border(width = 2.dp, color = TextWhite, shape = CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             text = formattedTime,
-                            fontSize = 36.sp,
+                            fontSize = 40.sp,
                             fontWeight = FontWeight.Bold,
                             color = TextWhite
                         )
@@ -275,7 +285,7 @@ fun PomodoroTimer(user: User, stats: TimerStats, viewModel: TimerViewModel) {
                             painter = painterResource(id = R.drawable.stop),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(38.dp)
+                                .size(42.dp)
                                 .clip(CircleShape)
                                 .clickable {
                                     timeLeft = currentDuration
@@ -290,7 +300,7 @@ fun PomodoroTimer(user: User, stats: TimerStats, viewModel: TimerViewModel) {
                             painter = painterResource(id = R.drawable.pause),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(38.dp)
+                                .size(42.dp)
                                 .clip(CircleShape)
                                 .clickable {
                                     isRunning = false
@@ -302,7 +312,7 @@ fun PomodoroTimer(user: User, stats: TimerStats, viewModel: TimerViewModel) {
                             painter = painterResource(id = R.drawable.play),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(38.dp)
+                                .size(42.dp)
                                 .clip(CircleShape)
                                 .clickable {
                                     isRunning = true
@@ -314,14 +324,14 @@ fun PomodoroTimer(user: User, stats: TimerStats, viewModel: TimerViewModel) {
                         painter = painterResource(id = R.drawable.settings),
                         contentDescription = null,
                         modifier = Modifier
-                            .size(38.dp)
+                            .size(42.dp)
                             .clip(CircleShape)
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
         Row(
             modifier = Modifier
@@ -330,7 +340,7 @@ fun PomodoroTimer(user: User, stats: TimerStats, viewModel: TimerViewModel) {
                 .padding(vertical = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            StatItem(title = "Cycles", value = cycles.toString(), valueColor = Color(0xFF60A5FA))
+            StatItem(title = "Cycles", value = cycles.toString(), valueColor = Color(0xFF818CF8))
             StatItem(title = "Hours", value = hours.toString(), valueColor = Color(0xFF4ADE80))
             StatItem(title = "Distractions", value = distractions.toString(), valueColor = Color(0xFF60A5FA))
         }
@@ -367,17 +377,17 @@ fun PomodoroTimer(user: User, stats: TimerStats, viewModel: TimerViewModel) {
 // For PomodoroTimer()
 @Composable
 fun StatItem(title: String, value: String, valueColor: Color) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.widthIn(min = 120.dp)) {
         Text(
             text = value,
             color = valueColor,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 18.sp
+            fontSize = 24.sp
         )
         Text(
             text = title,
             color = TextWhite,
-            fontSize = 12.sp
+            fontSize = 10.sp
         )
     }
 }
@@ -441,34 +451,33 @@ fun BasicTimer() {
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
                         .clip(RoundedCornerShape(6.dp))
-                        .background(if (label == "1 hour") modeSelectedColor else modeUnselectedColor)
+                        .background(if (label == "1 hour") ButtonFocusSelectedColor else ButtonUnselectedColor)
                         .clickable { action() }
                         .padding(horizontal = 14.dp, vertical = 6.dp)
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
         // Timer circle
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(260.dp)
-                .background(CardBackgroundColor, RoundedCornerShape(16.dp)),
+                .background(CardBackgroundColor, RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(24.dp)) {
                 Box(
                     modifier = Modifier
-                        .size(160.dp)
+                        .size(200.dp)
                         .border(width = 2.dp, color = TextWhite, shape = CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             text = formattedTime,
-                            fontSize = 36.sp,
+                            fontSize = 40.sp,
                             fontWeight = FontWeight.Bold,
                             color = TextWhite
                         )
@@ -491,7 +500,7 @@ fun BasicTimer() {
                             painter = painterResource(id = R.drawable.stop),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(38.dp)
+                                .size(42.dp)
                                 .clip(CircleShape)
                                 .clickable {
                                     timeLeft = durationInSeconds
@@ -505,7 +514,7 @@ fun BasicTimer() {
                             painter = painterResource(id = R.drawable.pause),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(38.dp)
+                                .size(42.dp)
                                 .clip(CircleShape)
                                 .clickable {
                                     isRunning = false
@@ -517,7 +526,7 @@ fun BasicTimer() {
                             painter = painterResource(id = R.drawable.play),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(38.dp)
+                                .size(42.dp)
                                 .clip(CircleShape)
                                 .clickable { isRunning = true }
                         )
@@ -527,14 +536,14 @@ fun BasicTimer() {
                         painter = painterResource(id = R.drawable.settings),
                         contentDescription = null,
                         modifier = Modifier
-                            .size(38.dp)
+                            .size(42.dp)
                             .clip(CircleShape)
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
         // Stats section
         Row(
@@ -544,7 +553,7 @@ fun BasicTimer() {
                 .padding(vertical = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            StatItem(title = "Completed Timers", value = completedTimers.toString(), valueColor = Color(0xFF60A5FA))
+            StatItem(title = "Completed Timers", value = completedTimers.toString(), valueColor = Color(0xFF818CF8))
             StatItem(title = "Hours", value = hours.toString(), valueColor = Color(0xFF4ADE80))
             StatItem(title = "Distractions", value = distractions.toString(), valueColor = Color(0xFF60A5FA))
         }
@@ -609,14 +618,13 @@ fun StopwatchTimer() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(260.dp)
-                .background(CardBackgroundColor, RoundedCornerShape(16.dp)),
+                .background(CardBackgroundColor, RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(24.dp)) {
                 Box(
                     modifier = Modifier
-                        .size(160.dp)
+                        .size(200.dp)
                         .border(width = 2.dp, color = TextWhite, shape = CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
@@ -646,7 +654,7 @@ fun StopwatchTimer() {
                             painter = painterResource(id = R.drawable.pause),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(38.dp)
+                                .size(42.dp)
                                 .clip(CircleShape)
                                 .clickable {
                                     isRunning = false
@@ -658,7 +666,7 @@ fun StopwatchTimer() {
                             painter = painterResource(id = R.drawable.stop),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(38.dp)
+                                .size(42.dp)
                                 .clip(CircleShape)
                                 .clickable {
                                     timeInSeconds = 0
@@ -672,7 +680,7 @@ fun StopwatchTimer() {
                             painter = painterResource(id = R.drawable.play),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(38.dp)
+                                .size(42.dp)
                                 .clip(CircleShape)
                                 .clickable { isRunning = true }
                         )
@@ -681,7 +689,7 @@ fun StopwatchTimer() {
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
         // Stats section
         Row(

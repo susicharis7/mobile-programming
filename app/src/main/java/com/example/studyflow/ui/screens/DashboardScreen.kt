@@ -294,7 +294,7 @@ fun TasksCompletedCard(modifier: Modifier = Modifier) {
             .padding(12.dp)
     ) {
         Text(
-            "TasksScreen Completed",
+            "Tasks Completed",
             color = TextWhite,
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
