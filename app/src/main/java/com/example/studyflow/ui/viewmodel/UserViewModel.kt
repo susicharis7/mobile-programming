@@ -27,10 +27,10 @@ class UserViewModel @Inject constructor(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
-    fun register(email: String, password: String) {
+    fun register(username: String, email: String, password: String) {
         viewModelScope.launch {
             try {
-                userRepo.insert(User(email=email, password=password, username=""))
+                userRepo.insert(User(username=username, password=password, email=email))
 
                 // added middle step so when a user registers they get immediately logged in
                 val authenticatedUser = userRepo.getUserByEmailAndPassword(email, password)

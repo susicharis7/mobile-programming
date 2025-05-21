@@ -104,7 +104,7 @@ refactor/navigation:
 @team: Need to create other screeens, looks like login and register are completed
 @sanin: 
     - (i tried) skontaj kako se mijenja boja na navigation bar i ostale customizatons, isto nesto na vrhu ne bude iste boje kao background pa i to probaj popraviti
-    - fix padding f
+    - fix register so that there is no toast unless register is successful
 @futureFixes: 
     - Napraviti bolju logiku za "StudyDayCell" boju in dashboard (currently it thinks that 45 min is 45 hours)
     - also da se popravi da one crne prazne celije popune cijeli grid 7x5

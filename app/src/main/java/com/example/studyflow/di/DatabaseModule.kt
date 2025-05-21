@@ -34,7 +34,7 @@ object DatabaseModule {
         return Room.databaseBuilder(
             context.applicationContext,
             AppDatabase::class.java,
-            "study_flow_v4.db",
+            "study_flow_v5.db",
         ).fallbackToDestructiveMigration(true).build()
     }
     @Provides

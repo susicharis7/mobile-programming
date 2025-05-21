@@ -88,7 +88,7 @@ fun RegisterScreen(
     onLoginNav: () -> Unit,
     onRegisterSuccess: (User) -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -185,8 +185,8 @@ fun RegisterScreen(
                     )
             ) {
                 TextField(
-                    value = name,
-                    onValueChange = { name = it },
+                    value = username,
+                    onValueChange = { username = it },
                     label = {
                         Text(
                             text = "Enter Your Name",
@@ -346,7 +346,7 @@ fun RegisterScreen(
 
                     if (!emailError && !passwordError) {
                         Toast.makeText(context, "Successfully Registered!", Toast.LENGTH_SHORT).show()
-                        userViewModel.register(email, password)
+                        userViewModel.register(username, email, password)
                     }
                 },
                 modifier = Modifier
