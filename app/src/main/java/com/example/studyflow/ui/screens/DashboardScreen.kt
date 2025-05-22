@@ -829,6 +829,7 @@ fun StudyActivitySection(
             Text("$daysStudied Days Studied", color = TextWhite)
         }
     }
+    Spacer(modifier = Modifier.height(12.dp))
 }
 
 

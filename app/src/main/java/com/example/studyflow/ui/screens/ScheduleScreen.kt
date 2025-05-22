@@ -144,7 +144,7 @@ fun TaskSectionCard(section: TaskSection) {
 
     Card(
         modifier = Modifier
-            .padding(vertical = 6.dp)
+            .padding(bottom = 12.dp)
             .fillMaxWidth(),
         colors = CardDefaults.run {
             cardColors(
@@ -199,7 +199,7 @@ fun TaskItem(task: Task) {
             .height(44.dp)
             .background(
                 color = task.subjectColor ?: Color.Gray,
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp)
             ),
         contentAlignment = Alignment.CenterStart
     ) {
