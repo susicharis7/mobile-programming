@@ -199,6 +199,7 @@ fun PomodoroTimer(user: User, viewModel: TimerViewModel) {
     val seconds = timeLeft % 60
     val formattedTime = String.format("%02d:%02d", minutes, seconds)
 
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -415,7 +416,12 @@ fun BasicTimer() {
         }
     }
 
-    val formattedTime = String.format("%02d:%02d", timeLeft / 60, timeLeft % 60)
+    // Updated - now we have "hours" part
+    val hoursPart = timeLeft / 3600
+    val minutesPart = (timeLeft % 3600) / 60
+    val secondsPart = timeLeft % 60
+    val formattedTime = String.format("%d:%02d:%02d", hoursPart, minutesPart, secondsPart)
+
 
     Column(
         modifier = Modifier
@@ -432,16 +438,16 @@ fun BasicTimer() {
         ) {
             listOf(
                 "1 hour" to {
-                    durationInSeconds = 60 * 60
-                    timeLeft = durationInSeconds
+                    timeLeft = 60 * 60
+                    durationInSeconds = timeLeft
                 },
                 "+10 minutes" to {
-                    durationInSeconds += 10 * 60
-                    timeLeft = durationInSeconds
+                    timeLeft += 10 * 60
+                    durationInSeconds = timeLeft
                 },
                 "-5 minutes" to {
-                    durationInSeconds = maxOf(0, durationInSeconds - 5 * 60)
-                    timeLeft = durationInSeconds
+                    timeLeft = maxOf(0, durationInSeconds - 5 * 60)
+                    durationInSeconds = timeLeft
                 }
             ).forEach { (label, action) ->
                 Text(
