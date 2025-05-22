@@ -144,34 +144,33 @@ fun TaskSectionCard(section: TaskSection) {
 
     Card(
         modifier = Modifier
-            .padding(vertical = 6.dp)
-            .fillMaxWidth(),
-        colors = CardDefaults.run {
-            cardColors(
-                containerColor = Color(0xFF0E2A38)
-            )
-        },
-        shape = RoundedCornerShape(12.dp)
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF0F172A)), // Dashboard-like dark
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Column {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { expanded = !expanded }
-                    .padding(14.dp),
+                    .clickable { expanded = !expanded },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = section.date,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TextWhite,
+                    color = Color.White,
                     modifier = Modifier.weight(1f)
                 )
                 Icon(
                     imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                    contentDescription = "Expand",
-                    tint = TextWhite
+                    contentDescription = null,
+                    tint = Color.White
                 )
             }
 
@@ -180,9 +179,9 @@ fun TaskSectionCard(section: TaskSection) {
                 enter = fadeIn() + expandVertically(),
                 exit = fadeOut() + shrinkVertically()
             ) {
-                Column(modifier = Modifier.padding(bottom = 12.dp)) {
+                Column(modifier = Modifier.padding(top = 12.dp)) {
                     section.tasks.forEach { task ->
-                        TaskItem(task)
+                        DashboardStyleTaskItem(task)
                     }
                 }
             }
@@ -191,23 +190,53 @@ fun TaskSectionCard(section: TaskSection) {
 }
 
 @Composable
-fun TaskItem(task: Task) {
-    Box(
+fun DashboardStyleTaskItem(task: Task) {
+    Row(
         modifier = Modifier
             .padding(horizontal = 14.dp, vertical = 4.dp)
             .fillMaxWidth()
             .height(44.dp)
             .background(
-                color = task.subjectColor ?: Color.Gray,
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp)
+                color = Color(0xFF1E1E1E),
+                shape = RoundedCornerShape(10.dp)
             ),
-        contentAlignment = Alignment.CenterStart
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        val showTick = task.title in listOf(
+            "Prepare Presentation",
+            "Project Submission",
+            "DS Homework",
+            "OS Homework"
+        )
+
+        if (showTick) {
+            Icon(
+                painter = painterResource(id = R.drawable.tick),
+                contentDescription = "Tick Icon",
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(start = 8.dp),
+                tint = Color.Unspecified
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+        } else {
+            Box(
+                modifier = Modifier
+                    .width(6.dp)
+                    .fillMaxHeight()
+                    .background(
+                        color = task.subjectColor ?: Color.Gray,
+                        shape = RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp)
+                    )
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+        }
+
         Text(
             text = task.title,
             fontSize = 14.sp,
-            color = Color.White,
-            modifier = Modifier.padding(start = 16.dp)
+            color = Color.White
         )
     }
 }
+
