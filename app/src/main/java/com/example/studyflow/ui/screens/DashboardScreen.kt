@@ -154,7 +154,7 @@ fun DashboardScreen(loggedUser: User, taskViewModel: TaskViewModel, navControlle
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Upcoming TasksScreen",
+                            "Upcoming Tasks",
                             color = TextWhite,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold
