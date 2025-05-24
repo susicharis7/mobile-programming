@@ -57,9 +57,10 @@ import androidx.compose.runtime.*
 
 
 @Composable
-fun ScheduleScreen(loggedUser: User, taskViewModel: TaskViewModel, examViewModel: ExamViewModel) {
+fun ScheduleScreen(loggedUser: User?, taskViewModel: TaskViewModel, examViewModel: ExamViewModel) {
     val tasks by taskViewModel.tasks.collectAsState()
     val exams by examViewModel.exams.collectAsState()
+
     val taskSections = listOf(
         TaskSection("Jun 1", listOf(
             Task("Mobile Programming Midterm Exam", Color(0xFF6BA2FF)),

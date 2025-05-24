@@ -61,10 +61,10 @@ import com.example.studyflow.ui.viewmodel.TimerViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun TimersScreen(loggedUser: User, timerViewModel: TimerViewModel) {
+fun TimersScreen(loggedUser: User?, timerViewModel: TimerViewModel) {
     val timerStats by timerViewModel.timerStats.collectAsState()
     LaunchedEffect(Unit) {
-        timerViewModel.loadTimerStats(loggedUser.id, TimerType.POMODORO)
+        timerViewModel.loadTimerStats(loggedUser!!.id, TimerType.POMODORO)
     }
 
 
@@ -160,7 +160,7 @@ fun TimersScreen(loggedUser: User, timerViewModel: TimerViewModel) {
 }
 
 @Composable
-fun PomodoroTimer(user: User, viewModel: TimerViewModel) {
+fun PomodoroTimer(loggedUser: User?, timerViewModel: TimerViewModel) {
     var selectedMode by remember { mutableStateOf("Focus") }
 
     val focusDuration = 25 * 60

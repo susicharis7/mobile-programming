@@ -61,7 +61,7 @@ import com.example.studyflow.ui.viewmodel.UserViewModel
 fun LoginScreen(
     userViewModel: UserViewModel,
     onRegisterNav: () -> Unit,
-    onLoginSuccess: (User) -> Unit
+    onLoginSuccess: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -76,7 +76,7 @@ fun LoginScreen(
         loginStatus?.let { success ->
             if (success) {
                 Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
-                onLoginSuccess(loggedUser!!)
+                onLoginSuccess()
             } else {
                 // do something
             }

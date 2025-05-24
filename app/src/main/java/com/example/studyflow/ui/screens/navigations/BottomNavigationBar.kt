@@ -18,13 +18,12 @@ import com.example.studyflow.ui.theme.TextWhite
 
 @Composable
 fun BottomNavigationBar(
-    loggedUser: User,
     currentRoute: String?, // added for fixing bottom bar not being updated when swiping back
-    onDashboardNav: (User) -> Unit,
-    onTimerNav: (User) -> Unit,
-    onTasksNav: (User) -> Unit,
-    onSubjectsNav: (User) -> Unit,
-    onScheduleNav: (User) -> Unit
+    onDashboardNav: () -> Unit,
+    onTimerNav: () -> Unit,
+    onTasksNav: () -> Unit,
+    onSubjectsNav: () -> Unit,
+    onScheduleNav: () -> Unit
 ) {
     var selectedItem by remember { mutableStateOf("Dashboard") }
 
@@ -49,7 +48,7 @@ fun BottomNavigationBar(
             onClick = {
                 if (selectedItem != "Subjects") {
                     selectedItem = "Subjects"
-                    onSubjectsNav(loggedUser)
+                    onSubjectsNav()
                 }
             }
         )
@@ -62,7 +61,7 @@ fun BottomNavigationBar(
             onClick = {
                 if (selectedItem != "Tasks") {
                     selectedItem = "Tasks"
-                    onTasksNav(loggedUser)
+                    onTasksNav()
                 }
             }
         )
@@ -75,7 +74,7 @@ fun BottomNavigationBar(
             onClick = {
                 if (selectedItem != "Dashboard") {
                     selectedItem = "Dashboard"
-                    onDashboardNav(loggedUser)
+                    onDashboardNav()
                 }
             }
         )
@@ -88,7 +87,7 @@ fun BottomNavigationBar(
             onClick = {
                 if (selectedItem != "Study-Timer") {
                     selectedItem = "Study-Timer"
-                    onTimerNav(loggedUser)
+                    onTimerNav()
                 }
             }
         )
@@ -101,7 +100,7 @@ fun BottomNavigationBar(
             onClick = {
                 if (selectedItem != "Schedule") {
                     selectedItem = "Schedule"
-                    onScheduleNav(loggedUser)
+                    onScheduleNav()
                 }
             }
         )

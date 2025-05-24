@@ -32,6 +32,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,6 +50,8 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.studyflow.R
 import com.example.studyflow.model.User
+import com.example.studyflow.ui.nav.DashboardNav
+import com.example.studyflow.ui.nav.TasksNav
 import com.example.studyflow.ui.theme.AVGStudyTimeGradientColor
 import com.example.studyflow.ui.theme.AVGStudyTimeHours
 import com.example.studyflow.ui.theme.BackgroundColor
@@ -61,10 +65,21 @@ import com.example.studyflow.ui.theme.TextGray
 import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.UpcomingExamCardColor
 import com.example.studyflow.ui.theme.UpcomingTasksBackground
+import com.example.studyflow.ui.viewmodel.ExamViewModel
 import com.example.studyflow.ui.viewmodel.TaskViewModel
+import com.example.studyflow.ui.viewmodel.TimerViewModel
+import com.example.studyflow.ui.viewmodel.UserViewModel
 
 @Composable
-fun DashboardScreen(loggedUser: User, taskViewModel: TaskViewModel, navController: NavHostController) { // trebace i viewmodele dodati
+fun DashboardScreen(
+    userViewModel: UserViewModel,
+    taskViewModel: TaskViewModel,
+    timerViewModel: TimerViewModel,
+    examViewModel: ExamViewModel,
+    navController: NavHostController
+) {
+    val loggedUser by userViewModel.loggedUser.collectAsState()
+
     Scaffold(
         topBar = {
             Column(
@@ -166,8 +181,8 @@ fun DashboardScreen(loggedUser: User, taskViewModel: TaskViewModel, navControlle
                             color = Color(0xFF818CF8),
                             fontSize = 13.sp,
                             modifier = Modifier.clickable {
-                                navController.navigate("tasks") {
-                                    popUpTo("dashboard") { inclusive = false }
+                                navController.navigate(TasksNav) {
+                                    popUpTo(DashboardNav) { inclusive = false }
                                 }
 
                             }
