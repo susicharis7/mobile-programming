@@ -1,8 +1,10 @@
 package com.example.studyflow.ui.screens
 
 // Scrollable
+import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +29,8 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -34,8 +38,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -55,16 +62,19 @@ import com.example.studyflow.ui.nav.TasksNav
 import com.example.studyflow.ui.theme.AVGStudyTimeGradientColor
 import com.example.studyflow.ui.theme.AVGStudyTimeHours
 import com.example.studyflow.ui.theme.BackgroundColor
+import com.example.studyflow.ui.theme.ButtonGradientColor
 import com.example.studyflow.ui.theme.CardBackgroundColor
 import com.example.studyflow.ui.theme.CurrentSessionGradientColor
 import com.example.studyflow.ui.theme.CurrentSessionHours
 import com.example.studyflow.ui.theme.StreakColor
 import com.example.studyflow.ui.theme.TaskCompletedGradientColor
 import com.example.studyflow.ui.theme.TaskCompletedNumber
+import com.example.studyflow.ui.theme.TextBlack
 import com.example.studyflow.ui.theme.TextGray
 import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.UpcomingExamCardColor
 import com.example.studyflow.ui.theme.UpcomingTasksBackground
+import com.example.studyflow.ui.theme.interFontFamily
 import com.example.studyflow.ui.viewmodel.ExamViewModel
 import com.example.studyflow.ui.viewmodel.TaskViewModel
 import com.example.studyflow.ui.viewmodel.TimerViewModel
@@ -72,13 +82,15 @@ import com.example.studyflow.ui.viewmodel.UserViewModel
 
 @Composable
 fun DashboardScreen(
+    loggedUser: User?,
     userViewModel: UserViewModel,
     taskViewModel: TaskViewModel,
     timerViewModel: TimerViewModel,
     examViewModel: ExamViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    onLogoutSuccess: () -> Unit
 ) {
-    val loggedUser by userViewModel.loggedUser.collectAsState()
+//    val loggedUser by userViewModel.loggedUser.collectAsState()
 
     Scaffold(
         topBar = {
@@ -130,9 +142,37 @@ fun DashboardScreen(
                 .padding(horizontal = 14.dp)
                 .padding(paddingValues)
         ) {
-//            item {  // Top Bar - Icons, Dashboard
-//                Spacer(modifier = Modifier.height(36.67.dp + 34.dp + 46.dp))
-//            }
+            //! TEMPORARY LOGOUT BUTTON FOR TESTING
+            item {
+                Button(
+                    onClick = {
+                        userViewModel.logout()
+                        onLogoutSuccess()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(42.dp)
+                        .background(
+                            brush = Brush.horizontalGradient(ButtonGradientColor),
+                            shape = RoundedCornerShape(2.dp)
+                        ),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = TextBlack
+                    ),
+                    interactionSource = remember { MutableInteractionSource() }, // ripple effect when button is pressed
+                    shape = RoundedCornerShape(2.dp)
+                ) {
+                    Text(
+                        text = "Logout",
+                        fontFamily = interFontFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp,
+                        letterSpacing = 1.sp,
+                        color = TextBlack
+                    )
+                }
+            }
 
             item { // Second Row, TasksScreen Completed;Current Session
                 Row(

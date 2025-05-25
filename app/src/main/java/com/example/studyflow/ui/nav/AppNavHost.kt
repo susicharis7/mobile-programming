@@ -1,11 +1,15 @@
 package com.example.studyflow.ui.nav
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 //import androidx.navigation.NavHost
@@ -51,8 +55,19 @@ fun AppNavHost(userViewModel: UserViewModel = hiltViewModel<UserViewModel>()) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val isLoading by userViewModel.isLoading.collectAsState()
     val loggedUser by userViewModel.loggedUser.collectAsState()
     val startDestination: Any = Auth
+
+    if (isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    }
 
     LaunchedEffect(loggedUser) {
         if (loggedUser == null) {
@@ -98,8 +113,7 @@ fun AppNavHost(userViewModel: UserViewModel = hiltViewModel<UserViewModel>()) {
             startDestination = startDestination, modifier = Modifier.padding(padding)
         ) {
             navigation<Auth>(startDestination = Login) {
-                composable<Login> { // backStackEntry ->
-//                    val authViewModel: UserViewModel = hiltViewModel(backStackEntry)
+                composable<Login> {
                     if (loggedUser == null) {
                         LoginScreen(userViewModel, onRegisterNav = {
                             navController.navigate(route = Register)
@@ -113,8 +127,7 @@ fun AppNavHost(userViewModel: UserViewModel = hiltViewModel<UserViewModel>()) {
                     }
 
                 }
-                composable<Register> { backStackEntry ->
-//                    val authViewModel: UserViewModel = hiltViewModel(backStackEntry)
+                composable<Register> {
                     RegisterScreen(userViewModel, onLoginNav = {
                         navController.navigate(route = Login)
                     }, onRegisterSuccess = {
@@ -134,7 +147,7 @@ fun AppNavHost(userViewModel: UserViewModel = hiltViewModel<UserViewModel>()) {
                     val timerViewModel: TimerViewModel = hiltViewModel(backStackEntry)
                     val examViewModel: ExamViewModel = hiltViewModel(backStackEntry)
 //                    might need something for study activity thing
-                    DashboardScreen(userViewModel, taskViewModel, timerViewModel, examViewModel, navController)
+                    DashboardScreen(loggedUser, userViewModel, taskViewModel, timerViewModel, examViewModel, navController, onLogoutSuccess = {})
                 }
                 composable<TasksNav>(
                     typeMap = mapOf(
