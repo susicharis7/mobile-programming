@@ -70,7 +70,6 @@ fun LoginScreen(
     var passwordError by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val loginStatus by userViewModel.loginStatus.collectAsState()
-    val loggedUser by userViewModel.loggedUser.collectAsState()
 
     LaunchedEffect(loginStatus) {
         loginStatus?.let { success ->
@@ -145,15 +144,15 @@ fun LoginScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(2.dp, if (loginStatus == false) RedValidationColor else LoginGreen, RoundedCornerShape(4.dp))
+                        .border(2.dp, if (loginStatus == false || emailError) RedValidationColor else LoginGreen, RoundedCornerShape(4.dp))
                 ) {
                     TextField(
                         value = email,
                         onValueChange = { email = it },
                         label = {
                             Text(
-                                text = if (loginStatus == false) "Invalid email or password" else "Email",
-                                color = if (loginStatus == false) RedValidationColor else LoginGreen,
+                                text = if (loginStatus == false || emailError) "Invalid email or password" else "Email",
+                                color = if (loginStatus == false || emailError) RedValidationColor else LoginGreen,
                                 fontFamily = interFontFamily,
                                 fontWeight = FontWeight.Normal
                             )
@@ -190,20 +189,20 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 10.dp)
-                        .border(2.dp, if (loginStatus == false) RedValidationColor else LoginGreen, RoundedCornerShape(4.dp))
+                        .border(2.dp, if (loginStatus == false || passwordError) RedValidationColor else LoginGreen, RoundedCornerShape(4.dp))
                 ) {
                     TextField(
                         value = password,
                         onValueChange = { password = it },
                         label = {
                             Text(
-                                text = if (loginStatus == false) "Invalid email or password" else "Password",
-                                color = if (loginStatus == false) RedValidationColor else LoginGreen,
+                                text = if (loginStatus == false || passwordError) "Invalid email or password" else "Password",
+                                color = if (loginStatus == false || passwordError) RedValidationColor else LoginGreen,
                                 fontFamily = interFontFamily,
                                 fontWeight = FontWeight.Normal
                             )
                         },
-                        isError = passwordError, //TODO check if this also needs to be !loginStatus!!
+                        isError = passwordError,
                         leadingIcon = {
                             Icon(Icons.Default.Lock, contentDescription = null, tint = TextWhite)
                         },
@@ -249,8 +248,8 @@ fun LoginScreen(
             // Button
             Button(
                 onClick = {
-                    emailError = ( !Patterns.EMAIL_ADDRESS.matcher(email).matches() ) && ( email!="a" )
-                    passwordError = ( !(password.length >= 8 && password.any { it.isDigit() }) ) && ( password!="a" )
+                    emailError = ( !Patterns.EMAIL_ADDRESS.matcher(email).matches() )
+                    passwordError = ( !(password.length >= 8 && password.any { it.isDigit() }) )
 
                     if (!emailError && !passwordError) {
                         userViewModel.login(email, password)
