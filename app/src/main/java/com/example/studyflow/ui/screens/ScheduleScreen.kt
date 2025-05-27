@@ -84,7 +84,7 @@ fun ScheduleScreen(loggedUser: User, taskViewModel: TaskViewModel, examViewModel
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 14.dp)
+                    .padding(horizontal = 20.dp)
                     .background(BackgroundColor)
                     .zIndex(1f)
             ) {
@@ -147,12 +147,13 @@ fun TaskSectionCard(section: TaskSection) {
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF0F172A)), // Dashboard-like dark
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF183040)), // Dashboard-like dark
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .fillMaxWidth()
+                .padding(vertical = 10.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -165,12 +166,15 @@ fun TaskSectionCard(section: TaskSection) {
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 14.dp)
                 )
                 Icon(
                     imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                     contentDescription = null,
-                    tint = Color.White
+                    tint = Color.White,
+                    modifier = Modifier.padding(end = 14.dp)
                 )
             }
 
@@ -193,11 +197,11 @@ fun TaskSectionCard(section: TaskSection) {
 fun DashboardStyleTaskItem(task: Task) {
     Row(
         modifier = Modifier
-            .padding(horizontal = 14.dp, vertical = 4.dp)
+            .padding(horizontal = 14.dp, vertical = 4.dp) // Reduced padding
             .fillMaxWidth()
             .height(44.dp)
             .background(
-                color = Color(0xFF1E1E1E),
+                color = Color(0xFF174459),
                 shape = RoundedCornerShape(10.dp)
             ),
         verticalAlignment = Alignment.CenterVertically
@@ -214,7 +218,7 @@ fun DashboardStyleTaskItem(task: Task) {
                 painter = painterResource(id = R.drawable.tick),
                 contentDescription = "Tick Icon",
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(28.dp)
                     .padding(start = 8.dp),
                 tint = Color.Unspecified
             )
@@ -222,11 +226,11 @@ fun DashboardStyleTaskItem(task: Task) {
         } else {
             Box(
                 modifier = Modifier
-                    .width(6.dp)
+                    .width(5.dp)
                     .fillMaxHeight()
                     .background(
                         color = task.subjectColor ?: Color.Gray,
-                        shape = RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp)
+                        shape = RoundedCornerShape(topEnd = 10.dp, bottomEnd = 10.dp)
                     )
             )
             Spacer(modifier = Modifier.width(10.dp))
@@ -235,8 +239,10 @@ fun DashboardStyleTaskItem(task: Task) {
         Text(
             text = task.title,
             fontSize = 14.sp,
-            color = Color.White
+            color = Color.White,
+            modifier = Modifier.weight(1f) // Make the text take up remaining space
         )
     }
 }
+
 

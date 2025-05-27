@@ -297,9 +297,6 @@ fun SubjectsScreen(loggedUser: User, subjectViewModel: SubjectViewModel) {
                     progressColor = FirstSubjectProgressColor
                 )
             }
-
-
-
         }
     }
 }
