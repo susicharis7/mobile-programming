@@ -70,7 +70,7 @@ fun TaskCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp),
+            .padding(bottom = 12.dp),
         colors = CardDefaults.cardColors(containerColor = CardBackgroundColor),
         shape = RoundedCornerShape(12.dp)
     ) {
