@@ -45,6 +45,19 @@ import com.example.studyflow.ui.theme.CardBackgroundColor
 import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.UpcomingTasksBackground
 import com.example.studyflow.ui.viewmodel.TaskViewModel
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.foundation.clickable
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 
 @Composable
 fun TaskCard(
@@ -62,8 +75,6 @@ fun TaskCard(
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(11.dp)) {
-
-
             Box(modifier = Modifier.fillMaxWidth()) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -75,9 +86,7 @@ fun TaskCard(
                         tint = Color.Gray,
                         modifier = Modifier.size(20.dp)
                     )
-
                     Spacer(modifier = Modifier.width(10.dp))
-
                     Text(
                         text = title,
                         color = TextWhite,
@@ -85,7 +94,6 @@ fun TaskCard(
                         fontSize = 15.sp
                     )
                 }
-
                 Icon(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = null,
@@ -99,13 +107,11 @@ fun TaskCard(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Nested Row
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = category,
@@ -116,18 +122,14 @@ fun TaskCard(
                             .background(UpcomingTasksBackground, RoundedCornerShape(4.dp))
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     )
-
                     Spacer(modifier = Modifier.width(6.dp))
-
                     Icon(
                         imageVector = Icons.Default.AccessTime,
                         contentDescription = null,
                         tint = Color(0xFFF9E79F),
                         modifier = Modifier.size(14.dp)
                     )
-
                     Spacer(modifier = Modifier.width(4.dp))
-
                     Text(
                         text = date,
                         color = Color(0xFFF9E79F),
@@ -147,9 +149,7 @@ fun TaskCard(
                         tint = priorityColor,
                         modifier = Modifier.size(14.dp)
                     )
-
                     Spacer(modifier = Modifier.width(4.dp))
-
                     Text(
                         text = priority,
                         color = priorityColor,
@@ -162,12 +162,12 @@ fun TaskCard(
     }
 }
 
-
 @Composable
 fun TasksScreen(loggedUser: User?, taskViewModel: TaskViewModel) {
     val tasks by taskViewModel.tasks.collectAsState()
+    var showDialog by remember { mutableStateOf(false) } // ✅ ADDED
 
-    Scaffold( // Default Stuff
+    Scaffold(
         topBar = {
             Column(
                 modifier = Modifier
@@ -177,7 +177,6 @@ fun TasksScreen(loggedUser: User?, taskViewModel: TaskViewModel) {
                     .zIndex(1f)
             ) {
                 Spacer(modifier= Modifier.height(16.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -189,7 +188,6 @@ fun TasksScreen(loggedUser: User?, taskViewModel: TaskViewModel) {
                         tint = TextWhite,
                         modifier = Modifier.size(34.dp)
                     )
-
                     Text(
                         "Tasks",
                         color = TextWhite,
@@ -197,7 +195,6 @@ fun TasksScreen(loggedUser: User?, taskViewModel: TaskViewModel) {
                         fontWeight = FontWeight.Normal,
                         letterSpacing = 0.05.em
                     )
-
                     Icon(
                         painter = painterResource(id = R.drawable.headphones),
                         contentDescription = null,
@@ -211,12 +208,11 @@ fun TasksScreen(loggedUser: User?, taskViewModel: TaskViewModel) {
 
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {/* Later Implement What Will It do */},
+                onClick = { showDialog = true }, // ✅ ADDED
                 containerColor = Color(0xFF5F93AD),
                 contentColor = TextWhite,
                 shape = RoundedCornerShape(15),
-                modifier = Modifier
-                    .padding(horizontal = 0.dp, vertical = 0.dp)
+                modifier = Modifier.padding(0.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -234,9 +230,6 @@ fun TasksScreen(loggedUser: User?, taskViewModel: TaskViewModel) {
                 .padding(horizontal = 14.dp)
                 .padding(paddingValues)
         ) {
-
-            // TaskCard Implementation
-
             items(3) { index ->
                 TaskCard(
                     title = when (index) {
@@ -266,9 +259,136 @@ fun TasksScreen(loggedUser: User?, taskViewModel: TaskViewModel) {
                     }
                 )
             }
+        }
 
-
-
+        if (showDialog) {
+            AddTaskDialog(
+                onAdd = { name, subject, deadline, priority ->
+                    showDialog = false
+                },
+                onDismiss = { showDialog = false }
+            )
         }
     }
 }
+
+@Composable
+fun AddTaskDialog(
+    onAdd: (String, String, String, String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var taskName by remember { mutableStateOf("") }
+    var subject by remember { mutableStateOf("") }
+    var deadline by remember { mutableStateOf("") }
+    var priority by remember { mutableStateOf("Add Priority") } // Changed initial value
+    val priorities = listOf("High", "Medium", "Low")
+    var expanded by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Add Task", color = Color.White) },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = taskName,
+                    onValueChange = { taskName = it },
+                    placeholder = { Text("Task Name", color = Color.Black) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFBBCFE9),
+                        unfocusedContainerColor = Color(0xFFBBCFE9),
+                        focusedTextColor = Color.Black,
+                        unfocusedTextColor = Color.Black,
+                        cursorColor = Color.Black
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = subject,
+                    onValueChange = { subject = it },
+                    placeholder = { Text("Add Subject", color = Color.Black) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFBBCFE9),
+                        unfocusedContainerColor = Color(0xFFBBCFE9),
+                        focusedTextColor = Color.Black,
+                        unfocusedTextColor = Color.Black,
+                        cursorColor = Color.Black
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = deadline,
+                    onValueChange = { deadline = it },
+                    placeholder = { Text("Add Deadline", color = Color.Black) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFBBCFE9),
+                        unfocusedContainerColor = Color(0xFFBBCFE9),
+                        focusedTextColor = Color.Black,
+                        unfocusedTextColor = Color.Black,
+                        cursorColor = Color.Black
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Box {
+                    OutlinedTextField(
+                        value = priority,
+                        onValueChange = {},
+                        readOnly = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { expanded = true },
+                        placeholder = { Text("Add Priority", color = Color.Black) },
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color(0xFFBBCFE9),
+                            unfocusedContainerColor = Color(0xFFBBCFE9),
+                            focusedTextColor = if (priority == "Add Priority") Color.Black.copy(alpha = 0.5f) else Color.Black,
+                            unfocusedTextColor = if (priority == "Add Priority") Color.Black.copy(alpha = 0.5f) else Color.Black,
+                            cursorColor = Color.Black
+                        )
+                    )
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        priorities.forEach {
+                            DropdownMenuItem(
+                                text = { Text(it) },
+                                onClick = {
+                                    priority = it
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                if (taskName.isNotBlank() && subject.isNotBlank() && deadline.isNotBlank() && priority != "Add Priority") {
+                    onAdd(taskName.trim(), subject.trim(), deadline.trim(), priority)
+                }
+            }) {
+                Text("Add", color = Color.White)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel", color = Color.White.copy(alpha = 0.7f))
+            }
+        },
+        containerColor = Color(0xFF234256)
+    )
+}
+
