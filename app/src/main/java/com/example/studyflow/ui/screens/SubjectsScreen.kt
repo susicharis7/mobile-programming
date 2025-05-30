@@ -16,25 +16,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -63,14 +59,13 @@ fun SubjectCard(
     progressColor: Brush
 ) {
     Card(
-       modifier = Modifier
-           .fillMaxWidth()
-           .padding(bottom = 12.dp),
-            colors = CardDefaults.cardColors(containerColor = CardBackgroundColor),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 12.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBackgroundColor),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
-
             Box(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = subjectName,
@@ -89,9 +84,7 @@ fun SubjectCard(
                         .align(Alignment.TopEnd)
                         .size(20.dp)
                 )
-
-
-            } // Box
+            }
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -102,21 +95,19 @@ fun SubjectCard(
                 Text(
                     text = "Progress", color = TextWhite, fontSize = 12.sp
                 )
-
                 Text(
                     text = "${(progress * 100).toInt()}%",
                     color = TextWhite,
                     fontSize = 12.sp
                 )
-            } // Row
+            }
 
-            // Progress Bar
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(13.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(ProgressBackgroundColor)// Background bar
+                    .background(ProgressBackgroundColor)
             ) {
                 Box(
                     modifier = Modifier
@@ -129,7 +120,6 @@ fun SubjectCard(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Completed / Remaining
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -150,14 +140,11 @@ fun SubjectCard(
                 text = "View All",
                 color = ViewAllColor,
                 fontSize = 13.sp,
-                modifier = Modifier.clickable{/* TODO : Navigate */}
+                modifier = Modifier.clickable { /* TODO : Navigate */ }
             )
-
-
-
-        } // Column
-    } // Card
-} // SubjectCard
+        }
+    }
+}
 
 @Composable
 fun CompletedRemainingCards(
@@ -186,11 +173,20 @@ fun CompletedRemainingCards(
     }
 }
 
-
-
 @Composable
 fun SubjectsScreen(loggedUser: User, subjectViewModel: SubjectViewModel) {
     val subjects by subjectViewModel.subjects.collectAsState()
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        AddSubjectDialog(
+            onAdd = { name ->
+                // You can call subjectViewModel.addSubject(name) here
+                showDialog = false
+            },
+            onDismiss = { showDialog = false }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -201,7 +197,7 @@ fun SubjectsScreen(loggedUser: User, subjectViewModel: SubjectViewModel) {
                     .background(BackgroundColor)
                     .zIndex(1f)
             ) {
-                Spacer(modifier= Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -235,7 +231,7 @@ fun SubjectsScreen(loggedUser: User, subjectViewModel: SubjectViewModel) {
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {/* Later Implement What Will It do */},
+                onClick = { showDialog = true },
                 containerColor = Color(0xFF5F93AD),
                 contentColor = TextWhite,
                 shape = RoundedCornerShape(15),
@@ -300,3 +296,47 @@ fun SubjectsScreen(loggedUser: User, subjectViewModel: SubjectViewModel) {
         }
     }
 }
+
+@Composable
+fun AddSubjectDialog(
+    onAdd: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var subjectName by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Add Subject Name", color = Color.White) },
+        text = {
+            TextField(
+                value = subjectName,
+                onValueChange = { subjectName = it },
+                placeholder = { Text("Add Subject Name", color = Color.Black) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color(0xFFBBCFE9),
+                    unfocusedContainerColor = Color(0xFFBBCFE9),
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    cursorColor = Color.Black
+                )
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                if (subjectName.isNotBlank()) onAdd(subjectName.trim())
+            }) {
+                Text("Add", color = Color.White)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel", color = Color.White.copy(alpha = 0.7f))
+            }
+        },
+        containerColor = Color(0xFF234256)
+    )
+}
+
+
