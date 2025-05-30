@@ -53,6 +53,7 @@ import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.ThirdSubjectProgressColor
 import com.example.studyflow.ui.theme.ViewAllColor
 import com.example.studyflow.ui.viewmodel.SubjectViewModel
+import com.example.studyflow.ui.viewmodel.TaskViewModel
 
 @Composable
 fun SubjectCard(
@@ -189,7 +190,7 @@ fun CompletedRemainingCards(
 
 
 @Composable
-fun SubjectsScreen(loggedUser: User, subjectViewModel: SubjectViewModel) {
+fun SubjectsScreen(loggedUser: User?, subjectViewModel: SubjectViewModel, taskViewModel: TaskViewModel) {
     val subjects by subjectViewModel.subjects.collectAsState()
 
     Scaffold(

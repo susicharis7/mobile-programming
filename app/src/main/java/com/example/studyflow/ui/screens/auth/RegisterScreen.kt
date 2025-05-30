@@ -86,7 +86,7 @@ fun isValidPassword(password: String): Boolean {
 fun RegisterScreen(
     userViewModel: UserViewModel,
     onLoginNav: () -> Unit,
-    onRegisterSuccess: (User) -> Unit
+    onRegisterSuccess: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -101,9 +101,9 @@ fun RegisterScreen(
 
     LaunchedEffect(registrationSuccess) {
         if (registrationSuccess) {
-            loggedUser?.let { user ->
+            loggedUser?.let {
                 Toast.makeText(context, "Welcome!", Toast.LENGTH_SHORT).show()
-                onRegisterSuccess(user)
+                onRegisterSuccess()
             }
         }
 //        registrationSuccess?.let { success ->

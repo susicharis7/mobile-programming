@@ -164,7 +164,7 @@ fun TaskCard(
 
 
 @Composable
-fun TasksScreen(loggedUser: User, taskViewModel: TaskViewModel) {
+fun TasksScreen(loggedUser: User?, taskViewModel: TaskViewModel) {
     val tasks by taskViewModel.tasks.collectAsState()
 
     Scaffold( // Default Stuff

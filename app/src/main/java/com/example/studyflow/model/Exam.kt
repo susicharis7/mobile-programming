@@ -4,8 +4,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 import java.util.Date
 
+//@Serializable
 @Entity(
     tableName = "exams",
     foreignKeys = [
@@ -32,7 +34,7 @@ data class Exam(
     val id: Int = 0,
     val name: String,
     val subjectId: Int,
-    //val examDate: Date,
+    val examDate: Date,
     val userId: Int,
     val isActive: Boolean
 )
