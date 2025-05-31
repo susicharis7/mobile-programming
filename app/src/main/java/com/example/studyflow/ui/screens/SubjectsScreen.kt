@@ -37,8 +37,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
 import com.example.studyflow.R
 import com.example.studyflow.model.User
+import com.example.studyflow.ui.screens.navigations.SettingsOverlay
 import com.example.studyflow.ui.theme.BackgroundColor
 import com.example.studyflow.ui.theme.CardBackgroundColor
 import com.example.studyflow.ui.theme.FirstSubjectProgressColor
@@ -50,6 +52,7 @@ import com.example.studyflow.ui.theme.ThirdSubjectProgressColor
 import com.example.studyflow.ui.theme.ViewAllColor
 import com.example.studyflow.ui.viewmodel.SubjectViewModel
 import com.example.studyflow.ui.viewmodel.TaskViewModel
+import com.example.studyflow.ui.viewmodel.UserViewModel
 
 @Composable
 fun SubjectCard(
@@ -175,9 +178,20 @@ fun CompletedRemainingCards(
 }
 
 @Composable
-fun SubjectsScreen(loggedUser: User?, subjectViewModel: SubjectViewModel, taskViewModel: TaskViewModel) {
+fun SubjectsScreen(
+    userViewModel: UserViewModel,
+    navController : NavController,
+    loggedUser: User?,
+    subjectViewModel: SubjectViewModel,
+    taskViewModel: TaskViewModel,
+    onLogoutSuccess: () -> Unit
+) {
     val subjects by subjectViewModel.subjects.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
+
+    // SettingsOverlay
+    val showOverlay = remember { mutableStateOf(false) }
+    val loggedUser by userViewModel.loggedUser.collectAsState()
 
     if (showDialog) {
         AddSubjectDialog(
@@ -209,7 +223,9 @@ fun SubjectsScreen(loggedUser: User?, subjectViewModel: SubjectViewModel, taskVi
                         Icons.Default.Menu,
                         contentDescription = null,
                         tint = TextWhite,
-                        modifier = Modifier.size(34.dp)
+                        modifier = Modifier
+                            .size(34.dp)
+                            .clickable { showOverlay.value = true }
                     )
 
                     Text(
@@ -296,6 +312,18 @@ fun SubjectsScreen(loggedUser: User?, subjectViewModel: SubjectViewModel, taskVi
             }
         }
     }
+
+    // SettingsOverlay.kt
+    SettingsOverlay(
+        navController = navController,
+        visible = showOverlay.value,
+        onDismiss = { showOverlay.value = false },
+        onAccountClick = { /* ili ostavi prazno */ },
+        onLogoutClick = {
+            userViewModel.logout()
+            onLogoutSuccess()
+        }
+    )
 }
 
 @Composable

@@ -44,10 +44,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import com.example.studyflow.R
 import com.example.studyflow.model.TimerStats
 import com.example.studyflow.model.TimerType
 import com.example.studyflow.model.User
+import com.example.studyflow.ui.screens.navigations.SettingsOverlay
 import com.example.studyflow.ui.theme.BackgroundColor
 import com.example.studyflow.ui.theme.ButtonFocusSelectedColor
 import com.example.studyflow.ui.theme.ButtonUnselectedColor
@@ -58,10 +60,17 @@ import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.thirdTimerBgColor
 import com.example.studyflow.ui.theme.thirdTimerBgColorv2
 import com.example.studyflow.ui.viewmodel.TimerViewModel
+import com.example.studyflow.ui.viewmodel.UserViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun TimersScreen(loggedUser: User?, timerViewModel: TimerViewModel) {
+fun TimersScreen(
+    loggedUser: User?,
+    userViewModel: UserViewModel,
+    navController : NavController,
+    timerViewModel: TimerViewModel,
+    onLogoutSuccess: () -> Unit
+) {
     val timerStats by timerViewModel.timerStats.collectAsState()
     LaunchedEffect(Unit) {
         timerViewModel.loadTimerStats(loggedUser!!.id, TimerType.POMODORO)
@@ -70,6 +79,9 @@ fun TimersScreen(loggedUser: User?, timerViewModel: TimerViewModel) {
 
     var selectedTab = remember { mutableStateOf("Pomodoro") }
 
+    // SettingsOverlay
+    val showOverlay = remember { mutableStateOf(false) }
+    val loggedUser by userViewModel.loggedUser.collectAsState()
 
     Scaffold(
         topBar = {
@@ -91,7 +103,10 @@ fun TimersScreen(loggedUser: User?, timerViewModel: TimerViewModel) {
                         imageVector = Icons.Default.Menu,
                         contentDescription = null,
                         tint = TextWhite,
-                        modifier = Modifier.size(34.dp)
+                        modifier = Modifier
+                            .size(34.dp)
+                            .clickable { showOverlay.value = true }
+
                     )
 
                     Text(
@@ -157,6 +172,18 @@ fun TimersScreen(loggedUser: User?, timerViewModel: TimerViewModel) {
             }
         }
     }
+
+    // SettingsOverlay.kt
+    SettingsOverlay(
+        navController = navController,
+        visible = showOverlay.value,
+        onDismiss = { showOverlay.value = false },
+        onAccountClick = { /* ili ostavi prazno */ },
+        onLogoutClick = {
+            userViewModel.logout()
+            onLogoutSuccess()
+        }
+    )
 }
 
 @Composable

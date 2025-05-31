@@ -30,6 +30,7 @@ import com.example.studyflow.ui.viewmodel.SubjectViewModel
 import com.example.studyflow.ui.viewmodel.TaskViewModel
 import com.example.studyflow.ui.viewmodel.UserViewModel
 import com.example.studyflow.ui.nav.types.CustomNavType
+import com.example.studyflow.ui.screens.MyProfileScreen
 import com.example.studyflow.ui.screens.ScheduleScreen
 import com.example.studyflow.ui.screens.TimersScreen
 import com.example.studyflow.ui.viewmodel.ExamViewModel
@@ -49,6 +50,10 @@ import kotlin.reflect.typeOf
 @Serializable object SubjectsNav
 @Serializable object StudyTimerNav
 @Serializable object ScheduleNav
+
+
+// SettingsOverlay
+@Serializable object ProfileNav
 
 @Composable
 fun AppNavHost(userViewModel: UserViewModel = hiltViewModel<UserViewModel>()) {
@@ -155,7 +160,11 @@ fun AppNavHost(userViewModel: UserViewModel = hiltViewModel<UserViewModel>()) {
                     )
                 ) { backStackEntry ->
                     val taskViewModel: TaskViewModel = hiltViewModel(backStackEntry)
-                    TasksScreen(loggedUser, taskViewModel)
+                    TasksScreen(loggedUser, navController, userViewModel, taskViewModel, onLogoutSuccess = {
+                        navController.navigate(Login) {
+                            popUpTo(Main) { inclusive = true }
+                        }
+                    })
                 }
                 composable<SubjectsNav>(
                     typeMap = mapOf(
@@ -164,7 +173,11 @@ fun AppNavHost(userViewModel: UserViewModel = hiltViewModel<UserViewModel>()) {
                 ) { backStackEntry ->
                     val subjectViewModel: SubjectViewModel = hiltViewModel(backStackEntry)
                     val taskViewModel: TaskViewModel = hiltViewModel(backStackEntry)
-                    SubjectsScreen(loggedUser, subjectViewModel, taskViewModel)
+                    SubjectsScreen(userViewModel, navController, loggedUser, subjectViewModel, taskViewModel, onLogoutSuccess = {
+                        navController.navigate(Login) {
+                            popUpTo(Main) { inclusive = true }
+                        }
+                    })
                 }
                 composable<StudyTimerNav>(
                     typeMap = mapOf(
@@ -172,7 +185,11 @@ fun AppNavHost(userViewModel: UserViewModel = hiltViewModel<UserViewModel>()) {
                     )
                 ) { backStackEntry ->
                     val timerViewModel: TimerViewModel = hiltViewModel(backStackEntry)
-                    TimersScreen(loggedUser, timerViewModel)
+                    TimersScreen(loggedUser, userViewModel,navController, timerViewModel, onLogoutSuccess = {
+                        navController.navigate(Login) {
+                            popUpTo(Main) { inclusive = true }
+                        }
+                    })
                 }
                 composable<ScheduleNav>(
                     typeMap = mapOf(
@@ -181,8 +198,22 @@ fun AppNavHost(userViewModel: UserViewModel = hiltViewModel<UserViewModel>()) {
                 ) { backStackEntry ->
                     val taskViewModel: TaskViewModel = hiltViewModel(backStackEntry)
                     val examViewModel: ExamViewModel = hiltViewModel(backStackEntry)
-                    ScheduleScreen(loggedUser, taskViewModel, examViewModel)
+                    ScheduleScreen(loggedUser, userViewModel,navController, taskViewModel, examViewModel, onLogoutSuccess = {
+                        navController.navigate(Login) {
+                            popUpTo(Main) { inclusive = true }
+                        }
+                    })
                 }
+
+                composable<ProfileNav>(
+                    typeMap = mapOf(
+                        typeOf<User>() to CustomNavType.UserType
+                    )
+                ) {
+                    MyProfileScreen(userViewModel = userViewModel, navController = navController)
+                }
+
+
 //                data class Dashboard(val user: User) DONE
 //                data class TasksScreen(val user: User) DONE
 //                data class Subjects(val user: User) DONE

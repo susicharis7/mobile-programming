@@ -50,16 +50,28 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.*
-
-
-
-
+import androidx.navigation.NavController
+import com.example.studyflow.ui.screens.navigations.SettingsOverlay
+import com.example.studyflow.ui.viewmodel.UserViewModel
 
 
 @Composable
-fun ScheduleScreen(loggedUser: User?, taskViewModel: TaskViewModel, examViewModel: ExamViewModel) {
+fun ScheduleScreen(
+    loggedUser: User?,
+    userViewModel: UserViewModel,
+    navController : NavController,
+    taskViewModel: TaskViewModel,
+    examViewModel: ExamViewModel,
+    onLogoutSuccess: () -> Unit
+) {
     val tasks by taskViewModel.tasks.collectAsState()
     val exams by examViewModel.exams.collectAsState()
+
+    // SettingsOverlay
+    val showOverlay = remember { mutableStateOf(false) }
+    val loggedUser by userViewModel.loggedUser.collectAsState()
+
+
 
     val taskSections = listOf(
         TaskSection("Jun 1", listOf(
@@ -100,7 +112,9 @@ fun ScheduleScreen(loggedUser: User?, taskViewModel: TaskViewModel, examViewMode
                         Icons.Default.Menu,
                         contentDescription = null,
                         tint = TextWhite,
-                        modifier = Modifier.size(34.dp)
+                        modifier = Modifier
+                            .size(34.dp)
+                            .clickable { showOverlay.value = true }
                     )
 
                     Text(
@@ -135,6 +149,19 @@ fun ScheduleScreen(loggedUser: User?, taskViewModel: TaskViewModel, examViewMode
             }
         }
     }
+
+    // SettingsOverlay.kt
+    SettingsOverlay(
+        navController = navController, // ✅ OVO DODAJ
+        visible = showOverlay.value,
+        onDismiss = { showOverlay.value = false },
+        onAccountClick = { /* ili ostavi prazno */ },
+        onLogoutClick = {
+            userViewModel.logout()
+            onLogoutSuccess()
+        }
+    )
+
 }
 data class Task(val title: String, val subjectColor: Color? = null)
 data class TaskSection(val date: String, val tasks: List<Task>)

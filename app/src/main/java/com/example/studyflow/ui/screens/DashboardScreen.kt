@@ -38,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,11 +55,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.studyflow.R
 import com.example.studyflow.model.User
 import com.example.studyflow.ui.nav.DashboardNav
+import com.example.studyflow.ui.nav.ProfileNav
 import com.example.studyflow.ui.nav.TasksNav
+import com.example.studyflow.ui.screens.navigations.SettingsOverlay
 import com.example.studyflow.ui.theme.AVGStudyTimeGradientColor
 import com.example.studyflow.ui.theme.AVGStudyTimeHours
 import com.example.studyflow.ui.theme.BackgroundColor
@@ -87,10 +91,13 @@ fun DashboardScreen(
     taskViewModel: TaskViewModel,
     timerViewModel: TimerViewModel,
     examViewModel: ExamViewModel,
-    navController: NavHostController,
+    navController: NavController,
     onLogoutSuccess: () -> Unit
 ) {
-//    val loggedUser by userViewModel.loggedUser.collectAsState()
+    // SettingsOverlay
+    val showOverlay = remember { mutableStateOf(false) }
+    val loggedUser by userViewModel.loggedUser.collectAsState()
+
 
     Scaffold(
         topBar = {
@@ -112,7 +119,9 @@ fun DashboardScreen(
                         Icons.Default.Menu,
                         contentDescription = null,
                         tint = TextWhite,
-                        modifier = Modifier.size(34.dp)
+                        modifier = Modifier
+                            .size(34.dp)
+                            .clickable { showOverlay.value = true }
                     )
 
                     Text(
@@ -143,36 +152,36 @@ fun DashboardScreen(
                 .padding(paddingValues)
         ) {
             //! TEMPORARY LOGOUT BUTTON FOR TESTING
-            item {
-                Button(
-                    onClick = {
-                        userViewModel.logout()
-                        onLogoutSuccess()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(42.dp)
-                        .background(
-                            brush = Brush.horizontalGradient(ButtonGradientColor),
-                            shape = RoundedCornerShape(2.dp)
-                        ),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = TextBlack
-                    ),
-                    interactionSource = remember { MutableInteractionSource() }, // ripple effect when button is pressed
-                    shape = RoundedCornerShape(2.dp)
-                ) {
-                    Text(
-                        text = "Logout",
-                        fontFamily = interFontFamily,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 20.sp,
-                        letterSpacing = 1.sp,
-                        color = TextBlack
-                    )
-                }
-            }
+//            item {
+//                Button(
+//                    onClick = {
+//                        userViewModel.logout()
+//                        onLogoutSuccess()
+//                    },
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(42.dp)
+//                        .background(
+//                            brush = Brush.horizontalGradient(ButtonGradientColor),
+//                            shape = RoundedCornerShape(2.dp)
+//                        ),
+//                    colors = ButtonDefaults.buttonColors(
+//                        containerColor = Color.Transparent,
+//                        contentColor = TextBlack
+//                    ),
+//                    interactionSource = remember { MutableInteractionSource() }, // ripple effect when button is pressed
+//                    shape = RoundedCornerShape(2.dp)
+//                ) {
+//                    Text(
+//                        text = "Logout",
+//                        fontFamily = interFontFamily,
+//                        fontWeight = FontWeight.SemiBold,
+//                        fontSize = 20.sp,
+//                        letterSpacing = 1.sp,
+//                        color = TextBlack
+//                    )
+//                }
+//            }
 
             item { // Second Row, TasksScreen Completed;Current Session
                 Row(
@@ -338,6 +347,18 @@ fun DashboardScreen(
 
         }
     }
+
+    // SettingsOverlay.kt
+    SettingsOverlay(
+        navController = navController,
+        visible = showOverlay.value,
+        onDismiss = { showOverlay.value = false },
+        onAccountClick = { navController.navigate(ProfileNav) },
+        onLogoutClick = {
+            userViewModel.logout()
+            onLogoutSuccess()
+        }
+    )
 }
 
 @Composable

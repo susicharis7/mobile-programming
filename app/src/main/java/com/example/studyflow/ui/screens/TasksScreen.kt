@@ -57,6 +57,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavController
+import com.example.studyflow.ui.screens.navigations.SettingsOverlay
+import com.example.studyflow.ui.viewmodel.UserViewModel
 
 
 @Composable
@@ -163,9 +166,19 @@ fun TaskCard(
 }
 
 @Composable
-fun TasksScreen(loggedUser: User?, taskViewModel: TaskViewModel) {
+fun TasksScreen(
+    loggedUser: User?,
+    navController : NavController,
+    userViewModel: UserViewModel,
+    taskViewModel: TaskViewModel,
+    onLogoutSuccess: () -> Unit
+) {
     val tasks by taskViewModel.tasks.collectAsState()
-    var showDialog by remember { mutableStateOf(false) } // ✅ ADDED
+    var showDialog by remember { mutableStateOf(false) }
+
+    // SettingsOverlay
+    val showOverlay = remember { mutableStateOf(false) }
+    val loggedUser by userViewModel.loggedUser.collectAsState()
 
     Scaffold(
         topBar = {
@@ -186,7 +199,9 @@ fun TasksScreen(loggedUser: User?, taskViewModel: TaskViewModel) {
                         Icons.Default.Menu,
                         contentDescription = null,
                         tint = TextWhite,
-                        modifier = Modifier.size(34.dp)
+                        modifier = Modifier
+                            .size(34.dp)
+                            .clickable { showOverlay.value = true }
                     )
                     Text(
                         "Tasks",
@@ -270,6 +285,18 @@ fun TasksScreen(loggedUser: User?, taskViewModel: TaskViewModel) {
             )
         }
     }
+
+    // SettingsOverlay.kt
+    SettingsOverlay(
+        navController = navController,
+        visible = showOverlay.value,
+        onDismiss = { showOverlay.value = false },
+        onAccountClick = { /* ili ostavi prazno */ },
+        onLogoutClick = {
+            userViewModel.logout()
+            onLogoutSuccess()
+        }
+    )
 }
 
 @Composable
