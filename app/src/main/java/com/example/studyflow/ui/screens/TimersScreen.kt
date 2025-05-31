@@ -21,9 +21,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -63,6 +68,7 @@ import com.example.studyflow.ui.viewmodel.TimerViewModel
 import com.example.studyflow.ui.viewmodel.UserViewModel
 import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimersScreen(
     loggedUser: User?,
@@ -75,6 +81,13 @@ fun TimersScreen(
     LaunchedEffect(Unit) {
         timerViewModel.loadTimerStats(loggedUser!!.id, TimerType.POMODORO)
     }
+    val sheetState = rememberModalBottomSheetState()
+    var showSheet by remember { mutableStateOf(false) }
+    var showFullMusicPage by remember { mutableStateOf(false) }
+    var showEnergizingSongs by remember { mutableStateOf(false) }
+    var showRelaxSongs by remember { mutableStateOf(false) }
+    var showFocusSongs by remember { mutableStateOf(false) }
+
 
 
     var selectedTab = remember { mutableStateOf("Pomodoro") }
@@ -121,8 +134,7 @@ fun TimersScreen(
                         painter = painterResource(id = R.drawable.headphones),
                         contentDescription = null,
                         tint = TextWhite,
-                        modifier = Modifier.size(24.dp)
-                    )
+                        modifier = Modifier.size(24.dp).clickable{showSheet=true}                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -184,6 +196,87 @@ fun TimersScreen(
             onLogoutSuccess()
         }
     )
+    when {
+        showEnergizingSongs -> {
+            EnergizingSongsPage(onBack = { showEnergizingSongs = false })
+            return
+        }
+
+        showRelaxSongs -> {
+            RelaxSongsPage(onBack = { showRelaxSongs = false })
+            return
+        }
+
+        showFocusSongs -> {
+            FocusSongsPage(onBack = { showFocusSongs = false })
+            return
+        }
+
+        showFullMusicPage -> {
+            FullMusicPage(
+                onBack = { showFullMusicPage = false },
+                onEnergiseClick = {
+                    showFullMusicPage = false
+                    showEnergizingSongs = true
+                },
+                onRelaxClick = {
+                    showFullMusicPage = false
+                    showRelaxSongs = true
+                },
+                onFocusClick = {
+                    showFullMusicPage = false
+                    showFocusSongs = true
+                }
+            )
+            return
+        }
+    }
+    if (showSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showSheet = false },
+            sheetState = sheetState,
+            containerColor = Color(0xFF1B263B),
+            scrimColor = Color.Black.copy(alpha = 0.5f)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+            ) {
+                AudioPlayerCard("Rain", R.raw.song)
+                AudioPlayerCard("Birds", R.raw.song)
+                AudioPlayerCard("Campfire", R.raw.song)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {
+                        showSheet = false
+                        showFullMusicPage = true
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF6A5ACD)
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                ) {
+                    Text("Full Music Version", color = Color.White)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = { showSheet = false },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF6A5ACD)
+                    ),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text("Close", color = Color.White)
+                }
+            }
+        }
+    }
 }
 
 @Composable
