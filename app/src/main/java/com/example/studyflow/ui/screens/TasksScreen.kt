@@ -1,5 +1,10 @@
 package com.example.studyflow.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,6 +58,8 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextButton
@@ -216,7 +223,6 @@ fun TasksScreen(
 
     // SettingsOverlay
     val showOverlay = remember { mutableStateOf(false) }
-    val loggedUser by userViewModel.loggedUser.collectAsState()
     val sheetState = rememberModalBottomSheetState()
     var showSheet by remember { mutableStateOf(false) }
     var showFullMusicPage by remember { mutableStateOf(false) }
@@ -262,7 +268,7 @@ fun TasksScreen(
 
     LaunchedEffect(Unit) {
         taskViewModel.loadTasks(loggedUser!!.id)
-        taskViewModel.loadTaskCounts(loggedUser!!.id)
+        taskViewModel.loadTaskCounts(loggedUser.id)
     }
 
     Scaffold(
@@ -377,6 +383,7 @@ fun TasksScreen(
 
             // Completed TaskCard Implementation
             item {
+                var expanded by remember { mutableStateOf(false) }
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -386,31 +393,51 @@ fun TasksScreen(
                 ) {
                     Column(modifier = Modifier.padding(11.dp)) {
 
-                        Text(
-                            text = "Completed ($completedTaskCount)",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        if (completedTasks.isNullOrEmpty()) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { expanded = !expanded },
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
                             Text(
-                                text = "You have no completed tasks"
+                                text = "Completed ($completedTaskCount)",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
                             )
-                        } else {
-                            val dateFormat = SimpleDateFormat("MMMM d, hh:mm a", Locale.getDefault())
-                            completedTasks.forEach() { task ->
-                                CompletedUpcomingTaskItem(
-                                    title = task.taskName,
-                                    subject = task.subjectName,
-                                    deadline = task.deadline.let { dateFormat.format(it) } ?: "No Date",
-                                    priorityLabel = task.priority.toString().lowercase().replaceFirstChar { it.uppercase() },
-                                    priorityColor = when (task.priority) {
-                                        Priority.HIGH -> PriorityHigh
-                                        Priority.MEDIUM -> PriorityMedium
-                                        Priority.LOW -> PriorityLow
-                                    },
-                                    showOption = true
-                                )
+                            Icon(
+                                imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+
+                        AnimatedVisibility(
+                            visible = expanded,
+                            enter = fadeIn() + expandVertically(),
+                            exit = fadeOut() + shrinkVertically()
+                        ) {
+                            Column {
+                                if (completedTasks.isNullOrEmpty()) {
+                                    Text(
+                                        text = "You have no completed tasks"
+                                    )
+                                } else {
+                                    val dateFormat = SimpleDateFormat("MMMM d, hh:mm a", Locale.getDefault())
+                                    completedTasks.forEach() { task ->
+                                        CompletedUpcomingTaskItem(
+                                            title = task.taskName,
+                                            subject = task.subjectName,
+                                            deadline = task.deadline.let { dateFormat.format(it) } ?: "No Date",
+                                            priorityLabel = task.priority.toString().lowercase().replaceFirstChar { it.uppercase() },
+                                            priorityColor = when (task.priority) {
+                                                Priority.HIGH -> PriorityHigh
+                                                Priority.MEDIUM -> PriorityMedium
+                                                Priority.LOW -> PriorityLow
+                                            },
+                                            showOption = true
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
