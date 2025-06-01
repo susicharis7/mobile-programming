@@ -48,6 +48,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -111,7 +116,7 @@ fun EnergizingSongsPage(onBack: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0D1B2A))
+            .background(Color(0xFF0E1D25))
     ) {
         Column(
             modifier = Modifier
@@ -165,7 +170,7 @@ fun FocusSongsPage(onBack: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0D1B2A))
+            .background(Color(0xFF0E1D25))
     ) {
         Column(
             modifier = Modifier
@@ -209,6 +214,62 @@ fun FocusSongsPage(onBack: () -> Unit) {
         }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AudioBottomSheet(
+    showSheet: Boolean,
+    onDismiss: () -> Unit,
+    sheetState: SheetState,
+    onFullMusicClick: () -> Unit
+) {
+    if (showSheet) {
+        ModalBottomSheet(
+            onDismissRequest = onDismiss,
+            sheetState = sheetState,
+            containerColor = Color(0xFF0E1D25),
+            scrimColor = Color.Black.copy(alpha = 0.5f)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+            ) {
+                AudioPlayerCard("Rain", R.raw.song)
+                AudioPlayerCard("Birds", R.raw.song)
+                AudioPlayerCard("Campfire", R.raw.song)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {
+                        onDismiss()
+                        onFullMusicClick()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF6A5ACD)
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                ) {
+                    Text("Full Music Version", color = Color.White)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF6A5ACD)
+                    ),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text("Close", color = Color.White)
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 fun SongCard(song: Song, onClick: () -> Unit) {
@@ -217,7 +278,7 @@ fun SongCard(song: Song, onClick: () -> Unit) {
             .fillMaxWidth()
             .height(120.dp)
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1B263B))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF172f3e))
     ) {
         Row(
             modifier = Modifier
@@ -277,7 +338,7 @@ fun FullMusicPage(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0D1B2A))
+            .background(Color(0xFF0E1D25))
     ) {
         Column(
             modifier = Modifier
@@ -330,7 +391,7 @@ fun RelaxSongsPage(onBack: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0D1B2A))
+            .background(Color(0xFF0E1D25))
     ) {
         Column(
             modifier = Modifier
@@ -385,7 +446,7 @@ fun AlbumCard(
             .fillMaxWidth()
             .height(120.dp)
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1B263B))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF172f3e))
     ) {
         Row(
             modifier = Modifier

@@ -188,6 +188,7 @@ fun CompletedRemainingCards(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectsScreen(
     userViewModel: UserViewModel,
@@ -202,6 +203,14 @@ fun SubjectsScreen(
 
     // SettingsOverlay
     val showOverlay = remember { mutableStateOf(false) }
+
+    val sheetState = rememberModalBottomSheetState()
+    var showSheet by remember { mutableStateOf(false) }
+    var showFullMusicPage by remember { mutableStateOf(false) }
+    var showEnergizingSongs by remember { mutableStateOf(false) }
+    var showRelaxSongs by remember { mutableStateOf(false) }
+    var showFocusSongs by remember { mutableStateOf(false) }
+
 
     if (showDialog) {
         AddSubjectDialog(
@@ -250,7 +259,7 @@ fun SubjectsScreen(
                         painter = painterResource(id = R.drawable.headphones),
                         contentDescription = null,
                         tint = TextWhite,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp).clickable{showSheet=true}
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -334,6 +343,49 @@ fun SubjectsScreen(
             onLogoutSuccess()
         }
     )
+
+    when {
+        showEnergizingSongs -> {
+            EnergizingSongsPage(onBack = { showEnergizingSongs = false })
+            return
+        }
+
+        showRelaxSongs -> {
+            RelaxSongsPage(onBack = { showRelaxSongs = false })
+            return
+        }
+
+        showFocusSongs -> {
+            FocusSongsPage(onBack = { showFocusSongs = false })
+            return
+        }
+
+        showFullMusicPage -> {
+            FullMusicPage(
+                onBack = { showFullMusicPage = false },
+                onEnergiseClick = {
+                    showFullMusicPage = false
+                    showEnergizingSongs = true
+                },
+                onRelaxClick = {
+                    showFullMusicPage = false
+                    showRelaxSongs = true
+                },
+                onFocusClick = {
+                    showFullMusicPage = false
+                    showFocusSongs = true
+                }
+            )
+            return
+        }
+    }
+
+    // to show modal for music
+    AudioBottomSheet(
+        showSheet = showSheet,
+        onDismiss = { showSheet = false },
+        sheetState = sheetState,
+        onFullMusicClick = { showFullMusicPage = true })
 }
 
 @Composable

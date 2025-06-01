@@ -31,10 +31,14 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -42,6 +46,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -91,6 +96,7 @@ import com.example.studyflow.ui.viewmodel.UserViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     loggedUser: User?,
@@ -117,7 +123,48 @@ fun DashboardScreen(
     }
 
 
+    val sheetState = rememberModalBottomSheetState()
+    var showSheet by remember { mutableStateOf(false) }
+    var showFullMusicPage by remember { mutableStateOf(false) }
+    var showEnergizingSongs by remember { mutableStateOf(false) }
+    var showRelaxSongs by remember { mutableStateOf(false) }
+    var showFocusSongs by remember { mutableStateOf(false) }
 
+    when {
+        showEnergizingSongs -> {
+            EnergizingSongsPage(onBack = { showEnergizingSongs = false })
+            return
+        }
+
+        showRelaxSongs -> {
+            RelaxSongsPage(onBack = { showRelaxSongs = false })
+            return
+        }
+
+        showFocusSongs -> {
+            FocusSongsPage(onBack = { showFocusSongs = false })
+            return
+        }
+
+        showFullMusicPage -> {
+            FullMusicPage(
+                onBack = { showFullMusicPage = false },
+                onEnergiseClick = {
+                    showFullMusicPage = false
+                    showEnergizingSongs = true
+                },
+                onRelaxClick = {
+                    showFullMusicPage = false
+                    showRelaxSongs = true
+                },
+                onFocusClick = {
+                    showFullMusicPage = false
+                    showFocusSongs = true
+                }
+            )
+            return
+        }
+    }
     Scaffold(
         topBar = {
             Column(
@@ -127,7 +174,7 @@ fun DashboardScreen(
                     .background(BackgroundColor)
                     .zIndex(1f)
             ) {
-                Spacer(modifier= Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -155,7 +202,7 @@ fun DashboardScreen(
                         painter = painterResource(id = R.drawable.headphones),
                         contentDescription = null,
                         tint = TextWhite,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp).clickable{showSheet=true}
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -397,17 +444,32 @@ fun DashboardScreen(
             item { // Study Activity
                 StudyActivitySection(
                     studyData = listOf(
-                        "30" to "4.5 hours", "31" to "2 hours", "1" to "1 hour", "2" to "2.5 hours", "3" to "4 hours", "4" to "30 min", "5" to "0 hours",
-                        "6" to "4.5 hours", "7" to "2 hours", "8" to "1.5 hours", "9" to "6 hours", "10" to "2.5 hours", "11" to "1 hour", "12" to "2 hours",
-                        "13" to "45 min", "14" to "0 hours", "15" to "6 hours", "16" to "1.5 hours", "17" to "2 hours", "18" to "5 hours"
+                        "30" to "4.5 hours",
+                        "31" to "2 hours",
+                        "1" to "1 hour",
+                        "2" to "2.5 hours",
+                        "3" to "4 hours",
+                        "4" to "30 min",
+                        "5" to "0 hours",
+                        "6" to "4.5 hours",
+                        "7" to "2 hours",
+                        "8" to "1.5 hours",
+                        "9" to "6 hours",
+                        "10" to "2.5 hours",
+                        "11" to "1 hour",
+                        "12" to "2 hours",
+                        "13" to "45 min",
+                        "14" to "0 hours",
+                        "15" to "6 hours",
+                        "16" to "1.5 hours",
+                        "17" to "2 hours",
+                        "18" to "5 hours"
                     ),
                     monthLabel = "April 2025",
                     totalHours = "48",
                     daysStudied = "20"
                 )
             }
-
-
 
 
         }
@@ -424,6 +486,12 @@ fun DashboardScreen(
             onLogoutSuccess()
         }
     )
+    // to show modal for music
+    AudioBottomSheet(
+        showSheet = showSheet,
+        onDismiss = { showSheet = false },
+        sheetState = sheetState,
+        onFullMusicClick = { showFullMusicPage = true })
 }
 
 @Composable

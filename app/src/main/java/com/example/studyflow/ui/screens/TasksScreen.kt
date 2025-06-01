@@ -53,6 +53,11 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextButton
@@ -71,8 +76,16 @@ import com.example.studyflow.ui.theme.PriorityMedium
 import com.example.studyflow.ui.theme.TextGray
 import com.example.studyflow.ui.theme.TextGray2
 import com.example.studyflow.ui.viewmodel.UserViewModel
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import java.text.SimpleDateFormat
 import java.util.Locale
+
 
 
 @Composable
@@ -187,6 +200,7 @@ fun CompletedUpcomingTaskItem(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksScreen(
     loggedUser: User?,
@@ -202,6 +216,49 @@ fun TasksScreen(
 
     // SettingsOverlay
     val showOverlay = remember { mutableStateOf(false) }
+    val loggedUser by userViewModel.loggedUser.collectAsState()
+    val sheetState = rememberModalBottomSheetState()
+    var showSheet by remember { mutableStateOf(false) }
+    var showFullMusicPage by remember { mutableStateOf(false) }
+    var showEnergizingSongs by remember { mutableStateOf(false) }
+    var showRelaxSongs by remember { mutableStateOf(false) }
+    var showFocusSongs by remember { mutableStateOf(false) }
+
+    when {
+        showEnergizingSongs -> {
+            EnergizingSongsPage(onBack = { showEnergizingSongs = false })
+            return
+        }
+
+        showRelaxSongs -> {
+            RelaxSongsPage(onBack = { showRelaxSongs = false })
+            return
+        }
+
+        showFocusSongs -> {
+            FocusSongsPage(onBack = { showFocusSongs = false })
+            return
+        }
+
+        showFullMusicPage -> {
+            FullMusicPage(
+                onBack = { showFullMusicPage = false },
+                onEnergiseClick = {
+                    showFullMusicPage = false
+                    showEnergizingSongs = true
+                },
+                onRelaxClick = {
+                    showFullMusicPage = false
+                    showRelaxSongs = true
+                },
+                onFocusClick = {
+                    showFullMusicPage = false
+                    showFocusSongs = true
+                }
+            )
+            return
+        }
+    }
 
     LaunchedEffect(Unit) {
         taskViewModel.loadTasks(loggedUser!!.id)
@@ -245,8 +302,7 @@ fun TasksScreen(
                         painter = painterResource(id = R.drawable.headphones),
                         contentDescription = null,
                         tint = TextWhite,
-                        modifier = Modifier.size(24.dp)
-                    )
+                        modifier = Modifier.size(24.dp).clickable{showSheet=true}                    )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -383,6 +439,14 @@ fun TasksScreen(
             onLogoutSuccess()
         }
     )
+
+    // music overlay
+    // to show modal for music
+    AudioBottomSheet(
+        showSheet = showSheet,
+        onDismiss = { showSheet = false },
+        sheetState = sheetState,
+        onFullMusicClick = { showFullMusicPage = true })
 }
 
 @Composable

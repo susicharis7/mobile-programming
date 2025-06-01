@@ -49,12 +49,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import com.example.studyflow.ui.screens.navigations.SettingsOverlay
 import com.example.studyflow.ui.viewmodel.UserViewModel
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ModalBottomSheet
 
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleScreen(
     loggedUser: User?,
@@ -71,6 +78,12 @@ fun ScheduleScreen(
     val showOverlay = remember { mutableStateOf(false) }
     val loggedUser by userViewModel.loggedUser.collectAsState()
 
+    val sheetState = rememberModalBottomSheetState()
+    var showSheet by remember { mutableStateOf(false) }
+    var showFullMusicPage by remember { mutableStateOf(false) }
+    var showEnergizingSongs by remember { mutableStateOf(false) }
+    var showRelaxSongs by remember { mutableStateOf(false) }
+    var showFocusSongs by remember { mutableStateOf(false) }
 
 
     val taskSections = listOf(
@@ -91,7 +104,41 @@ fun ScheduleScreen(
             Task("OS Homework", Color(0xFF2E3D4F))
         ))
     )
+    when {
+        showEnergizingSongs -> {
+            EnergizingSongsPage(onBack = { showEnergizingSongs = false })
+            return
+        }
 
+        showRelaxSongs -> {
+            RelaxSongsPage(onBack = { showRelaxSongs = false })
+            return
+        }
+
+        showFocusSongs -> {
+            FocusSongsPage(onBack = { showFocusSongs = false })
+            return
+        }
+
+        showFullMusicPage -> {
+            FullMusicPage(
+                onBack = { showFullMusicPage = false },
+                onEnergiseClick = {
+                    showFullMusicPage = false
+                    showEnergizingSongs = true
+                },
+                onRelaxClick = {
+                    showFullMusicPage = false
+                    showRelaxSongs = true
+                },
+                onFocusClick = {
+                    showFullMusicPage = false
+                    showFocusSongs = true
+                }
+            )
+            return
+        }
+    }
     Scaffold(
         topBar = {
             Column(
@@ -129,7 +176,7 @@ fun ScheduleScreen(
                         painter = painterResource(id = R.drawable.headphones),
                         contentDescription = null,
                         tint = TextWhite,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp).clickable { showSheet =true }
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -161,7 +208,12 @@ fun ScheduleScreen(
             onLogoutSuccess()
         }
     )
-
+    // to show modal for music
+    AudioBottomSheet(
+        showSheet = showSheet,
+        onDismiss = { showSheet = false },
+        sheetState = sheetState,
+        onFullMusicClick = { showFullMusicPage = true })
 }
 data class Task(val title: String, val subjectColor: Color? = null)
 data class TaskSection(val date: String, val tasks: List<Task>)
