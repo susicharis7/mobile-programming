@@ -9,6 +9,7 @@ import com.example.studyflow.model.Priority
 import com.example.studyflow.model.Subject
 import com.example.studyflow.model.Task
 import com.example.studyflow.model.User
+import com.example.studyflow.session.SessionManager
 import com.example.studyflow.ui.theme.*
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
@@ -24,11 +25,14 @@ import kotlin.random.Random
 class StudyFlow : Application() {
     @Inject
     lateinit var database: AppDatabase
+//    @Inject lateinit var sessionManager: SessionManager       // UNCOMMENT THIS LINE IF YOU GET TYPE CONVERSION ERROR
 
     override fun onCreate() {
         super.onCreate()
 
         CoroutineScope(Dispatchers.IO).launch {
+
+//            sessionManager.clearSession()     // UNCOMMENT THIS LINE AS WELL
 
 //            database.userDao().getUserById(1)
 //            Log.d("DatabaseTest", "Database initialized")
