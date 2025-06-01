@@ -19,15 +19,19 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,6 +52,7 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.studyflow.R
@@ -87,7 +92,6 @@ fun TimersScreen(
     var showEnergizingSongs by remember { mutableStateOf(false) }
     var showRelaxSongs by remember { mutableStateOf(false) }
     var showFocusSongs by remember { mutableStateOf(false) }
-
 
 
     var selectedTab = remember { mutableStateOf("Pomodoro") }
@@ -243,9 +247,15 @@ fun TimersScreen(
 fun PomodoroTimer(loggedUser: User?, timerViewModel: TimerViewModel) {
     var selectedMode by remember { mutableStateOf("Focus") }
 
-    val focusDuration = 25 * 60
-    val shortBreakDuration = 5 * 60
-    val longBreakDuration = 10 * 60
+    var showEditDialog by remember { mutableStateOf(false) }
+    var focusDurationMinutes by remember { mutableStateOf(25) }
+    var shortBreakMinutes by remember { mutableStateOf(5) }
+    var longBreakMinutes by remember { mutableStateOf(10) }
+
+    val focusDuration = focusDurationMinutes * 60
+    val shortBreakDuration = shortBreakMinutes * 60
+    val longBreakDuration = longBreakMinutes * 60
+
 
     val currentDuration = when (selectedMode) {
         "Focus" -> focusDuration
@@ -407,6 +417,9 @@ fun PomodoroTimer(loggedUser: User?, timerViewModel: TimerViewModel) {
                         modifier = Modifier
                             .size(42.dp)
                             .clip(CircleShape)
+                            .clickable {
+                                showEditDialog = true
+                            }
                     )
                 }
             }
@@ -452,6 +465,64 @@ fun PomodoroTimer(loggedUser: User?, timerViewModel: TimerViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
     }
+
+    if (showEditDialog) {
+        AlertDialog(
+            onDismissRequest = { showEditDialog = false },
+            title = {
+                Text("Edit Timer Durations")
+            },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    DurationInputField("Focus", focusDurationMinutes) {
+                        focusDurationMinutes = it
+                    }
+                    DurationInputField("Short Break", shortBreakMinutes) {
+                        shortBreakMinutes = it
+                    }
+                    DurationInputField("Long Break", longBreakMinutes) {
+                        longBreakMinutes = it
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showEditDialog = false
+                    timeLeft = when (selectedMode) {
+                        "Focus" -> focusDuration
+                        "Short Break" -> shortBreakDuration
+                        "Long Break" -> longBreakDuration
+                        else -> focusDuration
+                    }
+                }) {
+                    Text("Save")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showEditDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
+
+}
+
+@Composable
+fun DurationInputField(label: String, value: Int, onValueChange: (Int) -> Unit) {
+    OutlinedTextField(
+        value = value.toString(),
+        onValueChange = {
+            it.toIntOrNull()?.let { minutes ->
+                onValueChange(minutes.coerceIn(1, 180)) // max 3 hours
+            }
+        },
+        label = { Text("$label (min)") },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 
@@ -482,6 +553,8 @@ fun BasicTimer() {
     var completedTimers by remember { mutableStateOf(0) }
     var distractions by remember { mutableStateOf(0) }
     var hours by remember { mutableStateOf(0) }
+    var showEditDialog by remember { mutableStateOf(false) }
+
 
     LaunchedEffect(isRunning) {
         while (isRunning && timeLeft > 0) {
@@ -624,10 +697,21 @@ fun BasicTimer() {
                         modifier = Modifier
                             .size(42.dp)
                             .clip(CircleShape)
+                            .clickable { showEditDialog = true }
                     )
                 }
             }
         }
+        EditDurationDialog(
+            showDialog = showEditDialog,
+            currentDuration = durationInSeconds,
+            onDismiss = { showEditDialog = false },
+            onSave = { newDuration ->
+                durationInSeconds = newDuration
+                timeLeft = newDuration
+                showEditDialog = false
+            }
+        )
 
         Spacer(modifier = Modifier.height(14.dp))
 
@@ -674,6 +758,46 @@ fun BasicTimer() {
 }
 
 
+@Composable
+fun EditDurationDialog(
+    showDialog: Boolean,
+    currentDuration: Int,
+    onDismiss: () -> Unit,
+    onSave: (newDuration: Int) -> Unit
+) {
+    if (showDialog) {
+        var newDurationMinutes by remember { mutableStateOf(currentDuration / 60) }
+
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text("Edit Duration") },
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = newDurationMinutes.toString(),
+                        onValueChange = {
+                            newDurationMinutes = it.toIntOrNull() ?: newDurationMinutes
+                        },
+                        label = { Text("Duration (minutes)") },
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onSave(newDurationMinutes * 60)
+                }) {
+                    Text("Save")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+}
 
 
 @Composable
