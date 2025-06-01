@@ -31,10 +31,10 @@ import java.util.Date
 )
 data class Exam(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0,
     val name: String,
-    val subjectId: Int,
+    val subjectId: Long,
     val examDate: Date,
-    val userId: Int,
+    val userId: Long,
     val isActive: Boolean
 )

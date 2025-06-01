@@ -42,6 +42,7 @@ import com.example.studyflow.R
 import com.example.studyflow.model.User
 import com.example.studyflow.ui.theme.BackgroundColor
 import com.example.studyflow.ui.theme.CardBackgroundColor
+import com.example.studyflow.ui.theme.FloatingButtonColor
 import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.UpcomingTasksBackground
 import com.example.studyflow.ui.viewmodel.TaskViewModel
@@ -78,6 +79,7 @@ fun TaskCard(
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(11.dp)) {
+
             Box(modifier = Modifier.fillMaxWidth()) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -89,7 +91,9 @@ fun TaskCard(
                         tint = Color.Gray,
                         modifier = Modifier.size(20.dp)
                     )
+
                     Spacer(modifier = Modifier.width(10.dp))
+
                     Text(
                         text = title,
                         color = TextWhite,
@@ -97,6 +101,7 @@ fun TaskCard(
                         fontSize = 15.sp
                     )
                 }
+
                 Icon(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = null,
@@ -115,6 +120,7 @@ fun TaskCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
+                // Nested Row
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = category,
@@ -125,14 +131,18 @@ fun TaskCard(
                             .background(UpcomingTasksBackground, RoundedCornerShape(4.dp))
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     )
+
                     Spacer(modifier = Modifier.width(6.dp))
+
                     Icon(
                         imageVector = Icons.Default.AccessTime,
                         contentDescription = null,
                         tint = Color(0xFFF9E79F),
                         modifier = Modifier.size(14.dp)
                     )
+
                     Spacer(modifier = Modifier.width(4.dp))
+
                     Text(
                         text = date,
                         color = Color(0xFFF9E79F),
@@ -152,7 +162,9 @@ fun TaskCard(
                         tint = priorityColor,
                         modifier = Modifier.size(14.dp)
                     )
+
                     Spacer(modifier = Modifier.width(4.dp))
+
                     Text(
                         text = priority,
                         color = priorityColor,
@@ -164,6 +176,7 @@ fun TaskCard(
         }
     }
 }
+
 
 @Composable
 fun TasksScreen(
@@ -178,7 +191,6 @@ fun TasksScreen(
 
     // SettingsOverlay
     val showOverlay = remember { mutableStateOf(false) }
-    val loggedUser by userViewModel.loggedUser.collectAsState()
 
     Scaffold(
         topBar = {
@@ -190,6 +202,7 @@ fun TasksScreen(
                     .zIndex(1f)
             ) {
                 Spacer(modifier= Modifier.height(16.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -203,6 +216,7 @@ fun TasksScreen(
                             .size(34.dp)
                             .clickable { showOverlay.value = true }
                     )
+
                     Text(
                         "Tasks",
                         color = TextWhite,
@@ -210,6 +224,7 @@ fun TasksScreen(
                         fontWeight = FontWeight.Normal,
                         letterSpacing = 0.05.em
                     )
+
                     Icon(
                         painter = painterResource(id = R.drawable.headphones),
                         contentDescription = null,
@@ -224,7 +239,7 @@ fun TasksScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showDialog = true }, // ✅ ADDED
-                containerColor = Color(0xFF5F93AD),
+                containerColor = FloatingButtonColor,
                 contentColor = TextWhite,
                 shape = RoundedCornerShape(15),
                 modifier = Modifier.padding(0.dp)
@@ -245,6 +260,9 @@ fun TasksScreen(
                 .padding(horizontal = 14.dp)
                 .padding(paddingValues)
         ) {
+
+            // TaskCard Implementation
+
             items(3) { index ->
                 TaskCard(
                     title = when (index) {
@@ -418,4 +436,3 @@ fun AddTaskDialog(
         containerColor = Color(0xFF234256)
     )
 }
-

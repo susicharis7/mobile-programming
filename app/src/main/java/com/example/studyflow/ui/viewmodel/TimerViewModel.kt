@@ -18,7 +18,7 @@ class TimerViewModel @Inject constructor(
     private val _timerStats = MutableStateFlow<List<Timersession>>(emptyList())
     val timerStats: StateFlow<List<Timersession>> = _timerStats
 
-    fun loadTimerStats(userId: Int, timerType: TimerType) {
+    fun loadTimerStats(userId: Long, timerType: TimerType) {
         viewModelScope.launch {
             val list = timersessionRepo.getTimerSessionsByUserIdAndTimerType(userId, timerType)
             _timerStats.value = list

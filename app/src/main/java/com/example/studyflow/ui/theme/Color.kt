@@ -38,14 +38,30 @@ val LoginGreen = Color(0xFF48CB94)
 val ButtonGradientColor = listOf(Color(0xFF48CB94), Color(0xFF2F9168))
 val BackgroundColor = Color(0xFF0E1D25)
 val CardBackgroundColor = Color(0xED183040)
+val CardForegroundColor = Color(0xff174459)
 val TextWhite = Color(0xFFFAFAFA)
 val TextGray = Color(0xFFD1D5DB)
 val UpcomingTasksBackground = Color(0xFF374151)
-val UpcomingExamCardColor = Color(0xff174459)
 val TextBlack = Color(0xFF171717)
 val RedValidationColor = Color(0xFFF87171)
+val FloatingButtonColor =Color(0xFF1A536D)
+val PriorityHigh = Color(0xFFF87171)
+val PriorityMedium = Color(0xFFFFCB44)
+val PriorityLow = Color(0xFF4ADE80)
 
 
+// Color Stripes for exams
+val BlueColorStripe = Color(0xFF3B82F6)
+val PurpleColorStripe = Color(0xFFA855F7)
+val YellowColorStripe = Color(0xFFEAB308)
+val GreenColorStripe = Color(0xFF79F63B)
+val RedColorStripe = Color(0xFFF63B3E)
+val CyanColorStripe = Color(0xFF3BF6C7)
+val DeepOrangeColorStripe = Color(0xFFF6673B)
+val LightOrangeColorStripe = Color(0xFFF6923B)
+val PinkColorStripe = Color(0xFFF63BAB)
+val FuchsiaColorStripe = Color(0xFFF63B6A)
+val LightBlueColorStripe = Color(0xFF3BBBF6)
 
 
 // Default Colors

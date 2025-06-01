@@ -39,11 +39,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.studyflow.R
+import com.example.studyflow.model.Subject
 import com.example.studyflow.model.User
 import com.example.studyflow.ui.screens.navigations.SettingsOverlay
 import com.example.studyflow.ui.theme.BackgroundColor
 import com.example.studyflow.ui.theme.CardBackgroundColor
+import com.example.studyflow.ui.theme.CardForegroundColor
 import com.example.studyflow.ui.theme.FirstSubjectProgressColor
+import com.example.studyflow.ui.theme.FloatingButtonColor
 import com.example.studyflow.ui.theme.ProgressBackgroundColor
 import com.example.studyflow.ui.theme.SecondSubjectProgressColor
 import com.example.studyflow.ui.theme.TextGray
@@ -70,6 +73,7 @@ fun SubjectCard(
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
+
             Box(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = subjectName,
@@ -88,7 +92,9 @@ fun SubjectCard(
                         .align(Alignment.TopEnd)
                         .size(20.dp)
                 )
-            }
+
+
+            } // Box
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -104,14 +110,15 @@ fun SubjectCard(
                     color = TextWhite,
                     fontSize = 12.sp
                 )
-            }
+            } // Row
 
+            // Progress Bar
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(13.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(ProgressBackgroundColor)
+                    .background(ProgressBackgroundColor)// Background bar
             ) {
                 Box(
                     modifier = Modifier
@@ -124,6 +131,7 @@ fun SubjectCard(
 
             Spacer(modifier = Modifier.height(14.dp))
 
+            // Completed / Remaining
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -146,9 +154,12 @@ fun SubjectCard(
                 fontSize = 13.sp,
                 modifier = Modifier.clickable { /* TODO : Navigate */ }
             )
-        }
-    }
-}
+
+
+
+        } // Column
+    } // Card
+} // SubjectCard
 
 @Composable
 fun CompletedRemainingCards(
@@ -158,7 +169,7 @@ fun CompletedRemainingCards(
     Column(
         modifier = Modifier
             .width(165.dp)
-            .background(ProgressBackgroundColor, RoundedCornerShape(10.dp))
+            .background(CardForegroundColor, RoundedCornerShape(10.dp))
             .padding(vertical = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -191,7 +202,6 @@ fun SubjectsScreen(
 
     // SettingsOverlay
     val showOverlay = remember { mutableStateOf(false) }
-    val loggedUser by userViewModel.loggedUser.collectAsState()
 
     if (showDialog) {
         AddSubjectDialog(
@@ -249,7 +259,7 @@ fun SubjectsScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showDialog = true },
-                containerColor = Color(0xFF5F93AD),
+                containerColor = FloatingButtonColor,
                 contentColor = TextWhite,
                 shape = RoundedCornerShape(15),
                 modifier = Modifier

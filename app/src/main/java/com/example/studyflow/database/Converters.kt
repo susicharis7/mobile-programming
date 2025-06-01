@@ -1,5 +1,7 @@
 package com.example.studyflow.database
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.room.TypeConverter
 import com.example.studyflow.model.Priority
 import com.example.studyflow.model.TimerType
@@ -23,7 +25,17 @@ class Converters {
 
 
     // for timerType enum
+    @TypeConverter
     fun fromTimerType(timerType: TimerType): String = timerType.name
 
+    @TypeConverter
     fun toTimerType(timerType: String): TimerType = TimerType.valueOf(timerType)
+
+
+    // for color
+    @TypeConverter
+    fun fromColor(color: Color): Long = color.toArgb().toLong()
+
+    @TypeConverter
+    fun toColor(value: Long): Color = Color(value)
 }

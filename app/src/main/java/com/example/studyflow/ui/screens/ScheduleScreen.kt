@@ -97,7 +97,7 @@ fun ScheduleScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = 14.dp)
                     .background(BackgroundColor)
                     .zIndex(1f)
             ) {

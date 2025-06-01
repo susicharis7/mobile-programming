@@ -35,11 +35,11 @@ enum class Priority {
 )
 data class Task(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0,
     val name: String,
-    val subjectId: Int,
+    val subjectId: Long,
     val deadline: Date,
     val priority: Priority = Priority.MEDIUM,
     val isCompleted: Boolean = false,
-    val userId: Int
+    val userId: Long
 )
