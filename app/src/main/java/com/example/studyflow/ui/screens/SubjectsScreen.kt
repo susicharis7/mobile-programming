@@ -57,6 +57,7 @@ import com.example.studyflow.ui.theme.ViewAllColor
 import com.example.studyflow.ui.viewmodel.SubjectViewModel
 import com.example.studyflow.ui.viewmodel.TaskViewModel
 import com.example.studyflow.ui.viewmodel.UserViewModel
+import kotlin.random.Random
 
 @Composable
 fun SubjectCard(
@@ -215,8 +216,22 @@ fun SubjectsScreen(
 
 
     if (showDialog) {
+        val colors = arrayOf(
+            BlueColorStripe,
+            PurpleColorStripe,
+            YellowColorStripe,
+            GreenColorStripe,
+            RedColorStripe,
+            CyanColorStripe,
+            DeepOrangeColorStripe,
+            LightOrangeColorStripe,
+            PinkColorStripe,
+            FuchsiaColorStripe,
+            LightBlueColorStripe
+        )
         AddSubjectDialog(
             onAdd = { name ->
+                subjectViewModel.insertSubject(Subject(name = name, userId = loggedUser!!.id, isActive = true, color = colors[Random.nextInt(colors.size)]))
                 // You can call subjectViewModel.addSubject(name) here
                 showDialog = false
             },
