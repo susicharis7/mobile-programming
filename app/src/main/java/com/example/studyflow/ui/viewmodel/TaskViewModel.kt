@@ -21,6 +21,14 @@ class TaskViewModel @Inject constructor(
     private val _completedTasks = MutableStateFlow<List<TaskWithSubject>>(emptyList())
     val completedTasks: StateFlow<List<TaskWithSubject>> = _completedTasks
 
+    private val _subjectTaskCounts = MutableStateFlow<Map<Long, SubjectTaskCount>>(emptyMap())
+    val subjectTaskCounts: StateFlow<Map<Long, SubjectTaskCount>> = _subjectTaskCounts
+
+    data class SubjectTaskCount(
+        val completed: Int,
+        val remaining: Int
+    )
+
     private val _completedTaskCount = MutableStateFlow<Int?>(null)
     val completedTaskCount: StateFlow<Int?> = _completedTaskCount
 
@@ -37,6 +45,19 @@ class TaskViewModel @Inject constructor(
 
             val completedList = taskRepo.getTasksWithSubjectByUserIdAndIsCompleted(userId, true)
             _completedTasks.value = completedList
+        }
+    }
+    fun loadSubjectTaskCounts(userId: Long, subjectIds: List<Long>) {
+//        println("DEBUG: Loading counts for user $userId, subjects $subjectIds")
+        viewModelScope.launch {
+            val counts = mutableMapOf<Long, SubjectTaskCount>()
+
+            subjectIds.forEach() { subjectId ->
+                val completed = taskRepo.getTasksCountByUserIdAndSubjectAndIsCompleted(userId, subjectId, true)
+                val remaining = taskRepo.getTasksCountByUserIdAndSubjectAndIsCompleted(userId, subjectId, false)
+                counts[subjectId] = SubjectTaskCount(completed, remaining)
+            }
+            _subjectTaskCounts.value = counts
         }
     }
     fun loadTaskCounts(userId: Long) {

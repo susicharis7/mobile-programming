@@ -43,6 +43,7 @@ import com.example.studyflow.model.Subject
 import com.example.studyflow.model.User
 import com.example.studyflow.ui.screens.navigations.SettingsOverlay
 import com.example.studyflow.ui.theme.BackgroundColor
+import com.example.studyflow.ui.theme.*
 import com.example.studyflow.ui.theme.CardBackgroundColor
 import com.example.studyflow.ui.theme.CardForegroundColor
 import com.example.studyflow.ui.theme.FirstSubjectProgressColor
@@ -62,9 +63,9 @@ fun SubjectCard(
     subjectName: String,
     completed: Int,
     remaining: Int,
-    progress: Float,
     progressColor: Brush
 ) {
+    val progress = completed.toFloat()/(completed+remaining).toFloat()
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -199,6 +200,7 @@ fun SubjectsScreen(
     onLogoutSuccess: () -> Unit
 ) {
     val subjects by subjectViewModel.subjects.collectAsState()
+    val subjectTaskCounts by taskViewModel.subjectTaskCounts.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
 
     // SettingsOverlay
@@ -220,6 +222,16 @@ fun SubjectsScreen(
             },
             onDismiss = { showDialog = false }
         )
+    }
+
+    LaunchedEffect(Unit) {
+        subjectViewModel.loadSubjects(loggedUser!!.id)
+    }
+
+    LaunchedEffect(loggedUser, subjects) {
+        if (subjects.isNotEmpty()) {
+            taskViewModel.loadSubjectTaskCounts(loggedUser!!.id, subjects.map { it.id })
+        }
     }
 
     Scaffold(
@@ -283,6 +295,22 @@ fun SubjectsScreen(
         },
         modifier = Modifier.background(BackgroundColor)
     ) { paddingValues ->
+        fun getGradientForColor(color: Color): Brush {
+            return when (color) {
+                BlueColorStripe -> BlueColorGradient
+                PurpleColorStripe -> PurpleColorGradient
+                YellowColorStripe -> YellowColorGradient
+                GreenColorStripe -> GreenColorGradient
+                RedColorStripe -> RedColorGradient
+                CyanColorStripe -> CyanColorGradient
+                DeepOrangeColorStripe -> DeepOrangeColorGradient
+                LightOrangeColorStripe -> LightOrangeColorGradient
+                PinkColorStripe -> PinkColorGradient
+                FuchsiaColorStripe -> FuchsiaColorGradient
+                LightBlueColorStripe -> LightBlueColorGradient
+                else -> BlueColorGradient // default fallback
+            }
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -290,45 +318,52 @@ fun SubjectsScreen(
                 .padding(horizontal = 14.dp)
                 .padding(paddingValues)
         ) {
-            item {
-                SubjectCard(
-                    subjectName = "Mobile Programming",
-                    completed = 3,
-                    remaining = 1,
-                    progress = 0.75f,
-                    progressColor = FirstSubjectProgressColor
-                )
+            subjects.forEach() { subject ->
+                item {
+                    val counts = subjectTaskCounts[subject.id] ?: TaskViewModel.SubjectTaskCount(0, 0)
+                    SubjectCard(
+                        subjectName = subject.name,
+                        completed = counts.completed,
+                        remaining = counts.remaining,
+                        progressColor = getGradientForColor(subject.color)
+                    )
+                }
             }
-
-            item {
-                SubjectCard(
-                    subjectName = "Statistics",
-                    completed = 6,
-                    remaining = 2,
-                    progress = 0.75f,
-                    progressColor = SecondSubjectProgressColor
-                )
-            }
-
-            item {
-                SubjectCard(
-                    subjectName = "Microprocessors",
-                    completed = 9,
-                    remaining = 3,
-                    progress = 0.75f,
-                    progressColor = ThirdSubjectProgressColor
-                )
-            }
-
-            item {
-                SubjectCard(
-                    subjectName = "Data Structures",
-                    completed = 19,
-                    remaining = 12,
-                    progress = 0.86f,
-                    progressColor = FirstSubjectProgressColor
-                )
-            }
+//            item {
+//                SubjectCard(
+//                    subjectName = "Mobile Programming",
+//                    completed = 3,
+//                    remaining = 1,
+//                    progressColor = FirstSubjectProgressColor
+//                )
+//            }
+//
+//            item {
+//                SubjectCard(
+//                    subjectName = "Statistics",
+//                    completed = 6,
+//                    remaining = 2,
+//                    progressColor = SecondSubjectProgressColor
+//                )
+//            }
+//
+//            item {
+//                SubjectCard(
+//                    subjectName = "Microprocessors",
+//                    completed = 9,
+//                    remaining = 3,
+//                    progressColor = ThirdSubjectProgressColor
+//                )
+//            }
+//
+//            item {
+//                SubjectCard(
+//                    subjectName = "Data Structures",
+//                    completed = 19,
+//                    remaining = 12,
+//                    progressColor = FirstSubjectProgressColor
+//                )
+//            }
         }
     }
 

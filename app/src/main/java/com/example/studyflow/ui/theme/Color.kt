@@ -53,16 +53,27 @@ val PriorityLow = Color(0xFF4ADE80)
 
 // Color Stripes for exams
 val BlueColorStripe = Color(0xFF3B82F6)
+val BlueColorGradient = Brush.linearGradient(colors = listOf(Color(0xFF3B82F6), Color(0xFF234C90)))
 val PurpleColorStripe = Color(0xFFA855F7)
+val PurpleColorGradient = Brush.linearGradient(colors = listOf(Color(0xFFA855F7), Color(0xFF633291)))
 val YellowColorStripe = Color(0xFFEAB308)
+val YellowColorGradient = Brush.linearGradient(colors = listOf(Color(0xFFEAB308), Color(0xFF846505)))
 val GreenColorStripe = Color(0xFF79F63B)
+val GreenColorGradient= Brush.linearGradient(colors = listOf(Color(0xFF79F63B), Color(0xFF479023)))
 val RedColorStripe = Color(0xFFF63B3E)
+val RedColorGradient = Brush.linearGradient(colors = listOf(Color(0xFFF63B3E), Color(0xFF902324)))
 val CyanColorStripe = Color(0xFF3BF6C7)
+val CyanColorGradient = Brush.linearGradient(colors = listOf(Color(0xFF3BF6C7), Color(0xFF239075)))
 val DeepOrangeColorStripe = Color(0xFFF6673B)
+val DeepOrangeColorGradient = Brush.linearGradient(colors = listOf(Color(0xFFF6673B), Color(0xFF903C23)))
 val LightOrangeColorStripe = Color(0xFFF6923B)
+val LightOrangeColorGradient = Brush.linearGradient(colors = listOf(Color(0xFFF6923B), Color(0xFF905623)))
 val PinkColorStripe = Color(0xFFF63BAB)
+val PinkColorGradient = Brush.linearGradient(colors = listOf(Color(0xFFF63BAB), Color(0xFF902364)))
 val FuchsiaColorStripe = Color(0xFFF63B6A)
+val FuchsiaColorGradient = Brush.linearGradient(colors = listOf(Color(0xFFF63B6A), Color(0xFF90233E)))
 val LightBlueColorStripe = Color(0xFF3BBBF6)
+val LightBlueColorGradient = Brush.linearGradient(colors = listOf(Color(0xFF3BBBF6),Color(0xFF236490)))
 
 
 // Default Colors

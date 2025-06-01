@@ -21,6 +21,14 @@ class TaskRepositoryImpl @Inject constructor(private val taskDao: TaskDao): Task
         return taskDao.getTasksWithSubjectByUserIdAndIsCompleted(userId, isCompleted)
     }
 
+    override suspend fun getTasksCountByUserIdAndSubjectAndIsCompleted(
+        userId: Long,
+        subjectId: Long,
+        isCompleted: Boolean
+    ): Int {
+        return taskDao.getTasksCountByUserIdAndSubjectAndIsCompleted(userId, subjectId, isCompleted)
+    }
+
     override suspend fun getCompletedTaskCountByUserId(userId: Long): Int {
         return taskDao.getCompletedTaskCountByUserId(userId)
     }

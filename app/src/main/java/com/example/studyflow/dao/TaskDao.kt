@@ -18,9 +18,9 @@ interface TaskDao : BaseDao<Task> {
     @Query("SELECT COUNT(*) completedCount FROM tasks WHERE userId = :userId")
     suspend fun getTotalTaskCountByUserId(userId: Long): Int
 
-    // get tasks by subject
-
-    // get by priority/deadline (to give list of 3-4 most important tasks
+    // get completed/uncompleted tasks count by subject
+    @Query("SELECT COUNT(*) completedCount FROM tasks WHERE userId = :userId AND subjectId = :subjectId AND isCompleted = :isCompleted")
+    suspend fun getTasksCountByUserIdAndSubjectAndIsCompleted(userId: Long, subjectId: Long, isCompleted: Boolean): Int
 
     // task card also contains subject name so we might need some table joins
     @Query("""
