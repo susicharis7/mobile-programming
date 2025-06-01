@@ -27,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -101,7 +102,7 @@ fun DashboardScreen(
     onLogoutSuccess: () -> Unit
 ) {
 //    val loggedUser by userViewModel.loggedUser.collectAsState()
-    val tasks by taskViewModel.tasks.collectAsState()
+    val tasks by taskViewModel.remainingTasks.collectAsState()
     val exams by examViewModel.exams.collectAsState()
 
     val completedTaskCount by taskViewModel.completedTaskCount.collectAsState(0)
@@ -278,7 +279,8 @@ fun DashboardScreen(
                                     Priority.HIGH -> PriorityHigh
                                     Priority.MEDIUM -> PriorityMedium
                                     Priority.LOW -> PriorityLow
-                                }
+                                },
+                                showOption = false
                             )
                         }
                     }
@@ -647,7 +649,8 @@ fun UpcomingTaskItem(
     subject: String,
     deadline: String,
     priorityColor: Color,
-    priorityLabel: String
+    priorityLabel: String,
+    showOption: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -665,12 +668,28 @@ fun UpcomingTaskItem(
         )
 
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                title,
-                color = TextWhite,
-                fontSize = 14.5.sp,
-                fontWeight = FontWeight.Normal
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    title,
+                    color = TextWhite,
+                    fontSize = 14.5.sp,
+                    fontWeight = FontWeight.Normal
+                )
+
+                if (showOption) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = null,
+                        tint = TextWhite,
+                        modifier = Modifier
+                            .padding(end = 2.dp, top = 2.dp)
+                            .size(20.dp)
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(2.dp))
 

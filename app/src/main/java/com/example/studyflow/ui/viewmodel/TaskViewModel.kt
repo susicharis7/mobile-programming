@@ -15,8 +15,11 @@ import javax.inject.Inject
 class TaskViewModel @Inject constructor(
     private val taskRepo: TaskRepository,
 ) : ViewModel() {
-    private val _tasks = MutableStateFlow<List<TaskWithSubject>>(emptyList())
-    val tasks: StateFlow<List<TaskWithSubject>> = _tasks
+    private val _remainingTasks = MutableStateFlow<List<TaskWithSubject>>(emptyList())
+    val remainingTasks: StateFlow<List<TaskWithSubject>> = _remainingTasks
+
+    private val _completedTasks = MutableStateFlow<List<TaskWithSubject>>(emptyList())
+    val completedTasks: StateFlow<List<TaskWithSubject>> = _completedTasks
 
     private val _completedTaskCount = MutableStateFlow<Int?>(null)
     val completedTaskCount: StateFlow<Int?> = _completedTaskCount
@@ -29,8 +32,11 @@ class TaskViewModel @Inject constructor(
 
     fun loadTasks(userId: Long) {
         viewModelScope.launch {
-            val list = taskRepo.getTasksWithSubjectByUserId(userId)
-            _tasks.value = list
+            val remainingList = taskRepo.getTasksWithSubjectByUserIdAndIsCompleted(userId, false)
+            _remainingTasks.value = remainingList
+
+            val completedList = taskRepo.getTasksWithSubjectByUserIdAndIsCompleted(userId, true)
+            _completedTasks.value = completedList
         }
     }
     fun loadTaskCounts(userId: Long) {

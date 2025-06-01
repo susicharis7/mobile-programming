@@ -27,7 +27,7 @@ interface TaskDao : BaseDao<Task> {
         SELECT tasks.name taskName, subjects.name subjectName, tasks.deadline, tasks.priority 
         FROM tasks
         INNER JOIN subjects ON tasks.subjectId=subjects.id
-        WHERE tasks.userId = :userId AND tasks.isCompleted = 0
+        WHERE tasks.userId = :userId AND tasks.isCompleted = :isCompleted
         ORDER BY
             tasks.deadline ASC,
             CASE tasks.priority
@@ -35,5 +35,5 @@ interface TaskDao : BaseDao<Task> {
                 WHEN 'MEDIUM' THEN 2
                 WHEN 'LOW' THEN 3
             END""")
-    suspend fun getTasksWithSubjectByUserId(userId: Long): List<TaskWithSubject>
+    suspend fun getTasksWithSubjectByUserIdAndIsCompleted(userId: Long, isCompleted: Boolean): List<TaskWithSubject>
 }
