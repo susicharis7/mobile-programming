@@ -58,6 +58,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -90,8 +91,10 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.ui.layout.onGloballyPositioned
 import java.text.SimpleDateFormat
 import java.util.Locale
+
 
 
 
@@ -476,6 +479,7 @@ fun TasksScreen(
         onFullMusicClick = { showFullMusicPage = true })
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskDialog(
     onAdd: (String, String, String, String) -> Unit,
@@ -484,92 +488,109 @@ fun AddTaskDialog(
     var taskName by remember { mutableStateOf("") }
     var subject by remember { mutableStateOf("") }
     var deadline by remember { mutableStateOf("") }
-    var priority by remember { mutableStateOf("Add Priority") } // Changed initial value
-    val priorities = listOf("High", "Medium", "Low")
+    var priority by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
+
+    val priorities = listOf("High", "Medium", "Low")
+    val dialogBg = Color(0xFF234256)
+    val borderColor = Color(0xFFB6CBEE)
+
+    val textFieldColors = TextFieldDefaults.colors(
+        focusedTextColor = Color.White,
+        unfocusedTextColor = Color.White,
+        cursorColor = Color.White,
+        focusedContainerColor = dialogBg,
+        unfocusedContainerColor = dialogBg,
+        focusedIndicatorColor = borderColor,
+        unfocusedIndicatorColor = borderColor
+    )
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = dialogBg,
         title = { Text("Add Task", color = Color.White) },
         text = {
             Column {
+                // Task Name
                 OutlinedTextField(
                     value = taskName,
                     onValueChange = { taskName = it },
-                    placeholder = { Text("Task Name", color = Color.Black) },
+                    placeholder = { Text("Task Name", color = Color.White.copy(alpha = 0.7f)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFBBCFE9),
-                        unfocusedContainerColor = Color(0xFFBBCFE9),
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.Black,
-                        cursorColor = Color.Black
-                    )
+                    colors = textFieldColors
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
+                // Subject
                 OutlinedTextField(
                     value = subject,
                     onValueChange = { subject = it },
-                    placeholder = { Text("Add Subject", color = Color.Black) },
+                    placeholder = { Text("Add Subject", color = Color.White.copy(alpha = 0.7f)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFBBCFE9),
-                        unfocusedContainerColor = Color(0xFFBBCFE9),
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.Black,
-                        cursorColor = Color.Black
-                    )
+                    colors = textFieldColors
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
+                // Deadline
                 OutlinedTextField(
                     value = deadline,
                     onValueChange = { deadline = it },
-                    placeholder = { Text("Add Deadline", color = Color.Black) },
+                    placeholder = { Text("Add Deadline", color = Color.White.copy(alpha = 0.7f)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFBBCFE9),
-                        unfocusedContainerColor = Color(0xFFBBCFE9),
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.Black,
-                        cursorColor = Color.Black
-                    )
+                    colors = textFieldColors
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Box {
+                // Priority Dropdown (fully working)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                ) {
                     OutlinedTextField(
                         value = priority,
                         onValueChange = {},
                         readOnly = true,
+                        placeholder = { Text("Select Priority", color = Color.White.copy(alpha = 0.7f)) },
+                        label = { Text("Priority", color = Color.White.copy(alpha = 0.7f)) },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { expanded = true },
-                        placeholder = { Text("Add Priority", color = Color.Black) },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color(0xFFBBCFE9),
-                            unfocusedContainerColor = Color(0xFFBBCFE9),
-                            focusedTextColor = if (priority == "Add Priority") Color.Black.copy(alpha = 0.5f) else Color.Black,
-                            unfocusedTextColor = if (priority == "Add Priority") Color.Black.copy(alpha = 0.5f) else Color.Black,
-                            cursorColor = Color.Black
-                        )
+                            .onGloballyPositioned { },
+                        colors = textFieldColors
                     )
+
+                    // Transparent clickable overlay
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .clickable { expanded = true }
+                    )
+
                     DropdownMenu(
                         expanded = expanded,
-                        onDismissRequest = { expanded = false }
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(dialogBg)
                     ) {
-                        priorities.forEach {
+                        priorities.forEach { option ->
                             DropdownMenuItem(
-                                text = { Text(it) },
+                                text = { Text(option, color = Color.White) },
                                 onClick = {
-                                    priority = it
+                                    priority = option
                                     expanded = false
                                 }
                             )
@@ -580,7 +601,7 @@ fun AddTaskDialog(
         },
         confirmButton = {
             TextButton(onClick = {
-                if (taskName.isNotBlank() && subject.isNotBlank() && deadline.isNotBlank() && priority != "Add Priority") {
+                if (taskName.isNotBlank() && subject.isNotBlank() && deadline.isNotBlank() && priority.isNotBlank()) {
                     onAdd(taskName.trim(), subject.trim(), deadline.trim(), priority)
                 }
             }) {
@@ -591,7 +612,9 @@ fun AddTaskDialog(
             TextButton(onClick = onDismiss) {
                 Text("Cancel", color = Color.White.copy(alpha = 0.7f))
             }
-        },
-        containerColor = Color(0xFF234256)
+        }
     )
 }
+
+
+
