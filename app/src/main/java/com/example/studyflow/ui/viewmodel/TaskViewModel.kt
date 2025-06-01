@@ -2,6 +2,7 @@ package com.example.studyflow.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studyflow.model.Priority
 import com.example.studyflow.model.Task
 import com.example.studyflow.model.TaskWithSubject
 import com.example.studyflow.repository.TaskRepository
@@ -9,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -70,6 +72,11 @@ class TaskViewModel @Inject constructor(
 
             val remainingCount = totalCount - completedCount
             _remainingTaskCount.value = remainingCount
+        }
+    }
+    fun insertTask(task: Task) {
+        viewModelScope.launch {
+            taskRepo.insert(task)
         }
     }
 }

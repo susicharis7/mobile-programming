@@ -91,8 +91,14 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.ui.layout.onGloballyPositioned
+import com.example.studyflow.model.Subject
+import com.example.studyflow.model.Task
+import com.example.studyflow.ui.viewmodel.SubjectViewModel
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 
@@ -217,11 +223,13 @@ fun TasksScreen(
     navController : NavController,
     userViewModel: UserViewModel,
     taskViewModel: TaskViewModel,
+    subjectViewModel: SubjectViewModel,
     onLogoutSuccess: () -> Unit
 ) {
     val remainingTasks by taskViewModel.remainingTasks.collectAsState()
     val completedTasks by taskViewModel.completedTasks.collectAsState()
     val completedTaskCount by taskViewModel.completedTaskCount.collectAsState(0)
+    val subjects by subjectViewModel.subjects.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
 
     // SettingsOverlay
@@ -272,6 +280,7 @@ fun TasksScreen(
     LaunchedEffect(Unit) {
         taskViewModel.loadTasks(loggedUser!!.id)
         taskViewModel.loadTaskCounts(loggedUser.id)
+        subjectViewModel.loadSubjects(loggedUser.id)
     }
 
     Scaffold(
@@ -451,9 +460,11 @@ fun TasksScreen(
         if (showDialog) {
             AddTaskDialog(
                 onAdd = { name, subject, deadline, priority ->
+                    taskViewModel.insertTask(Task(name = name, subjectId = subject, deadline = deadline, priority = priority, isCompleted = false, userId = loggedUser!!.id))
                     showDialog = false
                 },
-                onDismiss = { showDialog = false }
+                onDismiss = { showDialog = false },
+                subjects
             )
         }
     }
@@ -482,16 +493,17 @@ fun TasksScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskDialog(
-    onAdd: (String, String, String, String) -> Unit,
-    onDismiss: () -> Unit
+    onAdd: (String, Long, Date, Priority) -> Unit,
+    onDismiss: () -> Unit,
+    subjects: List<Subject>
 ) {
     var taskName by remember { mutableStateOf("") }
-    var subject by remember { mutableStateOf("") }
+    var subjectId by remember { mutableLongStateOf(-1) }
     var deadline by remember { mutableStateOf("") }
-    var priority by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false) }
+    var priority by remember { mutableStateOf<Priority?>(null) }
+    var priorityExpanded by remember { mutableStateOf(false) }
+    var subjectExpanded by remember { mutableStateOf(false) }
 
-    val priorities = listOf("High", "Medium", "Low")
     val dialogBg = Color(0xFF234256)
     val borderColor = Color(0xFFB6CBEE)
 
@@ -524,16 +536,58 @@ fun AddTaskDialog(
                 )
 
                 // Subject
-                OutlinedTextField(
-                    value = subject,
-                    onValueChange = { subject = it },
-                    placeholder = { Text("Add Subject", color = Color.White.copy(alpha = 0.7f)) },
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    singleLine = true,
-                    colors = textFieldColors
-                )
+                        .padding(vertical = 4.dp)
+                ) {
+                    val subjectName = remember(subjectId) {
+                        subjects.find { it.id == subjectId }?.name ?: ""
+                    }
+                    OutlinedTextField(
+                        value = subjectName,
+                        onValueChange = {},
+                        readOnly = true,
+                        placeholder = { Text("Select Subject", color = Color.White.copy(alpha = 0.7f)) },
+                        label = { Text("Subject", color = Color.White.copy(alpha = 0.7f)) },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = if (subjectExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onGloballyPositioned { },
+                        colors = textFieldColors
+                    )
+
+                    // Transparent clickable overlay
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .clickable { subjectExpanded = true }
+                    )
+
+                    DropdownMenu(
+                        expanded = subjectExpanded,
+                        onDismissRequest = { subjectExpanded = false },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(dialogBg)
+                    ) {
+                        subjects.forEach { subject ->
+                            DropdownMenuItem(
+                                text = { Text(subject.name, color = Color.White) },
+                                onClick = {
+                                    subjectId = subject.id
+                                    subjectExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
 
                 // Deadline
                 OutlinedTextField(
@@ -554,14 +608,14 @@ fun AddTaskDialog(
                         .padding(vertical = 4.dp)
                 ) {
                     OutlinedTextField(
-                        value = priority,
+                        value = priority?.name?:"",
                         onValueChange = {},
                         readOnly = true,
                         placeholder = { Text("Select Priority", color = Color.White.copy(alpha = 0.7f)) },
                         label = { Text("Priority", color = Color.White.copy(alpha = 0.7f)) },
                         trailingIcon = {
                             Icon(
-                                imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                imageVector = if (priorityExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                                 contentDescription = null,
                                 tint = Color.White
                             )
@@ -576,22 +630,22 @@ fun AddTaskDialog(
                     Box(
                         modifier = Modifier
                             .matchParentSize()
-                            .clickable { expanded = true }
+                            .clickable { priorityExpanded = true }
                     )
 
                     DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
+                        expanded = priorityExpanded,
+                        onDismissRequest = { priorityExpanded = false },
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(dialogBg)
                     ) {
-                        priorities.forEach { option ->
+                        Priority.values().forEach { priorityOption ->
                             DropdownMenuItem(
-                                text = { Text(option, color = Color.White) },
+                                text = { Text(priorityOption.name, color = Color.White) },
                                 onClick = {
-                                    priority = option
-                                    expanded = false
+                                    priority = priorityOption
+                                    priorityExpanded = false
                                 }
                             )
                         }
@@ -600,9 +654,10 @@ fun AddTaskDialog(
             }
         },
         confirmButton = {
+            val dateFormat = SimpleDateFormat("MM-dd-yyyy-HH:mm", Locale.getDefault())
             TextButton(onClick = {
-                if (taskName.isNotBlank() && subject.isNotBlank() && deadline.isNotBlank() && priority.isNotBlank()) {
-                    onAdd(taskName.trim(), subject.trim(), deadline.trim(), priority)
+                if (taskName.isNotBlank() && subjectId>0 && deadline.isNotBlank() && priority!=null) {
+                    onAdd(taskName.trim(), subjectId, dateFormat.parse(deadline)!!, priority!!   )
                 }
             }) {
                 Text("Add", color = Color.White)

@@ -160,7 +160,8 @@ fun AppNavHost(userViewModel: UserViewModel = hiltViewModel<UserViewModel>()) {
                     )
                 ) { backStackEntry ->
                     val taskViewModel: TaskViewModel = hiltViewModel(backStackEntry)
-                    TasksScreen(loggedUser, navController, userViewModel, taskViewModel, onLogoutSuccess = {
+                    val subjectViewModel: SubjectViewModel = hiltViewModel(backStackEntry)
+                    TasksScreen(loggedUser, navController, userViewModel, taskViewModel, subjectViewModel , onLogoutSuccess = {
                         navController.navigate(Login) {
                             popUpTo(Main) { inclusive = true }
                         }
