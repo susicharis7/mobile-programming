@@ -300,7 +300,7 @@ fun TasksScreen(
                             )
                         } else {
                             val dateFormat = SimpleDateFormat("MMMM d, hh:mm a", Locale.getDefault())
-                            remainingTasks.take(3).forEach() { task ->
+                            remainingTasks.forEach() { task ->
                                 UpcomingTaskItem(
                                     title = task.taskName,
                                     subject = task.subjectName,
@@ -342,7 +342,7 @@ fun TasksScreen(
                             )
                         } else {
                             val dateFormat = SimpleDateFormat("MMMM d, hh:mm a", Locale.getDefault())
-                            completedTasks.take(3).forEach() { task ->
+                            completedTasks.forEach() { task ->
                                 CompletedUpcomingTaskItem(
                                     title = task.taskName,
                                     subject = task.subjectName,
