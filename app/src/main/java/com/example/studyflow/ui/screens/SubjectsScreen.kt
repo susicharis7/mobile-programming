@@ -395,24 +395,35 @@ fun AddSubjectDialog(
 ) {
     var subjectName by remember { mutableStateOf("") }
 
+    val dialogBg = Color(0xFF234256)
+    val borderColor = Color(0xFFB6CBEE)
+
+    val textFieldColors = TextFieldDefaults.colors(
+        focusedTextColor = Color.White,
+        unfocusedTextColor = Color.White,
+        cursorColor = Color.White,
+        focusedContainerColor = dialogBg,
+        unfocusedContainerColor = dialogBg,
+        focusedIndicatorColor = borderColor,
+        unfocusedIndicatorColor = borderColor
+    )
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Add Subject Name", color = Color.White) },
         text = {
-            TextField(
-                value = subjectName,
-                onValueChange = { subjectName = it },
-                placeholder = { Text("Add Subject Name", color = Color.Black) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color(0xFFBBCFE9),
-                    unfocusedContainerColor = Color(0xFFBBCFE9),
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black,
-                    cursorColor = Color.Black
+            Column {
+                OutlinedTextField(
+                    value = subjectName,
+                    onValueChange = { subjectName = it },
+                    placeholder = { Text("Add Subject Name", color = Color.White.copy(alpha = 0.7f)) },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    colors = textFieldColors
                 )
-            )
+            }
         },
         confirmButton = {
             TextButton(onClick = {
@@ -426,8 +437,9 @@ fun AddSubjectDialog(
                 Text("Cancel", color = Color.White.copy(alpha = 0.7f))
             }
         },
-        containerColor = Color(0xFF234256)
+        containerColor = dialogBg
     )
 }
+
 
 
