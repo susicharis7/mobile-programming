@@ -2,7 +2,6 @@ package com.example.studyflow.ui.screens
 
 import androidx.compose.runtime.Composable
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -234,9 +233,9 @@ fun AudioBottomSheet(
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
             ) {
-                AudioPlayerCard("Rain", R.raw.song)
-                AudioPlayerCard("Birds", R.raw.song)
-                AudioPlayerCard("Campfire", R.raw.song)
+                AudioPlayerCard("Rain", R.raw.rain_sound)
+                AudioPlayerCard("Wind", R.raw.wind_sound)
+                AudioPlayerCard("Campfire", R.raw.campfire_sound)
 
                 Spacer(modifier = Modifier.height(16.dp))
 

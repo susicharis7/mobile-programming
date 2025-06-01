@@ -262,7 +262,7 @@ fun TasksScreen(
 
     LaunchedEffect(Unit) {
         taskViewModel.loadTasks(loggedUser!!.id)
-        taskViewModel.loadTaskCounts(loggedUser.id)
+        taskViewModel.loadTaskCounts(loggedUser!!.id)
     }
 
     Scaffold(
