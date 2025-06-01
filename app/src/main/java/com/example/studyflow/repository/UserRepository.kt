@@ -7,5 +7,5 @@ interface UserRepository : BaseRepository<User> {
 
     suspend fun getUserByEmailAndPassword(email: String, password: String): User?
 
-    suspend fun getUserById(userId: Int): User?
+    suspend fun getUserById(userId: Long): User?
 }

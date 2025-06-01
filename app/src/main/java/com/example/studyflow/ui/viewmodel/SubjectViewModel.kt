@@ -17,10 +17,25 @@ class SubjectViewModel @Inject constructor(
     private val _subjects = MutableStateFlow<List<Subject>>(emptyList())
     val subjects: StateFlow<List<Subject>> = _subjects
 
-    fun loadSubjects(userId: Int) {
+    fun loadSubjects(userId: Long) {
         viewModelScope.launch {
             val list = subjectRepo.getSubjectByUserId(userId)
             _subjects.value = list
+        }
+    }
+    fun insertSubject(subject: Subject) {
+        viewModelScope.launch {
+            subjectRepo.insert(subject)
+        }
+    }
+    fun updateSubject(subject: Subject) {
+        viewModelScope.launch {
+            subjectRepo.update(subject)
+        }
+    }
+    fun deleteSubject(subject: Subject) {
+        viewModelScope.launch {
+            subjectRepo.delete(subject)
         }
     }
 }

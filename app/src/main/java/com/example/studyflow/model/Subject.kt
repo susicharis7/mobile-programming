@@ -1,12 +1,13 @@
 package com.example.studyflow.model
 
+import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
-@Serializable
+//@Serializable
 @Entity(
     tableName = "subjects",
     foreignKeys = [
@@ -21,8 +22,9 @@ import kotlinx.serialization.Serializable
 )
 data class Subject(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0,
     val name: String,
-    val userId: Int,
-    val isActive: Boolean
+    val userId: Long,
+    val isActive: Boolean,
+    val color: Color
 )

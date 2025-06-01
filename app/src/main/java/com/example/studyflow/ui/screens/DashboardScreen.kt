@@ -1,7 +1,6 @@
 package com.example.studyflow.ui.screens
 
 // Scrollable
-import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -28,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -40,14 +40,15 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -63,6 +64,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.studyflow.R
+import com.example.studyflow.model.Priority
 import com.example.studyflow.model.User
 import com.example.studyflow.ui.nav.DashboardNav
 import com.example.studyflow.ui.nav.ProfileNav
@@ -81,13 +83,18 @@ import com.example.studyflow.ui.theme.TaskCompletedNumber
 import com.example.studyflow.ui.theme.TextBlack
 import com.example.studyflow.ui.theme.TextGray
 import com.example.studyflow.ui.theme.TextWhite
-import com.example.studyflow.ui.theme.UpcomingExamCardColor
+import com.example.studyflow.ui.theme.CardForegroundColor
+import com.example.studyflow.ui.theme.PriorityHigh
+import com.example.studyflow.ui.theme.PriorityLow
+import com.example.studyflow.ui.theme.PriorityMedium
 import com.example.studyflow.ui.theme.UpcomingTasksBackground
 import com.example.studyflow.ui.theme.interFontFamily
 import com.example.studyflow.ui.viewmodel.ExamViewModel
 import com.example.studyflow.ui.viewmodel.TaskViewModel
 import com.example.studyflow.ui.viewmodel.TimerViewModel
 import com.example.studyflow.ui.viewmodel.UserViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -100,9 +107,21 @@ fun DashboardScreen(
     navController: NavController,
     onLogoutSuccess: () -> Unit
 ) {
+//    val loggedUser by userViewModel.loggedUser.collectAsState()
+    val tasks by taskViewModel.remainingTasks.collectAsState()
+    val exams by examViewModel.exams.collectAsState()
+
+    val completedTaskCount by taskViewModel.completedTaskCount.collectAsState(0)
+    val totalTaskCount by taskViewModel.totalTaskCount.collectAsState(0)
     // SettingsOverlay
     val showOverlay = remember { mutableStateOf(false) }
-    val loggedUser by userViewModel.loggedUser.collectAsState()
+
+    LaunchedEffect(Unit) {
+        taskViewModel.loadTasks(loggedUser!!.id)
+        examViewModel.loadExams(loggedUser.id)
+        taskViewModel.loadTaskCounts(loggedUser.id)
+    }
+
 
     val sheetState = rememberModalBottomSheetState()
     var showSheet by remember { mutableStateOf(false) }
@@ -235,7 +254,11 @@ fun DashboardScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    TasksCompletedCard(modifier = Modifier.weight(1f))
+                    TasksCompletedCard(
+                        modifier = Modifier.weight(1f),
+                        completedTasks = completedTaskCount?:0,
+                        totalTasks = totalTaskCount?:0
+                    )
                     CurrentSessionCard(modifier = Modifier.weight(1f))
                 }
                 Spacer(modifier = Modifier.height(10.dp))
@@ -257,7 +280,7 @@ fun DashboardScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(CardBackgroundColor, shape = RoundedCornerShape(12.dp))
-                        .padding(16.dp)
+                        .padding(vertical = 16.dp, horizontal = 12.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -287,32 +310,55 @@ fun DashboardScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    UpcomingTaskItem(
-                        title = "Complete Web Programming Milestone",
-                        category = "Web Programming",
-                        time = "May 5, 08:00 PM",
-                        priorityColor = Color(0xFFF87171),
-                        priorityLabel = "High",
-                        iconRes = R.drawable.tick
-                    )
+                    if (tasks.isNullOrEmpty()) {
+                        Text(
+                            text = "You have no tasks"
+                        )
+                    } else {
+                        val dateFormat = SimpleDateFormat("MMMM d, hh:mm a", Locale.getDefault())
+                        tasks.take(3).forEach() { task ->
+                            UpcomingTaskItem(
+                                title = task.taskName,
+                                subject = task.subjectName,
+                                deadline = task.deadline.let { dateFormat.format(it) } ?: "No Date",
+                                priorityLabel = task.priority.toString().lowercase().replaceFirstChar { it.uppercase() },
+                                priorityColor = when (task.priority) {
+                                    Priority.HIGH -> PriorityHigh
+                                    Priority.MEDIUM -> PriorityMedium
+                                    Priority.LOW -> PriorityLow
+                                },
+                                showOption = false
+                            )
+                        }
+                    }
 
-                    UpcomingTaskItem(
-                        title = "Prepare for Statistics Quiz",
-                        category = "Statistics",
-                        time = "Apr 19, 11:59 PM",
-                        priorityColor = Color(0xFFFFCB44),
-                        priorityLabel = "Medium",
-                        iconRes = R.drawable.tick
-                    )
 
-                    UpcomingTaskItem(
-                        title = "Prepare Presentation",
-                        category = "Operating Systems",
-                        time = "Apr 14, 08:00 PM",
-                        priorityColor = Color(0xFF4ADE80),
-                        priorityLabel = "Low",
-                        iconRes = R.drawable.tick
-                    )
+//                    UpcomingTaskItem(
+//                        title = "Complete Web Programming Milestone",
+//                        category = "Web Programming",
+//                        time = "May 5, 08:00 PM",
+//                        priorityColor = Color(0xFFF87171),
+//                        priorityLabel = "High",
+//                        iconRes = R.drawable.tick
+//                    )
+//
+//                    UpcomingTaskItem(
+//                        title = "Prepare for Statistics Quiz",
+//                        category = "Statistics",
+//                        time = "Apr 19, 11:59 PM",
+//                        priorityColor = Color(0xFFFFCB44),
+//                        priorityLabel = "Medium",
+//                        iconRes = R.drawable.tick
+//                    )
+//
+//                    UpcomingTaskItem(
+//                        title = "Prepare Presentation",
+//                        category = "Operating Systems",
+//                        time = "Apr 14, 08:00 PM",
+//                        priorityColor = Color(0xFF4ADE80),
+//                        priorityLabel = "Low",
+//                        iconRes = R.drawable.tick
+//                    )
 
                 } // Column
             } // item
@@ -343,33 +389,52 @@ fun DashboardScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
+                    if (exams.isNullOrEmpty()) {
+                        Text(
+                            text = "You have no exams",
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                    } else {
+                        val dateFormatDay = SimpleDateFormat("MMMM d", Locale.getDefault())
+                        val dateFormatTime = SimpleDateFormat("hh:mm a", Locale.getDefault())
+                        exams.take(3).forEach() { exam ->
+                            UpcomingExamItem(
+                                title = exam.examName,
+                                date = exam.examDate.let { dateFormatDay.format(it) } ?: "No Date",
+                                time = exam.examDate.let { dateFormatTime.format(it) } ?: "No Date",
+                                subject = exam.subjectName,
+                                colorStripe = exam.colorStripe,
+                                daysLeft = examViewModel.getDaysLeft(exam.examDate)
+                            )
+                        }
+                    }
 
-                    UpcomingExamItem(
-                        title = "Mobile Programming Exam",
-                        date = "Apr 23",
-                        time = "09:00 - 11:00",
-                        subject = "Mobile Programming",
-                        colorStripe = Color(0xFF60A5FA),
-                        daysLeft = "13"
-                    )
-
-                    UpcomingExamItem(
-                        title = "Statistics Exam",
-                        date = "Apr 26",
-                        time = "11:00 - 15:00",
-                        subject = "Probability & Statistics",
-                        colorStripe = Color(0xFFBB86FC),
-                        daysLeft = "16"
-                    )
-
-                    UpcomingExamItem(
-                        title = "Microprocessors Exam",
-                        date = "Apr 27",
-                        time = "10:00 - 12:00",
-                        subject = "Microprocessors",
-                        colorStripe = Color(0xFFFACC15),
-                        daysLeft = "17"
-                    )
+//                    UpcomingExamItem(
+//                        title = "Mobile Programming Exam",
+//                        date = "Apr 23",
+//                        time = "09:00 - 11:00",
+//                        subject = "Mobile Programming",
+//                        colorStripe = Color(0xFF60A5FA),
+//                        daysLeft = "13"
+//                    )
+//
+//                    UpcomingExamItem(
+//                        title = "Statistics Exam",
+//                        date = "Apr 26",
+//                        time = "11:00 - 15:00",
+//                        subject = "Probability & Statistics",
+//                        colorStripe = Color(0xFFBB86FC),
+//                        daysLeft = "16"
+//                    )
+//
+//                    UpcomingExamItem(
+//                        title = "Microprocessors Exam",
+//                        date = "Apr 27",
+//                        time = "10:00 - 12:00",
+//                        subject = "Microprocessors",
+//                        colorStripe = Color(0xFFFACC15),
+//                        daysLeft = "17"
+//                    )
 
                 }
 
@@ -430,7 +495,7 @@ fun DashboardScreen(
 }
 
 @Composable
-fun TasksCompletedCard(modifier: Modifier = Modifier) {
+fun TasksCompletedCard(modifier: Modifier = Modifier, completedTasks: Int, totalTasks: Int) {
     Column(
         modifier = modifier
             .height(100.dp)
@@ -454,7 +519,7 @@ fun TasksCompletedCard(modifier: Modifier = Modifier) {
                         fontWeight = FontWeight.ExtraBold
                     )
                 ) {
-                    append("12")
+                    append(completedTasks.toString())
                 }
                 withStyle(
                     style = SpanStyle(
@@ -463,7 +528,7 @@ fun TasksCompletedCard(modifier: Modifier = Modifier) {
                         fontWeight = FontWeight.Normal
                     )
                 ) {
-                    append(" / 20 tasks")
+                    append(" / $totalTasks tasks")
                 }
             },
             modifier = Modifier.padding(top = 5.dp)
@@ -471,12 +536,25 @@ fun TasksCompletedCard(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        val progress = if (totalTasks > 0) {
+            completedTasks.toFloat() / totalTasks.toFloat()
+        } else {
+            0f
+        }
+
         Box( /* Dynamic Progression */
             modifier = Modifier
                 .fillMaxWidth()
                 .height(12.dp)
-                .background(TaskCompletedGradientColor, shape = RoundedCornerShape(6.dp))
-        )
+                .background(UpcomingTasksBackground, shape = RoundedCornerShape(6.dp))
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(progress)
+                    .background(TaskCompletedGradientColor, shape = RoundedCornerShape(6.dp))
+            )
+        }
     }
 }
 
@@ -636,11 +714,11 @@ fun StreakCard(modifier: Modifier = Modifier) {
 @Composable
 fun UpcomingTaskItem(
     title: String,
-    category: String,
-    time: String,
+    subject: String,
+    deadline: String,
     priorityColor: Color,
     priorityLabel: String,
-    iconRes: Int
+    showOption: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -649,21 +727,37 @@ fun UpcomingTaskItem(
         verticalAlignment = Alignment.Top
     ) {
         Icon(
-            painter = painterResource(id = iconRes),
+            painter = painterResource(id = R.drawable.tick),
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier
                 .size(32.dp)
-                .padding(end = 10.dp, top = 4.dp)
+                .padding(end = 6.dp, top = 4.dp)
         )
 
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                title,
-                color = TextWhite,
-                fontSize = 14.5.sp,
-                fontWeight = FontWeight.Normal
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    title,
+                    color = TextWhite,
+                    fontSize = 14.5.sp,
+                    fontWeight = FontWeight.Normal
+                )
+
+                if (showOption) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = null,
+                        tint = TextWhite,
+                        modifier = Modifier
+                            .padding(end = 2.dp, top = 2.dp)
+                            .size(20.dp)
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(2.dp))
 
@@ -679,7 +773,7 @@ fun UpcomingTaskItem(
                             .padding(horizontal = 8.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = category,
+                            text = subject,
                             color = TextGray,
                             fontSize = 11.5.sp
                         )
@@ -698,7 +792,7 @@ fun UpcomingTaskItem(
                         Spacer(modifier = Modifier.width(4.dp))
 
                         Text(
-                            text = time,
+                            text = deadline,
                             color = Color(0xFFF9E79F),
                             fontSize = 10.sp
                         )
@@ -745,7 +839,7 @@ fun UpcomingExamItem(
         Box( // Entire Card Container (With Background)
             modifier = Modifier
                 .fillMaxWidth()
-                .background(UpcomingExamCardColor, shape = RoundedCornerShape(12.dp))
+                .background(CardForegroundColor, shape = RoundedCornerShape(12.dp))
         ) {
             Row( // Horizontal Layout inside Cards
                 modifier = Modifier

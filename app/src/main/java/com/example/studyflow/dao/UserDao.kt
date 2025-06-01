@@ -15,5 +15,12 @@ interface UserDao : BaseDao<User> {
     suspend fun getUserByEmailAndPassword(email: String, password: String): User?
 
     @Query("SELECT * FROM users WHERE id = :userId")
-    suspend fun getUserById(userId: Int): User?
+    suspend fun getUserById(userId: Long): User?
+
+
+    // Development queries
+
+    // THIS WILL DELETE ALL USERS, USE WISELY
+    @Query("DELETE FROM users")
+    suspend fun deleteAllUsers()
 }

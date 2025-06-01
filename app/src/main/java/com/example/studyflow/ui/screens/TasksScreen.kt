@@ -42,6 +42,7 @@ import com.example.studyflow.R
 import com.example.studyflow.model.User
 import com.example.studyflow.ui.theme.BackgroundColor
 import com.example.studyflow.ui.theme.CardBackgroundColor
+import com.example.studyflow.ui.theme.FloatingButtonColor
 import com.example.studyflow.ui.theme.TextWhite
 import com.example.studyflow.ui.theme.UpcomingTasksBackground
 import com.example.studyflow.ui.viewmodel.TaskViewModel
@@ -57,10 +58,23 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.navigation.NavController
+import com.example.studyflow.model.Priority
 import com.example.studyflow.ui.screens.navigations.SettingsOverlay
+import com.example.studyflow.ui.theme.PriorityHigh
+import com.example.studyflow.ui.theme.PriorityLow
+import com.example.studyflow.ui.theme.PriorityMedium
+import com.example.studyflow.ui.theme.TextGray
+import com.example.studyflow.ui.theme.TextGray2
 import com.example.studyflow.ui.viewmodel.UserViewModel
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -69,109 +83,122 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
+import java.text.SimpleDateFormat
+import java.util.Locale
+
+
 
 @Composable
-fun TaskCard(
+fun CompletedUpcomingTaskItem(
     title: String,
-    category: String,
-    date: String,
-    priority: String,
-    priorityColor: Color
+    subject: String,
+    deadline: String,
+    priorityColor: Color,
+    priorityLabel: String,
+    showOption: Boolean
 ) {
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 12.dp),
-        colors = CardDefaults.cardColors(containerColor = CardBackgroundColor),
-        shape = RoundedCornerShape(12.dp)
+            .padding(vertical = 6.dp),
+        verticalAlignment = Alignment.Top
     ) {
-        Column(modifier = Modifier.padding(11.dp)) {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.align(Alignment.CenterStart)
-                ) {
+        Icon(
+            painter = painterResource(id = R.drawable.tick),
+            contentDescription = null,
+            tint = PriorityLow,
+            modifier = Modifier
+                .size(32.dp)
+                .padding(end = 6.dp, top = 4.dp)
+        )
+
+        Column(modifier = Modifier.weight(1f)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    title,
+                    color = TextGray2,
+                    fontSize = 14.5.sp,
+                    fontWeight = FontWeight.Normal,
+                    style = TextStyle(textDecoration = TextDecoration.LineThrough)
+                )
+
+                if (showOption) {
                     Icon(
-                        painter = painterResource(R.drawable.tick),
+                        imageVector = Icons.Default.MoreVert,
                         contentDescription = null,
-                        tint = Color.Gray,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = title,
-                        color = TextWhite,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 15.sp
+                        tint = TextWhite,
+                        modifier = Modifier
+                            .padding(end = 2.dp, top = 2.dp)
+                            .size(20.dp)
                     )
                 }
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = null,
-                    tint = TextWhite,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(end = 2.dp, top = 2.dp)
-                        .size(20.dp)
-                )
             }
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(2.dp))
 
             Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = category,
-                        color = TextWhite,
-                        fontSize = 12.sp,
-                        letterSpacing = 1.sp,
+                    Box(
                         modifier = Modifier
-                            .background(UpcomingTasksBackground, RoundedCornerShape(4.dp))
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Icon(
-                        imageVector = Icons.Default.AccessTime,
-                        contentDescription = null,
-                        tint = Color(0xFFF9E79F),
-                        modifier = Modifier.size(14.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = date,
-                        color = Color(0xFFF9E79F),
-                        fontSize = 12.sp
-                    )
-                }
+                            .background(UpcomingTasksBackground, shape = RoundedCornerShape(4.dp))
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = subject,
+                            color = TextGray.copy(alpha = 0.5f),
+                            fontSize = 11.5.sp
+                        )
+                    }
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .background(Color.Transparent, RoundedCornerShape(6.dp))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                ) {
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            Icons.Default.Schedule,
+                            contentDescription = null,
+                            tint = TextGray2,
+                            modifier = Modifier.size(16.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(4.dp))
+
+                        Text(
+                            text = deadline,
+                            color = TextGray2,
+                            fontSize = 10.sp
+                        )
+                    }
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Default.Flag,
+                        Icons.Default.Flag,
                         contentDescription = null,
-                        tint = priorityColor,
-                        modifier = Modifier.size(14.dp)
+                        tint = priorityColor.copy(alpha = 0.5f),
+                        modifier = Modifier.size(13.dp)
                     )
+
                     Spacer(modifier = Modifier.width(4.dp))
+
                     Text(
-                        text = priority,
-                        color = priorityColor,
-                        fontSize = 14.sp,
-                        letterSpacing = 0.9.sp
+                        priorityLabel,
+                        color = priorityColor.copy(alpha = 0.5f),
+                        fontSize = 11.sp
                     )
                 }
             }
         }
+
+
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -182,7 +209,9 @@ fun TasksScreen(
     taskViewModel: TaskViewModel,
     onLogoutSuccess: () -> Unit
 ) {
-    val tasks by taskViewModel.tasks.collectAsState()
+    val remainingTasks by taskViewModel.remainingTasks.collectAsState()
+    val completedTasks by taskViewModel.completedTasks.collectAsState()
+    val completedTaskCount by taskViewModel.completedTaskCount.collectAsState(0)
     var showDialog by remember { mutableStateOf(false) }
 
     // SettingsOverlay
@@ -231,6 +260,11 @@ fun TasksScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        taskViewModel.loadTasks(loggedUser!!.id)
+        taskViewModel.loadTaskCounts(loggedUser.id)
+    }
+
     Scaffold(
         topBar = {
             Column(
@@ -241,6 +275,7 @@ fun TasksScreen(
                     .zIndex(1f)
             ) {
                 Spacer(modifier= Modifier.height(16.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -254,6 +289,7 @@ fun TasksScreen(
                             .size(34.dp)
                             .clickable { showOverlay.value = true }
                     )
+
                     Text(
                         "Tasks",
                         color = TextWhite,
@@ -261,6 +297,7 @@ fun TasksScreen(
                         fontWeight = FontWeight.Normal,
                         letterSpacing = 0.05.em
                     )
+
                     Icon(
                         painter = painterResource(id = R.drawable.headphones),
                         contentDescription = null,
@@ -274,7 +311,7 @@ fun TasksScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showDialog = true }, // ✅ ADDED
-                containerColor = Color(0xFF5F93AD),
+                containerColor = FloatingButtonColor,
                 contentColor = TextWhite,
                 shape = RoundedCornerShape(15),
                 modifier = Modifier.padding(0.dp)
@@ -295,34 +332,89 @@ fun TasksScreen(
                 .padding(horizontal = 14.dp)
                 .padding(paddingValues)
         ) {
-            items(3) { index ->
-                TaskCard(
-                    title = when (index) {
-                        0 -> "Complete Web Programming Milestone"
-                        1 -> "Prepare for Statistics Quiz"
-                        else -> "Prepare Presentation"
-                    },
-                    category = when (index) {
-                        0 -> "Web Programming"
-                        1 -> "Statistics"
-                        else -> "Operating Systems"
-                    },
-                    date = when (index) {
-                        0 -> "May 5, 08:00 PM"
-                        1 -> "Apr 19, 11:59 PM"
-                        else -> "Apr 14, 08:00 PM"
-                    },
-                    priority = when (index) {
-                        0 -> "High"
-                        1 -> "Medium"
-                        else -> "Low"
-                    },
-                    priorityColor = when (index) {
-                        0 -> Color(0xFFF87171)
-                        1 -> Color(0xFFFFCB44)
-                        else -> Color(0xFF4ADE80)
+
+            // Remaining TaskCard Implementation
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
+                    colors = CardDefaults.cardColors(containerColor = CardBackgroundColor),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Column(modifier = Modifier.padding(11.dp)) {
+
+                        Text(
+                            text = "Remaining",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        if (remainingTasks.isNullOrEmpty()) {
+                            Text(
+                                text = "You have no tasks"
+                            )
+                        } else {
+                            val dateFormat = SimpleDateFormat("MMMM d, hh:mm a", Locale.getDefault())
+                            remainingTasks.forEach() { task ->
+                                UpcomingTaskItem(
+                                    title = task.taskName,
+                                    subject = task.subjectName,
+                                    deadline = task.deadline.let { dateFormat.format(it) } ?: "No Date",
+                                    priorityLabel = task.priority.toString().lowercase().replaceFirstChar { it.uppercase() },
+                                    priorityColor = when (task.priority) {
+                                        Priority.HIGH -> PriorityHigh
+                                        Priority.MEDIUM -> PriorityMedium
+                                        Priority.LOW -> PriorityLow
+                                    },
+                                    showOption = true
+                                )
+                            }
+                        }
                     }
-                )
+                }
+            }
+
+            // Completed TaskCard Implementation
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
+                    colors = CardDefaults.cardColors(containerColor = CardBackgroundColor),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Column(modifier = Modifier.padding(11.dp)) {
+
+                        Text(
+                            text = "Completed ($completedTaskCount)",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        if (completedTasks.isNullOrEmpty()) {
+                            Text(
+                                text = "You have no completed tasks"
+                            )
+                        } else {
+                            val dateFormat = SimpleDateFormat("MMMM d, hh:mm a", Locale.getDefault())
+                            completedTasks.forEach() { task ->
+                                CompletedUpcomingTaskItem(
+                                    title = task.taskName,
+                                    subject = task.subjectName,
+                                    deadline = task.deadline.let { dateFormat.format(it) } ?: "No Date",
+                                    priorityLabel = task.priority.toString().lowercase().replaceFirstChar { it.uppercase() },
+                                    priorityColor = when (task.priority) {
+                                        Priority.HIGH -> PriorityHigh
+                                        Priority.MEDIUM -> PriorityMedium
+                                        Priority.LOW -> PriorityLow
+                                    },
+                                    showOption = true
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -476,4 +568,3 @@ fun AddTaskDialog(
         containerColor = Color(0xFF234256)
     )
 }
-

@@ -6,15 +6,15 @@ import com.example.studyflow.model.Timersession
 import javax.inject.Inject
 
 class TimersessionRepositoryImpl @Inject constructor(private val timersessionDao: TimersessionDao): TimersessionRepository {
-    override suspend fun insert(entity: Timersession) {
+    override suspend fun insert(entity: Timersession) : Long {
         return timersessionDao.insert(entity)
     }
 
-    override suspend fun getTimersessionsByUserId(userId: Int): List<Timersession> {
+    override suspend fun getTimersessionsByUserId(userId: Long): List<Timersession> {
         return timersessionDao.getTimersessionsByUserId(userId)
     }
 
-    override suspend fun getTimerSessionsByUserIdAndTimerType(userId: Int, timerType: TimerType): List<Timersession> {
+    override suspend fun getTimerSessionsByUserIdAndTimerType(userId: Long, timerType: TimerType): List<Timersession> {
         return timersessionDao.getTimerSessionsByUserIdAndTimerType(userId, timerType)
     }
 

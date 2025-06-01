@@ -71,7 +71,7 @@ fun ScheduleScreen(
     examViewModel: ExamViewModel,
     onLogoutSuccess: () -> Unit
 ) {
-    val tasks by taskViewModel.tasks.collectAsState()
+    val tasks by taskViewModel.completedTasks.collectAsState()
     val exams by examViewModel.exams.collectAsState()
 
     // SettingsOverlay
@@ -144,7 +144,7 @@ fun ScheduleScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = 14.dp)
                     .background(BackgroundColor)
                     .zIndex(1f)
             ) {

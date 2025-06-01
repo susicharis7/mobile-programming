@@ -26,8 +26,8 @@ enum class TimerType{
 )
 data class Timersession(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val userId: Int,
+    val id: Long = 0,
+    val userId: Long,
     val date: Date,
     val timerType: TimerType,
     val sessionTime: Int, // in seconds
