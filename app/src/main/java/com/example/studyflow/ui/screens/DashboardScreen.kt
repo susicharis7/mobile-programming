@@ -36,6 +36,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -421,53 +422,11 @@ fun DashboardScreen(
         }
     )
     // to show modal for music
-    if (showSheet) {
-        ModalBottomSheet(
-            onDismissRequest = { showSheet = false },
-            sheetState = sheetState,
-            containerColor = Color(0xFF1B263B),
-            scrimColor = Color.Black.copy(alpha = 0.5f)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-            ) {
-                AudioPlayerCard("Rain", R.raw.song)
-                AudioPlayerCard("Birds", R.raw.song)
-                AudioPlayerCard("Campfire", R.raw.song)
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = {
-                        showSheet = false
-                        showFullMusicPage = true
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6A5ACD)
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp)
-                ) {
-                    Text("Full Music Version", color = Color.White)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = { showSheet = false },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6A5ACD)
-                    ),
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) {
-                    Text("Close", color = Color.White)
-                }
-            }
-        }
-    }
-
+    AudioBottomSheet(
+        showSheet = showSheet,
+        onDismiss = { showSheet = false },
+        sheetState = sheetState,
+        onFullMusicClick = { showFullMusicPage = true })
 }
 
 @Composable
